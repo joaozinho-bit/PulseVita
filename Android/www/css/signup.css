@@ -1,0 +1,207 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background: linear-gradient(to right, #B6E5E5, #3E6262);
+    margin: 40px 70px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.div-logo {
+    width: 100%;
+}
+
+.logo {
+    width: 250px;
+}
+
+.container {
+    width: 90%;
+    height: auto;
+    padding: 30px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    background-color: #C7DEDE;
+    border-radius: 20px;
+}
+
+.container .second {
+    width: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.second h1 {
+    margin-bottom: 20px;
+
+    font-size: 2.5em;
+    font-weight: 600;
+    color: #205236;
+}
+
+.second input {
+    width: 80%;
+    padding: 15px;
+    margin: 10px 0;
+
+    background-color: #B6E5E5;
+    border: 1px solid #205236;
+    border-radius: 15px;
+
+    font-size: 1em;
+    color: #205236;
+}
+
+.second .link-clique {
+    width: 80%;
+    margin: 15px 0;
+}
+
+.second .link-clique a {
+    color: #34C759;
+    text-decoration: none;
+}
+
+.second p {
+    margin-top: 20px;
+
+    border: #205236;
+    color: #205236;
+    float: right;
+}
+
+.second button {
+    width: 80%;
+    padding: 15px;
+
+    background-color: #205236;
+    color: #B6E5E5;
+
+    border: none;
+    border-radius: 15px;
+
+    font-size: 1em;
+    cursor: pointer;
+}
+
+    .container .second {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container .first img {
+    width: 450px;
+}
+
+@media (max-width: 900px) {
+    body {
+        margin: 30px 30px;
+    }
+
+    .container .second img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    body {
+        margin: 24px 16px;
+        gap: 24px;
+
+        /* gradient vertical fica melhor em mobile */
+        background: linear-gradient(to bottom, #B6E5E5, #3E6262);
+        min-height: 100vh;
+    }
+
+    .div-logo {
+        display: flex;
+        justify-content: center;
+    }
+
+    .logo {
+        width: 160px;
+    }
+
+    /* Container vira coluna e ocupa quase todo o ecrã */
+    .container {
+        width: 100%;
+        padding: 24px 20px;
+        gap: 24px;
+
+        display: flex;
+        flex-direction: column-reverse;
+
+        border-radius: 20px;
+    }
+
+    /* Imagem decorativa */
+    .container .first {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .container .first img {
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+        max-width: 60vw;
+    }
+
+    /* Formulário ocupa largura total */
+    .container .second {
+        width: 100%;
+    }
+
+    .second h1 {
+        margin-bottom: 16px;
+
+        font-size: 1.8em;
+        text-align: center;
+    }
+
+    .second input {
+        width: 100%;
+        padding: 14px;
+
+        font-size: 0.95em;
+    }
+
+    .second .link-clique {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .second p {
+        margin-top: 10px;
+
+        float: none;
+        text-align: right;
+        font-size: 0.85em;
+    }
+
+    .second button {
+        width: 100%;
+        padding: 14px;
+
+        font-size: 1em;
+        font-weight: 600;
+    }
+}
