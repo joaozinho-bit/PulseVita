@@ -1,0 +1,135 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background: #B6E5E5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100dvh;
+}
+
+
+/* Header */
+.header{
+    padding: 40px 70px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.header .logo {
+    width: 100%;
+}
+
+.header .logo {
+    width: 250px;
+}
+
+.header .profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile .img-user{
+    width: 50px;
+}
+
+.profile span{
+    color: #205236;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* Conteudo padrao em todas as paginas */
+.container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+/* Menu lateral */
+.esquerda{
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 25%;
+    height: 60vh;
+}
+
+.esquerda .menu{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.esquerda .menu .menu-links{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px 10px 10px 70px;
+    align-items: center;
+    gap: 10px;
+}
+
+.esquerda .menu ul{
+    display: flex;
+    flex-direction: column;
+}
+
+.esquerda .menu a{
+    text-decoration: none;
+    color:#205236;
+}
+
+.esquerda .menu img{
+    width: 30px;
+    height: 30px;
+}
+
+.esquerda .btn-sair{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.esquerda .btn-sair a{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    background: #34C759;
+    color: #205236;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Conteudo principal */
+.direita{
+    border-radius: 15px;
+    margin: 20px 20px 20px 0;
+    display: flex;
+    width: 100%;
+    flex-grow: 1;
+    background: #138C6E;
+}
+
+
