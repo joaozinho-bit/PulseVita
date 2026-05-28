@@ -32,6 +32,10 @@
     color: white;
 }
 
+.conteudo .nota{
+    text-align: center;
+}
+
 /* Botao que leva pra o resultado */
 .conteudo .result button{
     font-size: 1em;

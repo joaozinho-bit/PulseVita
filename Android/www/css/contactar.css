@@ -1,0 +1,99 @@
+.conteudo{
+    padding: 40px 70px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+}
+
+.conteudo .container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.conteudo h1 ,h2{
+    color: white;
+}
+
+.conteudo h2{
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+.conteudo .container button{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #205236;
+    color: #b6e5e5;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    border: none;
+}
+
+.conteudo .container button p{
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.conteudo .container button img{
+    width: 20px;
+    height: 15px;
+}
+
+/* paginas de motivos */
+.container-motivos{
+    color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+}
+
+.container-motivos .topo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-motivos .topo h1{
+    color: white;
+}
+
+.container-motivos .topo .btn-voltar{
+    text-decoration: none;
+    background: #B6E5E5;
+    border-radius: 10px;
+    padding: 5px 20px;
+}
+
+.container-motivos .topo .btn-voltar a{
+    text-decoration: none;
+    color: #205236;
+    font-size: 1em;
+    border-radius: 10px;
+}
+
+.container-motivos h2{
+    color: white;
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+.container-motivos .siga{
+    font-weight: bold;
+}
+
+.dicas p{
+    font-weight: bold;
+}
+.dicas ul{
+    margin-left: 30px;
+}

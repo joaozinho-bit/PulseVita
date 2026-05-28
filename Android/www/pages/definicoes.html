@@ -6,7 +6,7 @@
         <link rel="icon" type="image/x-icon" href="../Imagens/Icon app.png">
 
         <!-- CSS -->
-        <link rel="stylesheet" href="../css/resultados.css">
+        <link rel="stylesheet" href="../css/definicoes.css">
         <link rel="stylesheet" href="../css/global.css">
 
         <!-- Font montserrat -->
@@ -14,7 +14,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         
-        <title>Marcações do utilizador</title>
+        <title>Dashboard do Utilizador</title>
     </head>
     <body>
         <!-- Header -->
@@ -82,16 +82,44 @@
                 </div>
             </div>
             <div class="direita">
-                <div id="conteudo" class="conteudo">
-                    <h2>Resultados</h2>
-                    <div class="result">
-                        <button onclick="carregarPaginaDeResultados('resultados-page2')">
-                            <p><strong>Resultado</strong> - Triagem do dia <span>05/05/2026</span></p>
-                        </button>
+                <div class="conteudo">
+                    <div class="info-pessoal">
+                        <div class="foto">
+                            <img src="../../Imagens/user.png" alt="">
+                        </div>
+                        <div class="lista-info">
+                            <div class="dados">
+                                <img class="icon" src="../../Imagens/user.png" alt="">
+                                <p class="nome">Pedro Silva</p>
+                                <button id="edit-nome" class="edit-btn">
+                                    <img src="../../Imagens/icon-lapis.png" alt="">
+                                </button>
+                            </div>
+                            <div class="dados">
+                                <img class="icon" src="../../Imagens/icon-tel.png" alt="">
+                                <p class="telefone">123 456 789</p>
+                                <button id="edit-telefone" class="edit-btn">
+                                    <img src="../../Imagens/icon-lapis.png" alt="">
+                                </button>
+                            </div>
+                            <div class="dados">
+                                <img class="icon" src="../../Imagens/icon-mail.png" alt="">
+                                <p class="email">pedro@gmail.com</p>
+                                <button id="edit-email" class="edit-btn">
+                                    <img src="../../Imagens/icon-lapis.png" alt="">
+                                </button>
+                            </div>
+                            <div class="dados">
+                                <img class="icon" src="../../Imagens/icon-cruz.png" alt="">
+                                <p class="num-utente">123456789</p>
+                                <button id="edit-num-utente" class="edit-btn">
+                                    <img src="../../Imagens/icon-lapis.png" alt="">
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </body>
-<script src="../js/app.js"></script>
 </html>
