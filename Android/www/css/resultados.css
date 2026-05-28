@@ -1,0 +1,46 @@
+.conteudo{
+    padding: 40px 70px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+}
+
+.conteudo .topo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.conteudo .topo .btn-voltar{
+    text-decoration: none;
+    background: #B6E5E5;
+    border-radius: 10px;
+    padding: 5px 20px;
+}
+
+.conteudo .topo .btn-voltar a{
+    text-decoration: none;
+    color: #205236;
+    font-size: 1em;
+    border-radius: 10px;
+}
+
+.conteudo{
+    color: white;
+}
+
+/* Botao que leva pra o resultado */
+.conteudo .result button{
+    font-size: 1em;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.conteudo .result p{
+    color: white;
+} 
