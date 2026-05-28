@@ -1,0 +1,49 @@
+.conteudo .info-pessoal{
+    padding: 40px 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+}
+
+.info-pessoal .foto{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 10px;
+    border: 3px solid #B6E5E5;
+}
+
+.info-pessoal .foto img{
+    width: 250px;
+}
+
+.info-pessoal .lista-info{
+    margin: 0 0 0 20px;
+}
+
+.info-pessoal .lista-info .dados{
+    display: flex;
+    margin: 0 0 10px 0;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+.info-pessoal .lista-info .dados p{
+    color: #ffffff;
+}
+
+.info-pessoal .lista-info .dados .icon {
+    width: 30px;
+}
+
+.dados .edit-btn{
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.dados .edit-btn img{
+    width: 15px;
+}
