@@ -23,7 +23,7 @@
         </div>
         <div class="profile">
             <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
-            <span>Pedro Silva</span>
+            <span id="nome-utilizador">...</span>
             <img class="point" src="../../Imagens/PontoVerde.png" alt="">
         </div>
     </div>
@@ -42,6 +42,15 @@
             </ul>
         </div>
     </div>
+
+    <script>
+    const dados = JSON.parse(localStorage.getItem('utilizador'));
+    if (!dados) {
+        window.location.href = '../index.html';
+    } else {
+        document.getElementById('nome-utilizador').textContent = dados.nomeCompleto;
+    }
+    </script>
     
 </body>
 </html>
