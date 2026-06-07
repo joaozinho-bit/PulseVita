@@ -15,17 +15,42 @@
     <div class="container">
         <div class="first">
             <h1>Bem Vindo(a)!</h1>
-            <input class="email" type="text" placeholder="E-mail">
-            <input class="senha" type="password" placeholder="Senha">
+            <input id="email-input" class="email" type="text" placeholder="E-mail">
+            <input id="senha-input" class="senha" type="password" placeholder="Senha">
             <div class="link-clique">
                 <p>Ainda não possui uma conta? <a href="pages/signup.html">Clique aqui</a></p>
             </div>
-            <button class="entrar">Entrar</button>
+            <button id="btn-entrar" class="entrar">Entrar</button>
         </div>
 
         <div class="second">
             <img src="../Imagens/PulseVita-para-Login.png" alt="PulseVita">
         </div>
     </div>
+    <script>
+    document.getElementById('btn-entrar').addEventListener('click', async function() {
+    const emailValue = document.getElementById('email-input').value;
+    const senhaValue = document.getElementById('senha-input').value;
+
+    try {
+        const resposta = await fetch('http://localhost:8080/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailValue, senha: senhaValue })
+        });
+
+        if (resposta.ok) {
+            const dados = await resposta.json();
+            localStorage.setItem('utilizador', JSON.stringify(dados));
+            window.location.href = 'pages/dashboard.html';
+        } else {
+            alert("Email ou senha inválidos!");
+        }
+    } catch (erro) {
+        alert("Não foi possível contactar o servidor.");
+    }
+});
+</script>
 </body>
+
 </html>

@@ -28,6 +28,7 @@
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
         </div>
+<<<<<<< HEAD
 
         <!-- Conteudo -->
         <section class="container">
@@ -129,4 +130,38 @@
             </div>
         </section>
     </body>
+=======
+        <div class="profile">
+            <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
+            <span id="nome-utilizador">...</span>
+            <img class="point" src="../../Imagens/PontoVerde.png" alt="">
+        </div>
+    </div>
+
+    <!-- Conteudo -->
+    <div class="esquerda">
+        <div class="menu">
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Marcações</a></li>
+                <li><a href="#">Resultados</a></li>
+                <li><a href="#">Contactar-nos</a></li>
+                <li><a href="#">Sincronizar</a></li>
+                <li><a href="#">Definições</a></li>
+                <a href="../index.html">Sair</a>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+    const dados = JSON.parse(localStorage.getItem('utilizador'));
+    if (!dados) {
+        window.location.href = '../index.html';
+    } else {
+        document.getElementById('nome-utilizador').textContent = dados.nomeCompleto;
+    }
+    </script>
+    
+</body>
+>>>>>>> BackendIndex
 </html>

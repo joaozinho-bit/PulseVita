@@ -18,15 +18,43 @@
         </div>
 
         <div class="second">
-            <h1>Bem Vindo(a)!</h1>
-            <input class="nome" type="text" placeholder="Nome e sobrenome">
-            <input class="email" type="text" placeholder="E-mail">
-            <input class="senha" type="password" placeholder="Senha">
+            <h1>Criar Conta</h1>
+            <input id="nome-input" class="nome" type="text" placeholder="Nome e sobrenome">
+            <input id="email-input" class="email" type="text" placeholder="E-mail">
+            <input id="senha-input" class="senha" type="password" placeholder="Senha">
             <div class="link-clique">
                 <p>Já possui uma conta? <a href="../index.html">Clique aqui</a></p>
             </div>
-            <button class="entrar">Entrar</button>
+            <button id="btn-registar" class="entrar">Criar Conta</button>
         </div>
     </div>
+    <script>
+        document.getElementById('btn-registar').addEventListener('click', async function() {
+            const nome = document.getElementById('nome-input').value;
+            const email = document.getElementById('email-input').value;
+            const senha = document.getElementById('senha-input').value;
+
+            if (!nome || !email || !senha) {
+                alert("Preenche todos os campos!");
+                return;
+            }
+
+            try {
+                const resposta = await fetch('http://localhost:8080/users/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nomeCompleto: nome, email: email, senha: senha })
+                });
+
+                if (resposta.ok) {
+                    window.location.href = '../index.html';
+                } else {
+                    alert("Este email já está registado!");
+                }
+            } catch (erro) {
+                alert("Não foi possível contactar o servidor.");
+            }
+        });
+    </script>
 </body>
 </html>

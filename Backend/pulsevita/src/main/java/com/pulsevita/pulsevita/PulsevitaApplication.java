@@ -8,6 +8,10 @@ public class PulsevitaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PulsevitaApplication.class, args);
+
+		
 	}
+
+
 
 }

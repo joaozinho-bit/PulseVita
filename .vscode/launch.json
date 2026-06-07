@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-PulsevitaApplication<pulsevita>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.pulsevita.pulsevita.PulsevitaApplication",
+            "projectName": "pulsevita",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
