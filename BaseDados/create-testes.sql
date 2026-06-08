@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS historico_utilizador;
+DROP TABLE IF EXISTS consulta;
+DROP TABLE IF EXISTS estado_consulta;
+DROP TABLE IF EXISTS doenca;
+DROP TABLE IF EXISTS utilizador_dispositivo;
+DROP TABLE IF EXISTS medico;
+DROP TABLE IF EXISTS utilizador;
+DROP TABLE IF EXISTS dispositivo;
+
 CREATE TABLE dispositivo (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100),
