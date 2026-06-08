@@ -1,21 +1,24 @@
 CREATE TABLE dispositivo (
-    id INTEGER PRIMARY KEY,
-    nome VARCHAR(100), -- "LinkVita"
-    tipo VARCHAR(100) -- Mais para escalabilidade do projeto, para agora só vai existir um, por exemplo "Temp&Bpm Monitor"
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    tipo VARCHAR(100)
 );
 
 CREATE TABLE utilizador (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     nome_completo VARCHAR(100),
     data_nascimento DATE,
     genero VARCHAR(1), -- M ou F
     username VARCHAR(100),
     email VARCHAR(100),
-    password VARCHAR(100)
+    password VARCHAR(100),
+    telefone VARCHAR(9),
+    foto_perfil VARCHAR(255),
+    data_registo TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE utilizador_dispositivo (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_utilizador INTEGER,
     id_dispositivo INTEGER,
     dispositivo_serial VARCHAR(100),
@@ -25,7 +28,7 @@ CREATE TABLE utilizador_dispositivo (
 );
 
 CREATE TABLE doenca (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_utilizador INTEGER,
     cronica BOOLEAN,
     nome VARCHAR(100),
@@ -34,7 +37,7 @@ CREATE TABLE doenca (
 );
 
 CREATE TABLE medico (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_cartao INTEGER,
     nome VARCHAR(100),
     especializacao VARCHAR(100)
@@ -52,7 +55,7 @@ INSERT INTO estado_consulta (estado, descricao) VALUES
     ('CONCLUIDA', 'Consulta concluída');
 
 CREATE TABLE consulta (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_medico INTEGER,
     id_utilizador INTEGER,
     estado VARCHAR(50) DEFAULT 'POR_CONFIRMAR',
@@ -65,7 +68,7 @@ CREATE TABLE consulta (
 );
 
 CREATE TABLE historico_utilizador (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     id_utilizador INTEGER,
     freq_cardiaca INTEGER,
     temperatura DECIMAL(4,2),
