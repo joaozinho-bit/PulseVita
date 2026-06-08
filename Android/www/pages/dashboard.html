@@ -90,7 +90,7 @@
                         <div class="lista-info">
                             <div class="dados">
                                 <img src="../../Imagens/user.png" alt="">
-                                <p id="nome-utilizador" class="nome">Pedro Silva</p>
+                                <p id="nome-info" class="nome">Pedro Silva</p>
                             </div>
                             <div class="dados">
                                 <img src="../../Imagens/icon-tel.png" alt="">
@@ -128,21 +128,22 @@
                 </div>
             </div>
         </section>       
-    </div>
+        </div>
 
 
-    <script>
-    const dados = JSON.parse(localStorage.getItem('utilizador'));
-    if (!dados) {
-        window.location.href = '../index.html';
-    } else {
-        document.getElementById('nome-utilizador').textContent = dados.nomeCompleto;
-        document.getElementById('email').textContent = dados.email;
-        document.getElementById('telefone').textContent = dados.telefone;
-        document.getElementById('num-utente').textContent = dados.numeroUtente; 
-    }
-    </script>
+        <script>
+        const dados = JSON.parse(localStorage.getItem('utilizador'));
+        if (!dados) {
+            window.location.href = '../index.html';
+        } else {
+            document.getElementById('nome-utilizador').textContent = dados.nomeCompleto;
+            document.getElementById('nome-info').textContent = dados.nomeCompleto;
+            document.getElementById('email').textContent = dados.email || 'N/A';
+            document.getElementById('telefone').textContent = dados.telefone ||'N/A';
+            document.getElementById('num-utente').textContent = dados.numeroUtente || 'N/A';
+        }
+        </script>
     
-</body>
+    </body>
 
 </html>
