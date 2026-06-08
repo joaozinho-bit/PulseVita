@@ -24,11 +24,10 @@
             </div>
             <div class="profile">
                 <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
-                <span>Pedro Silva</span>
+                <span id="nome-utilizador">Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
         </div>
-<<<<<<< HEAD
 
         <!-- Conteudo -->
         <section class="container">
@@ -91,19 +90,19 @@
                         <div class="lista-info">
                             <div class="dados">
                                 <img src="../../Imagens/user.png" alt="">
-                                <p class="nome">Pedro Silva</p>
+                                <p id="nome-utilizador" class="nome">Pedro Silva</p>
                             </div>
                             <div class="dados">
                                 <img src="../../Imagens/icon-tel.png" alt="">
-                                <p class="telefone">123 456 789</p>
+                                <p id="telefone" class="telefone">123 456 789</p>
                             </div>
                             <div class="dados">
                                 <img src="../../Imagens/icon-mail.png" alt="">
-                                <p class="email">pedro@gmail.com</p>
+                                <p id="email" class="email">pedro@gmail.com</p>
                             </div>
                             <div class="dados">
                                 <img src="../../Imagens/icon-cruz.png" alt="">
-                                <p class="num-utente">123456789</p>
+                                <p id="num-utente" class="num-utente">123456789</p>
                             </div>
                         </div>
                     </div>
@@ -128,30 +127,9 @@
                     </div>
                 </div>
             </div>
-        </section>
-    </body>
-=======
-        <div class="profile">
-            <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
-            <span id="nome-utilizador">...</span>
-            <img class="point" src="../../Imagens/PontoVerde.png" alt="">
-        </div>
+        </section>       
     </div>
 
-    <!-- Conteudo -->
-    <div class="esquerda">
-        <div class="menu">
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Marcações</a></li>
-                <li><a href="#">Resultados</a></li>
-                <li><a href="#">Contactar-nos</a></li>
-                <li><a href="#">Sincronizar</a></li>
-                <li><a href="#">Definições</a></li>
-                <a href="../index.html">Sair</a>
-            </ul>
-        </div>
-    </div>
 
     <script>
     const dados = JSON.parse(localStorage.getItem('utilizador'));
@@ -159,9 +137,12 @@
         window.location.href = '../index.html';
     } else {
         document.getElementById('nome-utilizador').textContent = dados.nomeCompleto;
+        document.getElementById('email').textContent = dados.email;
+        document.getElementById('telefone').textContent = dados.telefone;
+        document.getElementById('num-utente').textContent = dados.numeroUtente; 
     }
     </script>
     
 </body>
->>>>>>> BackendIndex
+
 </html>
