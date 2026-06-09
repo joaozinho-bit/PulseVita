@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="../css/marcarconsulta.css">
+        <link rel="stylesheet" href="../css/global.css">
+
+        <!-- Font montserrat -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        
+        <title>Dashboard do Utilizador</title>
+    </head>
+    <body>
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <img class="logo" src="../../Imagens/Logo.png" alt="PulseVita">
+            </div>
+            <div class="profile">
+                <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
+                <span id="nome-utilizador">Pedro Silva</span>
+                <img class="point" src="../../Imagens/PontoVerde.png" alt="">
+            </div>
+        </div>
+
+        <!-- Conteudo -->
+        <section class="container">
+            <div class="esquerda">
+                <div class="menu">
+                    <ul>
+                        <a href="dashboard.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-dashboard.png" alt="">
+                                <p>Dashboard</p>
+                            </li>
+                        </a>
+
+                        <a href="marcacoes.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-marcacoes.png" alt="">
+                                <p>Marcações</p>
+                            </li>
+                        </a>
+                        
+                        <a href="resultados.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-resultados.png" alt="">
+                                <p>Resultados</p>
+                            </li>
+                        </a>
+
+                        <a href="marcarconsulta.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-marcarconsulta.png" alt="">
+                                <p>Marcar Consulta</p>
+                            </li>
+                        </a>
+                        
+                        <a href="contactar.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-contactar.png" alt="">
+                                <p>Contactar-nos</p>
+                            </li>
+                        </a>
+                        <a href="sincronizar.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-sync.png" alt="">
+                                <p>Sincronizar</p>
+                            </li>
+                        </a>
+                        <a href="definicoes.html">
+                            <li class="menu-links">
+                                <img src="../../Imagens/icon-definicoes.png" alt="">
+                                <p>Definições</p>
+                            </li>
+                        </a>
+                    </ul>
+                    <div class="btn-sair">
+                        <a href="../index.html">        
+                            <p class="sair">Sair</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="direita">
+                <div class="conteudo">
+                    <div class="mc-wrap">
+                        <div class="mc-topbar">
+                            <div>
+                            <div class="mc-titulo">Marcar Consulta</div>
+                            <div class="mc-subtitulo">Seleciona a data e o horário pretendido</div>
+                            </div>
+                        </div>
+
+                        <div id="mc-form-area">
+                            <div class="mc-grid">
+
+                            <div class="mc-card">
+                                <div class="mc-card-label">
+                                <i class="ti ti-calendar"></i> Data
+                                </div>
+                                <div class="mc-sel-group">
+                                <div class="mc-sel-wrap">
+                                    <span>Dia</span>
+                                    <select id="mc-dia"><option value="">--</option></select>
+                                </div>
+                                <div class="mc-sel-wrap">
+                                    <span>Mês</span>
+                                    <select id="mc-mes">
+                                    <option value="">--</option>
+                                    <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+                                    <option value="3">Março</option><option value="4">Abril</option>
+                                    <option value="5">Maio</option><option value="6">Junho</option>
+                                    <option value="7">Julho</option><option value="8">Agosto</option>
+                                    <option value="9">Setembro</option><option value="10">Outubro</option>
+                                    <option value="11">Novembro</option><option value="12">Dezembro</option>
+                                    </select>
+                                </div>
+                                <div class="mc-sel-wrap">
+                                    <span>Ano</span>
+                                    <select id="mc-ano"><option value="">--</option></select>
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="mc-card">
+                                <div class="mc-card-label">
+                                <i class="ti ti-clock"></i> Horário
+                                </div>
+                                <div class="mc-hours" id="mc-horas">
+                                <button class="mc-h" data-h="08:00">08:00</button>
+                                <button class="mc-h" data-h="08:30">08:30</button>
+                                <button class="mc-h" data-h="09:00">09:00</button>
+                                <button class="mc-h" data-h="09:30">09:30</button>
+                                <button class="mc-h" data-h="10:00">10:00</button>
+                                <button class="mc-h" data-h="10:30">10:30</button>
+                                <button class="mc-h" data-h="11:00">11:00</button>
+                                <button class="mc-h" data-h="11:30">11:30</button>
+                                <button class="mc-h" data-h="14:00">14:00</button>
+                                <button class="mc-h" data-h="14:30">14:30</button>
+                                <button class="mc-h" data-h="15:00">15:00</button>
+                                <button class="mc-h" data-h="15:30">15:30</button>
+                                <button class="mc-h" data-h="16:00">16:00</button>
+                                <button class="mc-h" data-h="16:30">16:30</button>
+                                <button class="mc-h" data-h="17:00">17:00</button>
+                                <button class="mc-h" data-h="17:30">17:30</button>
+                                <button class="mc-h" data-h="18:00">18:00</button>
+                                <button class="mc-h" data-h="18:30">18:30</button>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="mc-bottom">
+                            <div class="mc-preview" id="mc-preview">Seleciona data e horário para confirmar</div>
+                            <button class="mc-btn-ok" id="mc-btn" disabled>Confirmar</button>
+                            </div>
+                        </div>
+
+                        <div class="mc-success" id="mc-success">
+                            <div class="mc-s-icon">✓</div>
+                            <h2>Consulta marcada!</h2>
+                            <p id="mc-s-text"></p>
+                            <button class="mc-btn-nova" onclick="mcReset()">Nova marcação</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>       
+        </div>
+        <script>
+            const dEl=document.getElementById('mc-dia'),mEl=document.getElementById('mc-mes'),aEl=document.getElementById('mc-ano');
+            const btn=document.getElementById('mc-btn'),prev=document.getElementById('mc-preview');
+            const form=document.getElementById('mc-form'),succ=document.getElementById('mc-success');
+            const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            let hora='';
+
+            const hoje=new Date();
+            for(let a=hoje.getFullYear();a<=hoje.getFullYear()+2;a++){const o=document.createElement('option');o.value=a;o.textContent=a;aEl.appendChild(o);}
+
+            function fillDias(){
+                const m=parseInt(mEl.value)||1,a=parseInt(aEl.value)||hoje.getFullYear();
+                const max=new Date(a,m,0).getDate(),cur=parseInt(dEl.value);
+                dEl.innerHTML='<option value="">--</option>';
+                for(let d=1;d<=max;d++){const o=document.createElement('option');o.value=d;o.textContent=String(d).padStart(2,'0');dEl.appendChild(o);}
+                if(cur&&cur<=max)dEl.value=cur;
+            }
+            mEl.addEventListener('change',fillDias);aEl.addEventListener('change',fillDias);fillDias();
+
+            function update(){
+                const d=dEl.value,m=mEl.value,a=aEl.value,ready=d&&m&&a&&hora;
+                if(ready){
+                prev.innerHTML='Consulta para <strong>'+String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+'</strong> às <strong>'+hora+'h</strong>.';
+                } else {
+                const pts=[];if(!d||!m||!a)pts.push('uma data');if(!hora)pts.push('um horário');
+                prev.innerHTML='Falta selecionar '+pts.join(' e ')+'.';
+                }
+                btn.disabled=!ready;
+            }
+            dEl.addEventListener('change',update);mEl.addEventListener('change',update);aEl.addEventListener('change',update);
+
+            document.querySelectorAll('.mc-h').forEach(b=>{
+                b.addEventListener('click',()=>{
+                document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('sel'));
+                b.classList.add('sel');hora=b.dataset.h;update();
+                });
+            });
+
+            btn.addEventListener('click',()=>{
+                const d=dEl.value,m=mEl.value,a=aEl.value;
+                document.getElementById('mc-stext').textContent=String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+' às '+hora+'h.';
+                form.style.display='none';succ.classList.add('vis');
+            });
+
+            function resetMC(){
+                dEl.value='';mEl.value='';aEl.value='';hora='';
+                document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('sel'));
+                prev.innerHTML='Nenhuma data ou hora selecionada ainda.';
+                btn.disabled=true;form.style.display='';succ.classList.remove('vis');fillDias();
+            }
+        </script>
+    </body>
+</html>
