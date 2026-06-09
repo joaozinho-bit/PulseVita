@@ -1,0 +1,197 @@
+/* Tabler icons — adiciona no <head> do teu HTML */
+/* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"> */
+
+.mc-wrap {
+  padding: 2rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+.mc-topbar {
+  margin-bottom: 1.8rem;
+}
+.mc-titulo {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.mc-subtitulo {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.8rem;
+  margin-top: 3px;
+}
+#mc-form-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.mc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  flex: 1;
+  margin-bottom: 16px;
+}
+.mc-card {
+  background: rgba(255,255,255,0.11);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 18px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.mc-card-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.mc-card-label i { font-size: 14px; }
+.mc-sel-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.mc-sel-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.mc-sel-wrap span {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+}
+.mc-sel-wrap select {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 10px 34px 10px 13px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  width: 100%;
+  transition: border-color .18s, background .18s;
+}
+.mc-sel-wrap select:focus {
+  outline: none;
+  border-color: rgba(255,255,255,0.55);
+  background-color: rgba(255,255,255,0.22);
+}
+.mc-sel-wrap select option { background: #0f7a5e; color: #fff; }
+.mc-hours {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  flex: 1;
+  align-content: start;
+}
+.mc-h {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 10px;
+  color: rgba(255,255,255,0.7);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 9px 0;
+  cursor: pointer;
+  text-align: center;
+  transition: all .15s;
+}
+.mc-h:hover { background: rgba(255,255,255,0.2); color: #fff; border-color: rgba(255,255,255,0.38); }
+.mc-h.active { background: #fff; color: #138C6E; border-color: #fff; }
+.mc-bottom {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.mc-preview {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 12px;
+  padding: 11px 16px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all .2s;
+}
+.mc-preview.ready { color: #fff; background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+.mc-preview strong { font-weight: 700; }
+.mc-btn-ok {
+  background: #34C759;
+  color: #205236;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity .2s, transform .15s;
+}
+.mc-btn-ok:hover:not(:disabled) { opacity: .88; }
+.mc-btn-ok:active:not(:disabled) { transform: scale(.97); }
+.mc-btn-ok:disabled { opacity: .3; cursor: not-allowed; }
+.mc-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 14px;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+.mc-success.show { display: flex; }
+.mc-s-icon {
+  width: 68px; height: 68px;
+  background: #34C759;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; color: #205236;
+}
+.mc-success h2 { color: #fff; font-size: 1.2rem; font-weight: 700; }
+.mc-success p { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+.mc-btn-nova {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 11px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 10px 22px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+/* Responsivo — telemovel */
+@media (max-width: 600px) {
+  .mc-wrap { padding: 1.4rem 1.2rem 1.2rem; }
+  .mc-titulo { font-size: 1.15rem; }
+  .mc-grid { grid-template-columns: 1fr; gap: 12px; }
+  .mc-hours { grid-template-columns: repeat(4, 1fr); }
+  .mc-bottom { flex-direction: column; align-items: stretch; }
+  .mc-preview { white-space: normal; }
+}
