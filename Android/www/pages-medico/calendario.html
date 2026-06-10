@@ -1,0 +1,73 @@
+<!-- ============================================================
+     PulseVita — Calendário Semanal
+     Ficheiro parcial: carregado dentro de div#conteudo
+     ============================================================ -->
+
+<link rel="stylesheet" href="../css-medicos/calendario.css">
+
+<div class="cal-page">
+
+  <!-- Cabeçalho da página -->
+  <div class="cal-topbar">
+    <div class="cal-title-block">
+      <h1 class="cal-title">Calendário</h1>
+      <span class="cal-week-label" id="semanaLabel"></span>
+    </div>
+    <div class="cal-actions">
+      <button class="cal-btn-ghost" id="btnHoje" title="Ir para a semana actual">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Hoje
+      </button>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" id="btnAnterior" title="Semana anterior">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="cal-nav-btn" id="btnProxima" title="Próxima semana">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas rápidas -->
+  <div class="cal-stats">
+    <div class="stat-card">
+      <div class="stat-icon stat-icon--green">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Consultas esta semana</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon stat-icon--blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Próxima consulta</div>
+        <div class="stat-value" id="statProxima">—</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon stat-icon--teal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Pacientes hoje</div>
+        <div class="stat-value" id="statHoje">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grade do calendário -->
+  <div class="cal-grid-wrap">
+    <div class="cal-grid" id="calGrid">
+      <div class="cal-grid-header" id="calHeader"></div>
+      <div class="cal-grid-body" id="calBody"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- <script src="../js/calendarioMedico.js"></script> -->
