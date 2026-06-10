@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
+        <!-- CSS -->
+        <link rel="stylesheet" href="../css-medicos/base.css">
+        <title>Gestao dos pacientes</title>
+    </head>
+    <body>
+        <aside>
+            <!-- Logo -->
+            <img class="logo" src="../../Imagens/Logo-Clara.png" alt="logo">
+
+            <!-- Links -->
+            <div class="links">
+                <button onclick="abrirLinks('calendario')">
+                    <img src="../../Imagens/icon-calendario.png" alt="">
+                    <p>Calendario</p>
+                </button>
+                <button onclick="abrirLinks('marcacoes')">
+                    <img src="../../Imagens/icon-marcacoesMedicos.png" alt="">
+                    <p>Marcacoes</p>
+                </button>
+                <button onclick="abrirLinks('pacientes')">
+                    <img src="../../Imagens/icon-pacientes.png" alt="">
+                    <p>Pacientes</p>
+                </button>
+            </div>
+            
+            <div class="group">
+                <!-- Logout -->
+                <div class="logout">
+                    <a href="">Sair</a>
+                </div>
+
+                <!-- Linha separadora -->
+                <div class="linha-separadora"></div>
+
+                <!-- Perfil -->
+                <div class="profile">
+                    <img class="img-user" src="../../Imagens/user-claro.png" alt="Imagem de perfil">
+                    <span>Pedro Silva</span>
+                    <img class="point" src="../../Imagens/PontoVerde.png" alt="">
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            <div id="conteudo" class="conteudo">
+                <!-- O conteúdo das páginas será carregado aqui -->
+            </div>
+        </main>
+    </body>
+    <script src="../js/appMedicos.js"></script>
+    <script src="../js/calendarioMedico.js"></script>
+</html>
