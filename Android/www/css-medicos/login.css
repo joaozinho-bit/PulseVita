@@ -1,0 +1,99 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: linear-gradient(90deg, #205236, #1B7B33);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header{
+  padding: 30px;
+}
+
+header img {
+  width: 250px;
+}
+
+main{
+  padding: 50px 0;
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cartao{
+  display: flex;
+  flex-direction: column;
+}
+
+.cartao h1{
+  color: #b6e5e5;
+  font-size: 3em;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.cartao p{
+  color: #b6e5e5;
+  font-size: 1em;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin-bottom:20px;
+}
+
+.cartao p img{
+  width: 10px;
+}
+
+.cartao .card{
+  width: 400px;
+}
+
+.ou{
+  color: #34C759;
+  font-size: 1.5em;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.ou .linha{
+  width: 2px;
+  height: 150px;
+  background-color: #34C759;
+}
+
+.input{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.input .num-medico, .senha{
+  color: #B6E5E5;
+  font-size: 1.3em;
+}
+
+.input input{
+  width: 350px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #B6E5E5;
+  color: #205236;
+}
+
+
+
