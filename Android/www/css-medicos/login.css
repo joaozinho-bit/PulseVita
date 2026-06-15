@@ -95,5 +95,15 @@ main{
   color: #205236;
 }
 
+.input button{
+  width: 350px;
+  padding: 10px;
+  background-color: #138C6E;
+  color: #b6e5e5;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1em;
+}
+
 
 
