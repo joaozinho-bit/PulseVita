@@ -42,7 +42,7 @@ public class UtilizadorController {
 public ResponseEntity<String> register(@RequestBody RegisterRequest dados) {
     boolean sucesso = service.registarUtilizador(dados.nomeCompleto, dados.email, dados.senha);
     if (sucesso) {
-        return ResponseEntity.ok("Conta criada com sucesso!");
+        return ResponseEntity.ok("Conta criada");
     } else {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já existe.");
     }
