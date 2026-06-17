@@ -15,6 +15,7 @@ CREATE TABLE dispositivo (
 
 CREATE TABLE utilizador (
     id SERIAL PRIMARY KEY,
+    n_utente VARCHAR(20) UNIQUE,
     nome_completo VARCHAR(100),
     data_nascimento DATE,
     genero VARCHAR(1), -- M ou F
