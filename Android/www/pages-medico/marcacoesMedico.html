@@ -1,0 +1,114 @@
+<link rel="stylesheet" href="../css-medicos/marcacoesMedico.css">
+<div class="marcacoes-container">
+
+    <section class="marcacoes-calendario-card">
+
+        <div class="marcacoes-topo">
+            <button id="btnMesAnteriorMarcacoes" class="btn-seta-marcacoes" type="button">
+                ←
+            </button>
+
+            <button id="tituloMesMarcacoes" class="titulo-mes-marcacoes" type="button">
+                Maio - 2026
+            </button>
+
+            <button id="btnMesSeguinteMarcacoes" class="btn-seta-marcacoes" type="button">
+                →
+            </button>
+        </div>
+
+        <div class="dias-semana-marcacoes">
+            <span>dom</span>
+            <span>seg</span>
+            <span>ter</span>
+            <span>qua</span>
+            <span>qui</span>
+            <span>sex</span>
+            <span>sáb</span>
+        </div>
+
+        <div id="calendarioMarcacoes" class="calendario-marcacoes"></div>
+
+        <div class="legenda-marcacoes">
+            <div>
+                <span class="bolinha-legenda pendente"></span>
+                <p>Pendente</p>
+            </div>
+
+            <div>
+                <span class="bolinha-legenda recusado"></span>
+                <p>Recusado</p>
+            </div>
+
+            <div>
+                <span class="bolinha-legenda aprovado"></span>
+                <p>Aprovado</p>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="area-inferior-marcacoes">
+
+        <div class="card-marcacoes card-horarios-marcacoes">
+
+            <div class="layout-horarios-marcacoes">
+
+                <div class="coluna-horas-marcacoes">
+                    <span>09:00</span>
+                    <span>10:00</span>
+                    <span>11:00</span>
+                    <span>12:00</span>
+                    <span>13:00</span>
+                    <span>14:00</span>
+                    <span>15:00</span>
+                    <span>16:00</span>
+                </div>
+
+                <div id="listaHorariosMarcacoes" class="lista-horarios-marcacoes">
+                    <!-- Criado pelo JavaScript -->
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-marcacoes card-pacientes-marcacoes">
+
+            <h3 id="tituloPacientesMarcacoes">
+                Pacientes
+            </h3>
+
+            <div id="listaPacientesMarcacoes" class="lista-pacientes-marcacoes">
+                <p class="mensagem-vazia-marcacoes">
+                    Seleciona um dia e um horário.
+                </p>
+            </div>
+
+            <div class="aviso-marcacoes">
+                <p>
+                    Apenas um paciente pode ser aprovado por horário.
+                    Ao aceitar um pedido, os outros pedidos desse mesmo horário serão recusados automaticamente.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="card-marcacoes card-dados-marcacoes">
+
+            <h3>Dados do paciente</h3>
+
+            <div id="dadosPacienteMarcacoes" class="dados-paciente-marcacoes">
+                <p class="mensagem-vazia-marcacoes">
+                    Seleciona um paciente para veres os dados.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
