@@ -97,28 +97,28 @@
                         <div class="lista-info">
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/user.png" alt="">
-                                <p class="nome">Pedro Silva</p>
+                                <p class="nome" id="nome">Pedro Silva</p>
                                 <button id="edit-nome" class="edit-btn">
                                     <img src="../../Imagens/icon-lapis.png" alt="">
                                 </button>
                             </div>
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-tel.png" alt="">
-                                <p class="telefone">123 456 789</p>
+                                <p class="telefone" id="telefone">123 456 789</p>
                                 <button id="edit-telefone" class="edit-btn">
                                     <img src="../../Imagens/icon-lapis.png" alt="">
                                 </button>
                             </div>
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-mail.png" alt="">
-                                <p class="email">pedro@gmail.com</p>
+                                <p class="email" id="email">pedro@gmail.com</p>
                                 <button id="edit-email" class="edit-btn">
                                     <img src="../../Imagens/icon-lapis.png" alt="">
                                 </button>
                             </div>
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-cruz.png" alt="">
-                                <p class="num-utente">123456789</p>
+                                <p class="num-utente" id="num-utente">123456789</p>
                                 <button id="edit-num-utente" class="edit-btn">
                                     <img src="../../Imagens/icon-lapis.png" alt="">
                                 </button>
@@ -128,5 +128,69 @@
                 </div>
             </div>
         </section>
+        <script>
+    const user = JSON.parse(localStorage.getItem('utilizador'));
+    if (!user) window.location.href = '../index.html';
+
+    const campos = [
+        { btnId: 'edit-nome',       elemId: 'nome',       campo: 'nomeCompleto' },
+        { btnId: 'edit-telefone',   elemId: 'telefone',   campo: 'telefone' },
+        { btnId: 'edit-email',      elemId: 'email',       campo: 'email' },
+        { btnId: 'edit-num-utente', elemId: 'num-utente', campo: 'numUtente' }
+    ];
+
+    // Preenche os dados
+    campos.forEach(({ elemId, campo }) => {
+        document.getElementById(elemId).textContent = user[campo] || 'N/A';
+    });
+    document.querySelector('.profile span').textContent = user.nomeCompleto || 'Utilizador';
+
+    function ativarEdicao({ btnId, elemId, campo }) {
+        document.getElementById(btnId).addEventListener('click', () => {
+            const p = document.getElementById(elemId);
+            const input = Object.assign(document.createElement('input'), {
+                type: 'text', value: p.textContent === 'N/A' ? '' : p.textContent, className: 'input-inline'
+            });
+            const btnGuardar = Object.assign(document.createElement('button'), {
+                textContent: '✓', className: 'btn-guardar-inline'
+            });
+
+            p.replaceWith(input);
+            document.getElementById(btnId).replaceWith(btnGuardar);
+            input.focus();
+
+            async function guardar() {
+                const res = await fetch(`http://localhost:8080/users/${user.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ [campo]: input.value.trim() })
+                });
+                if (!res.ok) return alert('Erro ao guardar.');
+
+                Object.assign(user, await res.json());
+                localStorage.setItem('utilizador', JSON.stringify(user));
+
+                const novop = Object.assign(document.createElement('p'), {
+                    id: elemId, textContent: user[campo] || 'N/A'
+                });
+                const novoBtn = document.createElement('button');
+                novoBtn.id = btnId; novoBtn.className = 'edit-btn';
+                novoBtn.innerHTML = '<img src="../../Imagens/icon-lapis.png" alt="">';
+
+                input.replaceWith(novop);
+                btnGuardar.replaceWith(novoBtn);
+                ativarEdicao({ btnId, elemId, campo });
+
+                if (campo === 'nomeCompleto')
+                    document.querySelector('.profile span').textContent = user[campo];
+            }
+
+            btnGuardar.addEventListener('click', guardar);
+            input.addEventListener('keydown', e => e.key === 'Enter' && guardar());
+        });
+    }
+
+    campos.forEach(ativarEdicao);
+</script>
     </body>
 </html>

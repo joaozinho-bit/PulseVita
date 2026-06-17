@@ -17,10 +17,15 @@ public class Utilizador {
 
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
+    
+
+    @Column(name = "num_utente")
+    private String numUtente;
 
     private String genero;
     private String username;
     private String email;
+    private String telefone;
     private String password;
 
     // Gets e Sets
@@ -78,5 +83,17 @@ public class Utilizador {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getTelefone() {
+        return telefone;
+    }
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+    public String getNumUtente() {
+        return numUtente;
+    }
+    public void setNumUtente(String numUtente) {
+        this.numUtente = numUtente;
     }
 }
