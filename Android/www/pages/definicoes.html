@@ -90,6 +90,7 @@
             </div>
             <div class="direita">
                 <div class="conteudo">
+                    <h1>Definições</h1>
                     <div class="info-pessoal">
                         <div class="foto">
                             <img src="../../Imagens/user.png" alt="">
@@ -123,12 +124,42 @@
                                     <img src="../../Imagens/icon-lapis.png" alt="">
                                 </button>
                             </div>
+                            <div class="dados">
+                                <img class="icon" src="../../Imagens/icon-genero.png" alt="">
+
+                                <select class="edit-select genero" id="genero" disabled>
+                                    <option value="Masculino" selected>Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Prefiro não dizer">Prefiro não dizer</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+
+                                <button id="edit-genero" class="edit-btn" type="button">
+                                    <img src="../../Imagens/icon-lapis.png" alt="">
+                                </button>
+                            </div>
+                            <div class="dados">
+                                <img class="icon" src="../../Imagens/icon-cruz.png" alt="">
+                                <input class="edit-date" id="data-nasc" type="date">
+                                <button id="edit-data-nasc" class="edit-btn">
+                                    <img src="../../Imagens/icon-lapis.png" alt="">
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <script>
+            // Ativa edição do género
+            const btnGenero = document.getElementById("edit-genero");
+            const selectGenero = document.getElementById("genero");
+
+            btnGenero.addEventListener("click", function () {
+                selectGenero.disabled = false;
+                selectGenero.focus();
+            });
+            
             const btnGuardar = Object.assign(document.createElement('button'), {
                 className: 'btn-guardar-inline'
             });
