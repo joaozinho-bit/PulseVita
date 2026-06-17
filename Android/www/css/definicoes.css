@@ -1,7 +1,13 @@
+.conteudo h1{
+    color: #ffffff;
+    font-size: 2rem;
+    padding: 40px 0 0  70px;
+}
+
 .conteudo .info-pessoal{
     padding: 40px 70px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
     justify-content: center;
 }
@@ -46,6 +52,104 @@
 
 .dados .edit-btn img{
     width: 15px;
+}
+
+.info-pessoal .lista-info .dados .edit-select {
+    border-radius: 12px;
+    border: none;
+    background-color: #20523600;
+
+    color: #ffffff;
+    font-size: 15px;
+    font-family: inherit;
+
+    padding: 5px;
+    outline: none;
+
+    /* min-width: 170px;
+    height: 40px; */
+
+    cursor: pointer;
+    transition: 0.3s ease;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+}
+
+/* Quando estiver bloqueado */
+.info-pessoal .lista-info .dados .edit-select:disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+/* Quando clicar/editar */
+.info-pessoal .lista-info .dados .edit-select:focus {
+    background: rgba(255, 255, 255, 0.158);
+}
+
+/* Opções dentro do dropdown */
+.info-pessoal .lista-info .dados .edit-select option {
+    background-color: #205236;
+    color: #ffffff;
+}
+
+.info-pessoal .lista-info .dados .edit-date {
+    background: none;
+    border-radius: 12px;
+    border: none;
+
+    color: #ffffff;
+    font-size: 15px;
+    font-family: inherit;
+
+    padding: 8px 12px;
+    outline: none;
+
+    min-width: 160px;
+    height: 38px;
+
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+/* Quando clicas no input */
+.info-pessoal .lista-info .dados .edit-date:focus {
+    background: rgba(255, 255, 255, 0.034);
+}
+
+/* Ícone do calendário no Chrome/Edge */
+.info-pessoal .lista-info .dados .edit-date::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.3s ease;
+}
+
+.info-pessoal .lista-info .dados .edit-date::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Remove estilos automáticos em alguns browsers */
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit {
+    color: #ffffff;
+}
+
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-fields-wrapper {
+    color: #ffffff;
+}
+
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-text {
+    color: #B6E5E5;
+    padding: 0 2px;
+}
+
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-day-field,
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-month-field,
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-year-field {
+    color: #ffffff;
 }
 
 /* Inputs apos clicar em editar */
