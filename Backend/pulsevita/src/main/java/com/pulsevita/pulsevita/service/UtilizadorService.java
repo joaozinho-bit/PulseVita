@@ -37,12 +37,12 @@ public class UtilizadorService {
     return repository.findById(id);
 }
 
-public Utilizador atualizarUtilizador(Long id, String nome, String telefone, String email, String numUtente) {
+public Utilizador atualizarUtilizador(Long id, String nome, String telefone, String email, String n_utente) {
     return repository.findById(id).map(u -> {
         if (nome != null) u.setNomeCompleto(nome);
         if (telefone != null) u.setTelefone(telefone);
         if (email != null) u.setEmail(email);
-        if (numUtente != null) u.setNumUtente(numUtente);
+        if (n_utente != null) u.setN_utente(n_utente);
         return repository.save(u);
     }).orElse(null);
 }

@@ -59,12 +59,12 @@ static class UpdateRequest {
     public String nomeCompleto;
     public String telefone;
     public String email;
-    public String numUtente;
+    public String n_utente;
 }
 
 @PutMapping("/{id}")
 public ResponseEntity<?> updateUtilizador(@PathVariable Long id, @RequestBody UpdateRequest dados) {
-    Utilizador atualizado = service.atualizarUtilizador(id, dados.nomeCompleto, dados.telefone, dados.email, dados.numUtente);
+    Utilizador atualizado = service.atualizarUtilizador(id, dados.nomeCompleto, dados.telefone, dados.email, dados.n_utente);
     if (atualizado != null) {
         return ResponseEntity.ok(atualizado);
     }
