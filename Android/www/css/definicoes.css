@@ -47,3 +47,52 @@
 .dados .edit-btn img{
     width: 15px;
 }
+
+/* Inputs apos clicar em editar */
+.input-inline {
+    display: inline-flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1.5px solid #138C6E;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #205236;
+    outline: none;
+    width: 220px;
+    box-shadow: 0 0 0 3px rgba(19, 140, 110, 0.12);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-inline:focus {
+    border-color: #34C759;
+    box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.18);
+}
+
+.btn-guardar-inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #138C6E;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    margin-left: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(19, 140, 110, 0.25);
+    transition: background 0.2s, transform 0.1s;
+    vertical-align: middle;
+}
+
+.btn-guardar-inline:hover {
+    background: #34C759;
+    transform: scale(1.08);
+}
+
+.btn-guardar-inline:active {
+    transform: scale(0.96);
+}
