@@ -19,8 +19,8 @@ public class Utilizador {
     private LocalDate dataNascimento;
     
 
-    @Column(name = "num_utente")
-    private String numUtente;
+    @Column(name = "n_utente")
+    private String n_utente;
 
     private String genero;
     private String username;
@@ -90,10 +90,10 @@ public class Utilizador {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-    public String getNumUtente() {
-        return numUtente;
+    public String getN_utente() {
+        return n_utente;
     }
-    public void setNumUtente(String numUtente) {
-        this.numUtente = numUtente;
+    public void setN_utente(String n_utente) {
+        this.n_utente = n_utente;
     }
 }
