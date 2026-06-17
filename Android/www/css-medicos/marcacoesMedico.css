@@ -1,0 +1,555 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+/* ========================= */
+/* CONTAINER PRINCIPAL */
+/* ========================= */
+
+.marcacoes-container {
+    width: 100%;
+    min-height: 100%;
+    padding: 32px 36px;
+    background-color: #b6e5e5;
+    font-family: "Montserrat", sans-serif;
+    color: #205236;
+    box-sizing: border-box;
+}
+
+/* ========================= */
+/* CALENDÁRIO */
+/* ========================= */
+
+.marcacoes-calendario-card {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 24px 36px 16px;
+    border: 1px solid rgba(32, 82, 54, 0.15);
+    box-shadow: 0 2px 12px rgba(32, 82, 54, 0.08);
+    box-sizing: border-box;
+}
+
+.marcacoes-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.btn-seta-marcacoes {
+    border: none;
+    background: transparent;
+    color: #205236;
+    font-size: 36px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.15s ease;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.btn-seta-marcacoes:hover {
+    transform: scale(1.15);
+    color: #138C6E;
+}
+
+.titulo-mes-marcacoes {
+    border: none;
+    background: transparent;
+    color: #205236;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    font-family: "Montserrat", sans-serif;
+    transition: color 0.15s ease;
+}
+
+.titulo-mes-marcacoes:hover {
+    color: #138C6E;
+}
+
+.dias-semana-marcacoes {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    color: #6a9e7f;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(32, 82, 54, 0.1);
+}
+
+.calendario-marcacoes {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid rgba(32, 82, 54, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dia-marcacoes {
+    height: 36px;
+    border: none;
+    border-right: 1px solid rgba(32, 82, 54, 0.12);
+    border-bottom: 1px solid rgba(32, 82, 54, 0.12);
+    background-color: #ffffff;
+    color: #3a6e4e;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.dia-marcacoes:nth-child(7n) {
+    border-right: none;
+}
+
+.dia-marcacoes:nth-child(n+29) {
+    border-bottom: none;
+}
+
+.dia-marcacoes:hover {
+    background-color: #e8f8ed;
+}
+
+.dia-marcacoes.dia-selecionado-marcacoes {
+    background-color: #d4f5dc;
+    outline: 2px solid #34c759;
+    outline-offset: -1px;
+    z-index: 2;
+}
+
+.dia-outro-mes-marcacoes {
+    background-color: #f8faf9;
+    color: #a0bba9;
+}
+
+.dia-outro-mes-marcacoes:hover {
+    background-color: #f0f7f2;
+}
+
+.numero-dia-marcacoes {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.indicador-dia-marcacoes {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 20px;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+.pendente {
+    background-color: #f5c800;
+}
+
+.recusado {
+    background-color: #dc3535;
+}
+
+.aprovado {
+    background-color: #34c759;
+}
+
+.legenda-marcacoes {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(32, 82, 54, 0.08);
+}
+
+.legenda-marcacoes div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legenda-marcacoes p {
+    margin: 0;
+    color: #5a7d68;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.bolinha-legenda {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ========================= */
+/* ÁREA INFERIOR */
+/* ========================= */
+
+.area-inferior-marcacoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.card-marcacoes {
+    min-height: 260px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(32, 82, 54, 0.15);
+    box-shadow: 0 2px 12px rgba(32, 82, 54, 0.07);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.card-marcacoes h3 {
+    margin: 0 0 16px;
+    color: #205236;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.mensagem-vazia-marcacoes {
+    margin-top: 50px;
+    color: #8aaa96;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 0 12px;
+}
+
+/* ========================= */
+/* HORÁRIOS */
+/* ========================= */
+
+.card-horarios-marcacoes {
+    padding: 0;
+    overflow: hidden;
+}
+
+.layout-horarios-marcacoes {
+    display: grid;
+    grid-template-columns: 58px 1fr;
+    height: 100%;
+    min-height: 260px;
+}
+
+.coluna-horas-marcacoes {
+    border-right: 1px solid rgba(32, 82, 54, 0.12);
+    background-color: #f5fdf8;
+}
+
+.coluna-horas-marcacoes span {
+    height: 32.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3aab6a;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+    border-bottom: 1px solid rgba(32, 82, 54, 0.07);
+}
+
+.coluna-horas-marcacoes span:last-child {
+    border-bottom: none;
+}
+
+.lista-horarios-marcacoes {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.horario-marcacoes {
+    width: 100%;
+    height: 32.5px;
+    border: none;
+    border-bottom: 1px solid rgba(32, 82, 54, 0.07);
+    background-color: transparent;
+    color: #205236;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    text-align: center;
+    letter-spacing: 0.2px;
+}
+
+.horario-marcacoes:last-child {
+    border-bottom: none;
+}
+
+.horario-marcacoes:hover {
+    background-color: #e8f8ed;
+}
+
+.horario-pendente-marcacoes {
+    background-color: #fff3a3;
+    color: #7a6200;
+}
+
+.horario-pendente-marcacoes:hover {
+    background-color: #ffed80;
+}
+
+.horario-aprovado-marcacoes {
+    background-color: #d0f5d9;
+    color: #1a6e30;
+}
+
+.horario-aprovado-marcacoes:hover {
+    background-color: #baefca;
+}
+
+.horario-recusado-marcacoes {
+    background-color: #fde0e0;
+    color: #b42c2c;
+}
+
+.horario-recusado-marcacoes:hover {
+    background-color: #facccc;
+}
+
+.horario-selecionado-marcacoes {
+    outline: 2px solid #205236;
+    outline-offset: -2px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ========================= */
+/* PACIENTES */
+/* ========================= */
+
+.lista-pacientes-marcacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.paciente-item-marcacoes {
+    width: 100%;
+    border: 1px solid rgba(52, 199, 89, 0.5);
+    background-color: #eef9f2;
+    border-radius: 6px;
+    padding: 9px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    font-family: "Montserrat", sans-serif;
+    box-sizing: border-box;
+}
+
+.paciente-item-marcacoes:hover {
+    transform: translateX(3px);
+    background-color: #e2f6ea;
+    box-shadow: 0 2px 8px rgba(32, 82, 54, 0.1);
+}
+
+.paciente-selecionado-marcacoes {
+    outline: 2px solid #205236;
+    outline-offset: -1px;
+    background-color: #e0f5e9;
+}
+
+.info-paciente-lista-marcacoes h4 {
+    margin: 0 0 3px;
+    color: #205236;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.info-paciente-lista-marcacoes p {
+    margin: 0;
+    color: #6a8f77;
+    font-size: 9px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.estado-paciente-marcacoes {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.estado-pendente-marcacoes {
+    color: #9f8a00;
+}
+
+.estado-aprovado-marcacoes {
+    color: #1a7834;
+}
+
+.estado-recusado-marcacoes {
+    color: #c93333;
+}
+
+.seta-paciente-marcacoes {
+    font-size: 20px;
+    color: #4a8a62;
+    margin-left: 6px;
+    line-height: 1;
+}
+
+.aviso-marcacoes {
+    margin-top: 14px;
+    background-color: #1e4f35;
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+.aviso-marcacoes p {
+    margin: 0;
+    font-size: 9px;
+    line-height: 1.6;
+    font-weight: 500;
+    opacity: 0.92;
+}
+
+/* ========================= */
+/* DADOS DO PACIENTE */
+/* ========================= */
+
+.perfil-topo-marcacoes {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.avatar-marcacoes {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d8f7f7, #b6e5e5);
+    border: 2px solid #8ce6e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(32, 82, 54, 0.12);
+}
+
+.perfil-topo-marcacoes h4 {
+    margin: 0 0 4px;
+    color: #205236;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.perfil-topo-marcacoes p {
+    margin: 2px 0;
+    color: #5f836c;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.linha-dados-marcacoes {
+    height: 1px;
+    background: linear-gradient(to right, #34c759, rgba(52, 199, 89, 0.1));
+    margin: 14px 0;
+}
+
+.detalhes-marcacoes p {
+    margin: 6px 0;
+    color: #4a6e58;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.detalhes-marcacoes strong {
+    color: #205236;
+    font-weight: 700;
+}
+
+.acoes-marcacoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-acao-marcacoes {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    letter-spacing: 0.3px;
+}
+
+.btn-acao-marcacoes:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.05);
+}
+
+.btn-aceitar-marcacoes {
+    background-color: #208c3e;
+}
+
+.btn-recusar-marcacoes {
+    background-color: #dc3535;
+}
+
+.btn-acao-marcacoes:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    filter: none;
+}
+
+/* ========================= */
+/* RESPONSIVO */
+/* ========================= */
+
+@media (max-width: 1100px) {
+    .area-inferior-marcacoes {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .marcacoes-container {
+        padding: 20px 16px;
+    }
+
+    .marcacoes-calendario-card {
+        padding: 18px 16px 14px;
+    }
+}

@@ -1,0 +1,526 @@
+let mcMesAtual = 4; // Maio = 4 porque em JS Janeiro é 0
+let mcAnoAtual = 2026;
+
+let mcDiaSelecionado = null;
+let mcHorarioSelecionado = null;
+let mcPacienteSelecionado = null;
+
+const mcHorarios = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00"
+];
+
+const mcNomesMeses = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro"
+];
+
+const mcMarcacoesIniciais = [
+    {
+        id: 1,
+        data: "2026-05-09",
+        hora: "09:00",
+        estado: "pendente",
+        solicitadoEm: "05/05/2026 às 09:32",
+        motivo: "Consulta de rotina",
+        paciente: {
+            nome: "Ana Paula",
+            idade: 27,
+            genero: "Feminino",
+            telefone: "928 345 776",
+            email: "ana.paula@gmail.com"
+        }
+    },
+    {
+        id: 2,
+        data: "2026-05-09",
+        hora: "09:00",
+        estado: "pendente",
+        solicitadoEm: "05/05/2026 às 10:15",
+        motivo: "Batimentos cardíacos altos",
+        paciente: {
+            nome: "André Silva",
+            idade: 31,
+            genero: "Masculino",
+            telefone: "934 225 901",
+            email: "andre.silva@gmail.com"
+        }
+    },
+    {
+        id: 3,
+        data: "2026-05-18",
+        hora: "11:00",
+        estado: "pendente",
+        solicitadoEm: "07/05/2026 às 14:22",
+        motivo: "Temperatura elevada",
+        paciente: {
+            nome: "Marta Lopes",
+            idade: 24,
+            genero: "Feminino",
+            telefone: "919 456 783",
+            email: "marta.lopes@gmail.com"
+        }
+    },
+    {
+        id: 4,
+        data: "2026-05-18",
+        hora: "11:00",
+        estado: "pendente",
+        solicitadoEm: "07/05/2026 às 15:08",
+        motivo: "Dores de cabeça constantes",
+        paciente: {
+            nome: "Diogo Santos",
+            idade: 29,
+            genero: "Masculino",
+            telefone: "961 123 456",
+            email: "diogo.santos@gmail.com"
+        }
+    },
+    {
+        id: 5,
+        data: "2026-05-25",
+        hora: "14:00",
+        estado: "recusado",
+        solicitadoEm: "09/05/2026 às 12:40",
+        motivo: "Consulta geral",
+        paciente: {
+            nome: "Joana Ferreira",
+            idade: 35,
+            genero: "Feminino",
+            telefone: "933 987 111",
+            email: "joana.ferreira@gmail.com"
+        }
+    },
+    {
+        id: 6,
+        data: "2026-05-30",
+        hora: "14:00",
+        estado: "pendente",
+        solicitadoEm: "12/05/2026 às 08:50",
+        motivo: "Resultados instáveis nas medições",
+        paciente: {
+            nome: "Rui Costa",
+            idade: 42,
+            genero: "Masculino",
+            telefone: "912 789 333",
+            email: "rui.costa@gmail.com"
+        }
+    },
+    {
+        id: 7,
+        data: "2026-05-31",
+        hora: "15:00",
+        estado: "pendente",
+        solicitadoEm: "13/05/2026 às 11:03",
+        motivo: "Avaliação médica",
+        paciente: {
+            nome: "Carolina Martins",
+            idade: 22,
+            genero: "Feminino",
+            telefone: "968 333 222",
+            email: "carolina.martins@gmail.com"
+        }
+    }
+];
+
+function mcCarregarMarcacoes() {
+    const dadosGuardados = localStorage.getItem("pulsevita_marcacoes");
+
+    if (dadosGuardados) {
+        return JSON.parse(dadosGuardados);
+    }
+
+    localStorage.setItem("pulsevita_marcacoes", JSON.stringify(mcMarcacoesIniciais));
+    return JSON.parse(JSON.stringify(mcMarcacoesIniciais));
+}
+
+let mcMarcacoes = mcCarregarMarcacoes();
+
+function mcGuardarMarcacoes() {
+    localStorage.setItem("pulsevita_marcacoes", JSON.stringify(mcMarcacoes));
+}
+
+function iniciarMarcarConsulta() {
+    const calendario = document.getElementById("mcCalendario");
+
+    if (!calendario) {
+        return;
+    }
+
+    document.getElementById("mcMesAnterior").addEventListener("click", mcMesAnterior);
+    document.getElementById("mcMesSeguinte").addEventListener("click", mcMesSeguinte);
+
+    mcRenderizarTudo();
+}
+
+function mcRenderizarTudo() {
+    mcRenderizarCalendario();
+    mcRenderizarHorarios();
+    mcRenderizarPacientes();
+    mcRenderizarDadosPaciente();
+}
+
+function mcFormatarData(ano, mes, dia) {
+    const mesFormatado = String(mes + 1).padStart(2, "0");
+    const diaFormatado = String(dia).padStart(2, "0");
+
+    return `${ano}-${mesFormatado}-${diaFormatado}`;
+}
+
+function mcRenderizarCalendario() {
+    const calendario = document.getElementById("mcCalendario");
+    const tituloMes = document.getElementById("mcTituloMes");
+
+    calendario.innerHTML = "";
+    tituloMes.textContent = `${mcNomesMeses[mcMesAtual]} - ${mcAnoAtual}`;
+
+    const totalDiasMes = new Date(mcAnoAtual, mcMesAtual + 1, 0).getDate();
+
+    let dia = 1;
+    let proximoMesDia = 1;
+
+    for (let i = 1; i <= 35; i++) {
+        const botaoDia = document.createElement("button");
+        botaoDia.type = "button";
+        botaoDia.classList.add("mc-dia");
+
+        let dataCompleta;
+        let numeroParaMostrar;
+
+        if (dia <= totalDiasMes) {
+            numeroParaMostrar = dia;
+            dataCompleta = mcFormatarData(mcAnoAtual, mcMesAtual, dia);
+
+            dia++;
+        } else {
+            numeroParaMostrar = proximoMesDia;
+            dataCompleta = mcFormatarData(mcAnoAtual, mcMesAtual + 1, proximoMesDia);
+
+            botaoDia.classList.add("mc-outro-mes");
+            proximoMesDia++;
+        }
+
+        botaoDia.dataset.data = dataCompleta;
+
+        if (mcDiaSelecionado === dataCompleta) {
+            botaoDia.classList.add("mc-dia-ativo");
+        }
+
+        const spanNumero = document.createElement("span");
+        spanNumero.classList.add("mc-numero-dia");
+        spanNumero.textContent = numeroParaMostrar;
+
+        botaoDia.appendChild(spanNumero);
+
+        const marcacoesDoDia = mcMarcacoes.filter(m => m.data === dataCompleta);
+
+        if (marcacoesDoDia.length > 0) {
+            const indicador = document.createElement("span");
+            indicador.classList.add("mc-indicador");
+
+            const estadoDia = mcObterEstadoDoGrupo(marcacoesDoDia);
+
+            if (estadoDia === "pendente") {
+                indicador.classList.add("mc-pendente");
+            } else if (estadoDia === "aprovado") {
+                indicador.classList.add("mc-aprovado");
+            } else {
+                indicador.classList.add("mc-recusado");
+            }
+
+            indicador.textContent = marcacoesDoDia.length;
+            botaoDia.appendChild(indicador);
+        }
+
+        botaoDia.addEventListener("click", () => {
+            mcDiaSelecionado = dataCompleta;
+            mcHorarioSelecionado = null;
+            mcPacienteSelecionado = null;
+
+            mcRenderizarTudo();
+        });
+
+        calendario.appendChild(botaoDia);
+    }
+}
+
+function mcRenderizarHorarios() {
+    const listaHorarios = document.getElementById("mcListaHorarios");
+
+    listaHorarios.innerHTML = "";
+
+    mcHorarios.forEach(hora => {
+        const botaoHorario = document.createElement("button");
+        botaoHorario.type = "button";
+        botaoHorario.classList.add("mc-horario");
+
+        const marcacoesHorario = mcMarcacoes.filter(m => {
+            return m.data === mcDiaSelecionado && m.hora === hora;
+        });
+
+        if (marcacoesHorario.length > 0) {
+            const estado = mcObterEstadoDoGrupo(marcacoesHorario);
+
+            if (estado === "pendente") {
+                botaoHorario.classList.add("mc-horario-pendente");
+            } else if (estado === "aprovado") {
+                botaoHorario.classList.add("mc-horario-aprovado");
+            } else {
+                botaoHorario.classList.add("mc-horario-recusado");
+            }
+
+            botaoHorario.textContent = `${marcacoesHorario.length} Pedido(s)`;
+        } else {
+            botaoHorario.textContent = "";
+        }
+
+        if (mcHorarioSelecionado === hora) {
+            botaoHorario.classList.add("mc-horario-ativo");
+        }
+
+        botaoHorario.addEventListener("click", () => {
+            if (!mcDiaSelecionado) {
+                return;
+            }
+
+            mcHorarioSelecionado = hora;
+            mcPacienteSelecionado = null;
+
+            mcRenderizarHorarios();
+            mcRenderizarPacientes();
+            mcRenderizarDadosPaciente();
+        });
+
+        listaHorarios.appendChild(botaoHorario);
+    });
+}
+
+function mcRenderizarPacientes() {
+    const titulo = document.getElementById("mcTituloPacientes");
+    const listaPacientes = document.getElementById("mcListaPacientes");
+
+    listaPacientes.innerHTML = "";
+
+    if (!mcDiaSelecionado) {
+        titulo.textContent = "Pacientes";
+        listaPacientes.innerHTML = `<p class="mc-vazio">Seleciona um dia no calendário.</p>`;
+        return;
+    }
+
+    if (!mcHorarioSelecionado) {
+        titulo.textContent = "Pacientes";
+        listaPacientes.innerHTML = `<p class="mc-vazio">Seleciona um horário.</p>`;
+        return;
+    }
+
+    const pacientes = mcMarcacoes.filter(m => {
+        return m.data === mcDiaSelecionado && m.hora === mcHorarioSelecionado;
+    });
+
+    titulo.textContent = `Pacientes às ${mcHorarioSelecionado} (${pacientes.length})`;
+
+    if (pacientes.length === 0) {
+        listaPacientes.innerHTML = `<p class="mc-vazio">Não existem pedidos neste horário.</p>`;
+        return;
+    }
+
+    pacientes.forEach(marcacao => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.classList.add("mc-paciente-item");
+
+        if (mcPacienteSelecionado && mcPacienteSelecionado.id === marcacao.id) {
+            item.classList.add("mc-paciente-ativo");
+        }
+
+        item.innerHTML = `
+            <div class="mc-paciente-info">
+                <h4>${marcacao.paciente.nome}</h4>
+                <p>Solicitado em: ${marcacao.solicitadoEm}</p>
+            </div>
+
+            <div>
+                <span class="mc-estado-paciente mc-estado-${marcacao.estado}">
+                    ${mcPrimeiraMaiuscula(marcacao.estado)}
+                </span>
+                <span class="mc-seta-paciente">›</span>
+            </div>
+        `;
+
+        item.addEventListener("click", () => {
+            mcPacienteSelecionado = marcacao;
+
+            mcRenderizarPacientes();
+            mcRenderizarDadosPaciente();
+        });
+
+        listaPacientes.appendChild(item);
+    });
+}
+
+function mcRenderizarDadosPaciente() {
+    const dados = document.getElementById("mcDadosPaciente");
+
+    if (!mcPacienteSelecionado) {
+        dados.innerHTML = `<p class="mc-vazio">Seleciona um paciente para veres os dados.</p>`;
+        return;
+    }
+
+    const marcacao = mcPacienteSelecionado;
+
+    const podeAceitar = marcacao.estado === "pendente";
+    const podeRecusar = marcacao.estado === "pendente";
+
+    dados.innerHTML = `
+        <div class="mc-perfil-topo">
+            <div class="mc-avatar">👤</div>
+
+            <div>
+                <h4>${marcacao.paciente.nome}</h4>
+                <p>${marcacao.paciente.idade} anos - ${marcacao.paciente.genero}</p>
+                <p>${marcacao.paciente.telefone}</p>
+                <p>${marcacao.paciente.email}</p>
+            </div>
+        </div>
+
+        <div class="mc-linha"></div>
+
+        <div class="mc-detalhes">
+            <p><strong>Data:</strong> ${mcDataParaPT(marcacao.data)}</p>
+            <p><strong>Hora:</strong> ${marcacao.hora}</p>
+            <p><strong>Solicitado em:</strong> ${marcacao.solicitadoEm}</p>
+            <p><strong>Motivo:</strong> ${marcacao.motivo}</p>
+            <p><strong>Estado:</strong> ${mcPrimeiraMaiuscula(marcacao.estado)}</p>
+        </div>
+
+        <div class="mc-acoes">
+            <button 
+                class="mc-btn mc-btn-aceitar" 
+                type="button"
+                ${podeAceitar ? "" : "disabled"}
+                onclick="mcAceitarMarcacao(${marcacao.id})"
+            >
+                Aceitar
+            </button>
+
+            <button 
+                class="mc-btn mc-btn-recusar" 
+                type="button"
+                ${podeRecusar ? "" : "disabled"}
+                onclick="mcRecusarMarcacao(${marcacao.id})"
+            >
+                Recusar
+            </button>
+        </div>
+    `;
+}
+
+function mcAceitarMarcacao(id) {
+    const marcacaoAceite = mcMarcacoes.find(m => m.id === id);
+
+    if (!marcacaoAceite) {
+        return;
+    }
+
+    mcMarcacoes.forEach(marcacao => {
+        const mesmaData = marcacao.data === marcacaoAceite.data;
+        const mesmaHora = marcacao.hora === marcacaoAceite.hora;
+
+        if (mesmaData && mesmaHora) {
+            if (marcacao.id === id) {
+                marcacao.estado = "aprovado";
+            } else {
+                marcacao.estado = "recusado";
+            }
+        }
+    });
+
+    mcPacienteSelecionado = mcMarcacoes.find(m => m.id === id);
+
+    mcGuardarMarcacoes();
+    mcRenderizarTudo();
+}
+
+function mcRecusarMarcacao(id) {
+    const marcacao = mcMarcacoes.find(m => m.id === id);
+
+    if (!marcacao) {
+        return;
+    }
+
+    marcacao.estado = "recusado";
+    mcPacienteSelecionado = marcacao;
+
+    mcGuardarMarcacoes();
+    mcRenderizarTudo();
+}
+
+function mcObterEstadoDoGrupo(lista) {
+    const temPendente = lista.some(m => m.estado === "pendente");
+    const temAprovado = lista.some(m => m.estado === "aprovado");
+
+    if (temPendente) {
+        return "pendente";
+    }
+
+    if (temAprovado) {
+        return "aprovado";
+    }
+
+    return "recusado";
+}
+
+function mcMesAnterior() {
+    mcMesAtual--;
+
+    if (mcMesAtual < 0) {
+        mcMesAtual = 11;
+        mcAnoAtual--;
+    }
+
+    mcDiaSelecionado = null;
+    mcHorarioSelecionado = null;
+    mcPacienteSelecionado = null;
+
+    mcRenderizarTudo();
+}
+
+function mcMesSeguinte() {
+    mcMesAtual++;
+
+    if (mcMesAtual > 11) {
+        mcMesAtual = 0;
+        mcAnoAtual++;
+    }
+
+    mcDiaSelecionado = null;
+    mcHorarioSelecionado = null;
+    mcPacienteSelecionado = null;
+
+    mcRenderizarTudo();
+}
+
+function mcPrimeiraMaiuscula(texto) {
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+function mcDataParaPT(data) {
+    const partes = data.split("-");
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
