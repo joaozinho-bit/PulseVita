@@ -31,6 +31,12 @@ function abrirLinks(pagina) {
           window.iniciarMarcacoesMedico();
         }
       }
+
+      if (pagina === "pacientes") {
+        if (typeof window.iniciarPacientesMedico === "function") {
+            window.iniciarPacientesMedico();
+        }
+      }
     })
     .catch(erro => {
       console.error("Erro ao carregar a página:", erro);

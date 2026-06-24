@@ -125,16 +125,16 @@ aside {
 
 /* Main */
 main {
+    padding: 40px;
     width: 100%;
     height: 100vh;
     overflow-y: auto;
-    padding: 40px;
     display: flex;
     flex-direction: column;
 }
 
 .conteudo {
     width: 100%;
-    height: 50dvh;
+    height: 100%;
     flex: 1;
 }
