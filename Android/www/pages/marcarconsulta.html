@@ -176,9 +176,16 @@
         <script>
             const dEl=document.getElementById('mc-dia'),mEl=document.getElementById('mc-mes'),aEl=document.getElementById('mc-ano');
             const btn=document.getElementById('mc-btn'),prev=document.getElementById('mc-preview');
-            const form=document.getElementById('mc-form'),succ=document.getElementById('mc-success');
+            const formArea=document.getElementById('mc-form-area'),succ=document.getElementById('mc-success');
             const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
             let hora='';
+
+            const utilizador = JSON.parse(localStorage.getItem('utilizador'));
+            if (!utilizador) {
+                window.location.href = '../index.html';
+            }else {
+                document.getElementById('nome-utilizador').textContent = utilizador.nomeCompleto;
+            }
 
             const hoje=new Date();
             for(let a=hoje.getFullYear();a<=hoje.getFullYear()+2;a++){const o=document.createElement('option');o.value=a;o.textContent=a;aEl.appendChild(o);}
@@ -195,10 +202,10 @@
             function update(){
                 const d=dEl.value,m=mEl.value,a=aEl.value,ready=d&&m&&a&&hora;
                 if(ready){
-                prev.innerHTML='Consulta para <strong>'+String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+'</strong> às <strong>'+hora+'h</strong>.';
+                    prev.innerHTML='Consulta para <strong>'+String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+'</strong> às <strong>'+hora+'</strong>.';
                 } else {
-                const pts=[];if(!d||!m||!a)pts.push('uma data');if(!hora)pts.push('um horário');
-                prev.innerHTML='Falta selecionar '+pts.join(' e ')+'.';
+                    const pts=[];if(!d||!m||!a)pts.push('uma data');if(!hora)pts.push('um horário');
+                    prev.innerHTML='Falta selecionar '+pts.join(' e ')+'.';
                 }
                 btn.disabled=!ready;
             }
@@ -206,23 +213,54 @@
 
             document.querySelectorAll('.mc-h').forEach(b=>{
                 b.addEventListener('click',()=>{
-                document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('sel'));
-                b.classList.add('sel');hora=b.dataset.h;update();
+                    document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('active'));
+                    b.classList.add('active');hora=b.dataset.h;update();
                 });
             });
 
-            btn.addEventListener('click',()=>{
+            btn.addEventListener('click', async ()=>{
                 const d=dEl.value,m=mEl.value,a=aEl.value;
-                document.getElementById('mc-stext').textContent=String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+' às '+hora+'h.';
-                form.style.display='none';succ.classList.add('vis');
+                const dataStr = `${a}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+                btn.disabled = true;
+                btn.textContent = 'A marcar...';
+
+                try {
+                    const resposta = await fetch('http://localhost:8080/consultas', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            idUtilizador: utilizador.id,
+                            data: dataStr,
+                            hora: hora
+                        })
+                    });
+
+                    if (resposta.ok) {
+                        document.getElementById('mc-s-text').textContent =
+                            String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+' às '+hora+'.';
+                        formArea.style.display = 'none';
+                        succ.classList.add('show');
+                    } else {
+                        alert('Não foi possível marcar a consulta. Tenta novamente.');
+                        btn.disabled = false;
+                        btn.textContent = 'Confirmar';
+                    }
+                } catch (erro) {
+                    alert('Não foi possível contactar o servidor.');
+                    btn.disabled = false;
+                    btn.textContent = 'Confirmar';
+                }
             });
 
-            function resetMC(){
+            function mcReset(){
                 dEl.value='';mEl.value='';aEl.value='';hora='';
-                document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('sel'));
-                prev.innerHTML='Nenhuma data ou hora selecionada ainda.';
-                btn.disabled=true;form.style.display='';succ.classList.remove('vis');fillDias();
+                document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('active'));
+                prev.innerHTML='Seleciona data e horário para confirmar';
+                btn.disabled=true;btn.textContent='Confirmar';
+                formArea.style.display='';succ.classList.remove('show');
+                fillDias();
             }
-        </script>
+</script>
     </body>
 </html>
