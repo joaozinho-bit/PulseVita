@@ -1,0 +1,308 @@
+.pacientes-container {
+    width: 100%;
+    min-height: 100%;
+    background-color: #b6e5e5;
+    font-family: "Montserrat", sans-serif;
+    color: #205236;
+
+    display: grid;
+    grid-template-columns: 1fr 285px;
+    gap: 45px;
+    box-sizing: border-box;
+}
+
+/* ========================= */
+/* ÁREA PRINCIPAL */
+/* ========================= */
+
+.pacientes-area-principal h1 {
+    margin: 0 0 40px;
+    color: #205236;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.lista-pacientes-medico {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.item-paciente-medico {
+    width: 100%;
+    height: 52px;
+    border: 1.5px solid #34c759;
+    border-radius: 6px;
+    background-color: rgba(104, 224, 166, 0.30);
+    color: #205236;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+
+    display: grid;
+    grid-template-columns: 52px 1fr 160px 36px;
+    align-items: center;
+
+    padding: 0 16px 0 10px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-align: left;
+}
+
+.item-paciente-medico:hover {
+    background-color: rgba(104, 224, 166, 0.50);
+    transform: translateX(4px);
+}
+
+.item-paciente-medico.ativo {
+    background-color: rgba(104, 224, 166, 0.60);
+    border-color: #205236;
+    outline: 1.5px solid #205236;
+}
+
+/* Ícone pessoa (silhueta CSS) */
+.icone-paciente-lista {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.icone-paciente-lista::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    background-color: #205236;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 9px;
+}
+
+.icone-paciente-lista::after {
+    content: "";
+    width: 28px;
+    height: 16px;
+    background-color: #205236;
+    border-radius: 10px 10px 4px 4px;
+    position: absolute;
+    bottom: 0;
+    left: 2px;
+}
+
+.nome-paciente-lista {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.consultas-paciente-lista {
+    font-size: 14px;
+    font-weight: 500;
+    color: #3d6d50;
+}
+
+.seta-paciente-lista {
+    font-size: 22px;
+    font-weight: 400;
+    text-align: right;
+    color: #205236;
+}
+
+/* ========================= */
+/* PAINEL DIREITO */
+/* ========================= */
+
+.painel-paciente-medico {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    /* alinha com o título h1 da área principal */
+    padding-top: 0;
+    position: relative;
+    top: 0;
+}
+
+/* Deixamos espaço para alinhar com o h1 */
+.painel-paciente-medico::before {
+    content: "";
+    display: block;
+    height: 57px; /* compensa o h1 (36px font + 40px margin-bottom - height própria) */
+}
+
+.pesquisa-paciente-box {
+    width: 100%;
+    height: 38px;
+    background-color: #ffffff;
+    border: 1px solid #199b80;
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+.pesquisa-paciente-box span {
+    color: #205236;
+    font-size: 22px;
+    line-height: 1;
+    transform: rotate(-15deg);
+    flex-shrink: 0;
+}
+
+.pesquisa-paciente-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    color: #205236;
+    font-size: 14px;
+    font-family: inherit;
+    background: transparent;
+}
+
+.pesquisa-paciente-box input::placeholder {
+    color: #9cb5aa;
+}
+
+/* ========================= */
+/* CARD DETALHES */
+/* ========================= */
+
+.card-detalhes-paciente {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #b0ddd8;
+    border-radius: 8px;
+    padding: 24px 20px 20px;
+    box-sizing: border-box;
+}
+
+/* Avatar circular */
+.avatar-grande-paciente {
+    width: 100px;
+    height: 100px;
+    border: 2px solid #8ce6e6;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0fafa;
+}
+
+.icone-pessoa-grande {
+    width: 52px;
+    height: 52px;
+    position: relative;
+}
+
+.icone-pessoa-grande::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    background-color: #9ee4e4;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 14px;
+}
+
+.icone-pessoa-grande::after {
+    content: "";
+    width: 48px;
+    height: 26px;
+    background-color: #9ee4e4;
+    border-radius: 16px 16px 6px 6px;
+    position: absolute;
+    bottom: 0;
+    left: 2px;
+}
+
+/* Dados do paciente */
+.dados-paciente-medico {
+    display: flex;
+    flex-direction: column;
+}
+
+.dados-paciente-medico .secao-titulo {
+    font-size: 13px;
+    font-weight: 700;
+    color: #205236;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.dados-paciente-medico .paciente-nome {
+    font-size: 15px;
+    font-weight: 600;
+    color: #205236;
+    margin: 0 0 6px;
+}
+
+.dados-paciente-medico .paciente-info {
+    font-size: 12px;
+    color: #3d6d50;
+    margin: 3px 0;
+    line-height: 1.5;
+}
+
+.dados-paciente-medico .linha-divisoria {
+    width: 100%;
+    height: 1px;
+    background-color: #c8eee0;
+    margin: 16px 0;
+}
+
+.dados-paciente-medico .medicoes-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #34c759;
+    margin: 6px 0 4px;
+}
+
+.btn-enviar-mensagem {
+    margin-top: 20px;
+    width: 100%;
+    height: 36px;
+    border: none;
+    border-radius: 5px;
+    background-color: #15987d;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    letter-spacing: 0.02em;
+}
+
+.btn-enviar-mensagem:hover {
+    background-color: #0f8069;
+    transform: translateY(-2px);
+}
+
+.sem-paciente-selecionado {
+    text-align: center;
+    margin-top: 30px;
+    color: #6c927b;
+    font-size: 13px;
+}
+
+/* ========================= */
+/* RESPONSIVO */
+/* ========================= */
+
+@media (max-width: 1100px) {
+    .pacientes-container {
+        grid-template-columns: 1fr;
+        padding: 30px 24px;
+    }
+
+    .painel-paciente-medico::before {
+        display: none;
+    }
+}

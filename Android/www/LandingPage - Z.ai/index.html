@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitalSense — Smart Health Sensor | Temperature & BPM in One Touch</title>
+    <meta name="description" content="Premium smart health sensor for instant body temperature and heart rate measurement. Designed for home, clinics, schools and modern health monitoring.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ============ Scroll Progress Bar ============ -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- ============ Custom Cursor ============ -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- ============ Loader ============ -->
+    <div class="loader" id="loader">
+        <div class="loader-inner">
+            <div class="loader-ring"></div>
+            <div class="loader-text">VITALSENSE</div>
+        </div>
+    </div>
+
+    <!-- ============ Navigation ============ -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h4l2-6 4 12 2-6h6"/>
+                    </svg>
+                </span>
+                <span class="logo-text">Vital<span>Sense</span></span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#benefits" class="nav-link">Benefits</a></li>
+                <li><a href="#how" class="nav-link">How it works</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#pricing" class="btn btn-primary nav-cta">Pre-order</a>
+                <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============ Hero Section ============ -->
+    <section class="hero" id="hero">
+        <!-- Animated background blobs -->
+        <div class="hero-bg">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+            <div class="grid-overlay"></div>
+        </div>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Now in limited pre-order</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="line">Your health,</span>
+                    <span class="line"><span class="gradient-text">measured</span> in</span>
+                    <span class="line">one touch.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    VitalSense reads your body temperature and heart rate in seconds.
+                    One smart device. One simple gesture. Real-time clarity you can trust.
+                </p>
+                <div class="hero-cta">
+                    <a href="#pricing" class="btn btn-primary btn-lg magnetic">
+                        <span>Pre-order now</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="#how" class="btn btn-ghost btn-lg">
+                        <span class="play-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </span>
+                        <span>See how it works</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value" data-target="0.5" data-suffix="s">0</div>
+                        <div class="stat-label">Measurement time</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" data-target="99.2" data-suffix="%">0</div>
+                        <div class="stat-label">Clinical accuracy</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" data-target="72" data-suffix="h">0</div>
+                        <div class="stat-label">Battery life</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual" id="heroVisual">
+                <div class="product-glow"></div>
+                <div class="product-orbit">
+                    <div class="orbit-dot orbit-dot-1"></div>
+                    <div class="orbit-dot orbit-dot-2"></div>
+                    <div class="orbit-dot orbit-dot-3"></div>
+                </div>
+                <div class="product-wrap">
+                    <img src="https://z-cdn-media.chatglm.cn/files/ff224c84-cee8-4dff-9b82-c5a6f115e268.png?auth_key=1882051223-7cbc25c4631d44638a765232be36fd43-0-2f99b6a98fbbbaae3092080ef7ea3223"
+                         alt="VitalSense smart health sensor device showing body temperature and heart rate measurement"
+                         class="product-img" id="heroProduct">
+                </div>
+                <div class="floating-tag tag-temp">
+                    <div class="tag-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+                    </div>
+                    <div class="tag-info">
+                        <div class="tag-label">Temperature</div>
+                        <div class="tag-value">36.5°C</div>
+                    </div>
+                </div>
+                <div class="floating-tag tag-bpm">
+                    <div class="tag-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </div>
+                    <div class="tag-info">
+                        <div class="tag-label">Heart rate</div>
+                        <div class="tag-value">72 BPM</div>
+                    </div>
+                </div>
+                <div class="floating-tag tag-status">
+                    <div class="tag-dot"></div>
+                    <div class="tag-info">
+                        <div class="tag-label">Status</div>
+                        <div class="tag-value">Optimal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-marquee">
+            <div class="marquee-track">
+                <span>· Body temperature</span>
+                <span>· Heart rate / BPM</span>
+                <span>· Real-time display</span>
+                <span>· RGB status indicators</span>
+                <span>· Compact design</span>
+                <span>· Body temperature</span>
+                <span>· Heart rate / BPM</span>
+                <span>· Real-time display</span>
+                <span>· RGB status indicators</span>
+                <span>· Compact design</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Benefits Section ============ -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">Why VitalSense</span>
+                <h2 class="section-title">Built for the way<br>modern health feels.</h2>
+                <p class="section-lead">Every detail is engineered for speed, comfort and clarity — so checking on yourself becomes effortless, not anxious.</p>
+            </div>
+
+            <div class="benefits-grid">
+                <article class="benefit-card glass reveal" data-tilt>
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <h3>Instant measurement</h3>
+                    <p>Get accurate temperature and BPM readings in less than a second. No waiting, no retries, no guesswork.</p>
+                </article>
+
+                <article class="benefit-card glass reveal" data-tilt>
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z"/></svg>
+                    </div>
+                    <h3>Real-time display</h3>
+                    <p>A crisp integrated screen shows your readings clearly the moment they're captured — no app required to check.</p>
+                </article>
+
+                <article class="benefit-card glass reveal" data-tilt>
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                    </div>
+                    <h3>RGB status lights</h3>
+                    <p>Color-coded lights instantly tell you if readings are within range, elevated, or require attention.</p>
+                </article>
+
+                <article class="benefit-card glass reveal" data-tilt>
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    </div>
+                    <h3>Compact & ergonomic</h3>
+                    <p>Slim enough for a pocket, shaped to sit naturally in your hand. Carry it anywhere care happens.</p>
+                </article>
+
+                <article class="benefit-card glass reveal" data-tilt>
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7L9 18l-5-5"/></svg>
+                    </div>
+                    <h3>Effortless to use</h3>
+                    <p>One button. One gesture. One screen. Designed so anyone — from kids to clinicians — can use it confidently.</p>
+                </article>
+
+                <article class="benefit-card glass reveal" data-tilt>
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>For every setting</h3>
+                    <p>Home care, clinics, schools, offices, gyms. One device that adapts to wherever health needs to be checked.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ How It Works ============ -->
+    <section class="how" id="how">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">How it works</span>
+                <h2 class="section-title">Four seconds,<br>four simple steps.</h2>
+                <p class="section-lead">No manuals. No setup. Just pick it up and the device meets you where you are.</p>
+            </div>
+
+            <div class="how-grid">
+                <div class="how-step reveal" data-step="01">
+                    <div class="how-visual">
+                        <div class="how-circle">
+                            <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M30 40h20M40 30v20" stroke-linecap="round"/>
+                                <circle cx="40" cy="40" r="18" opacity="0.5"/>
+                            </svg>
+                        </div>
+                        <div class="how-pulse"></div>
+                    </div>
+                    <div class="how-content">
+                        <div class="how-num">01</div>
+                        <h3>Place your finger</h3>
+                        <p>Rest your finger on the BPM sensor area at the bottom of the device. A soft light confirms contact.</p>
+                    </div>
+                </div>
+
+                <div class="how-step reveal" data-step="02">
+                    <div class="how-visual">
+                        <div class="how-circle">
+                            <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M40 20a16 16 0 0 1 16 16c0 8-8 12-8 20H32c0-8-8-12-8-20a16 16 0 0 1 16-16z" opacity="0.5"/>
+                                <path d="M35 56h10" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="how-pulse"></div>
+                    </div>
+                    <div class="how-content">
+                        <div class="how-num">02</div>
+                        <h3>Bring to forehead</h3>
+                        <p>Hold the temperature sensor near your forehead. The device works at a comfortable distance — no contact needed.</p>
+                    </div>
+                </div>
+
+                <div class="how-step reveal" data-step="03">
+                    <div class="how-visual">
+                        <div class="how-circle">
+                            <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="22" y="28" width="36" height="24" rx="3" opacity="0.5"/>
+                                <path d="M30 40h6l3-6 3 12 3-6h5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="how-pulse"></div>
+                    </div>
+                    <div class="how-content">
+                        <div class="how-num">03</div>
+                        <h3>Read the screen</h3>
+                        <p>Your temperature and heart rate appear instantly on the integrated display, side by side, easy to read.</p>
+                    </div>
+                </div>
+
+                <div class="how-step reveal" data-step="04">
+                    <div class="how-visual">
+                        <div class="how-circle">
+                            <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="40" cy="40" r="18" opacity="0.5"/>
+                                <circle cx="32" cy="40" r="3" fill="currentColor"/>
+                                <circle cx="40" cy="40" r="3" fill="currentColor"/>
+                                <circle cx="48" cy="40" r="3" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="how-pulse"></div>
+                    </div>
+                    <div class="how-content">
+                        <div class="how-num">04</div>
+                        <h3>See your status</h3>
+                        <p>RGB indicator lights turn green, yellow or red so you instantly know if everything's in range.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="how-line" aria-hidden="true">
+                <div class="how-line-fill" id="howLineFill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Features Section ============ -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">Features</span>
+                <h2 class="section-title">Every feature,<br>engineered with intent.</h2>
+            </div>
+
+            <div class="features-bento">
+                <article class="feature-card feature-large glass reveal" data-tilt>
+                    <div class="feature-bg">
+                        <div class="feature-orb feature-orb-cyan"></div>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        </div>
+                        <h3>Heart rate / BPM</h3>
+                        <p>Optical sensing captures your pulse with clinical-grade precision. The finger pad is calibrated for both adults and children, recognizing subtle waveform variations for accurate readings even at rest or after activity.</p>
+                        <ul class="feature-list">
+                            <li>Optical pulse sensing</li>
+                            <li>Beat-to-beat detection</li>
+                            <li>Resting & active modes</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <article class="feature-card glass reveal" data-tilt>
+                    <div class="feature-bg">
+                        <div class="feature-orb feature-orb-green"></div>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+                        </div>
+                        <h3>Body temperature</h3>
+                        <p>Infrared proximity sensing reads forehead temperature without contact — hygienic and fast.</p>
+                    </div>
+                </article>
+
+                <article class="feature-card glass reveal" data-tilt>
+                    <div class="feature-bg">
+                        <div class="feature-orb feature-orb-purple"></div>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                        </div>
+                        <h3>Integrated display</h3>
+                        <p>A bright built-in screen shows readings clearly — no phone, no app required to check results.</p>
+                    </div>
+                </article>
+
+                <article class="feature-card feature-wide glass reveal" data-tilt>
+                    <div class="feature-bg">
+                        <div class="feature-orb feature-orb-cyan"></div>
+                    </div>
+                    <div class="feature-content feature-content-row">
+                        <div>
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+                            </div>
+                            <h3>RGB status indicators</h3>
+                            <p>Color-coded lights give instant visual feedback. Green for normal, amber for elevated, red for attention — readable from across the room.</p>
+                        </div>
+                        <div class="rgb-demo">
+                            <span class="rgb-dot rgb-green"></span>
+                            <span class="rgb-dot rgb-yellow"></span>
+                            <span class="rgb-dot rgb-red"></span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="feature-card glass reveal" data-tilt>
+                    <div class="feature-bg">
+                        <div class="feature-orb feature-orb-green"></div>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                        </div>
+                        <h3>Compact & ergonomic</h3>
+                        <p>Shaped to fit your hand and your life. Slim enough for any pocket or bag.</p>
+                    </div>
+                </article>
+
+                <article class="feature-card glass reveal" data-tilt>
+                    <div class="feature-bg">
+                        <div class="feature-orb feature-orb-purple"></div>
+                    </div>
+                    <div class="feature-content">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        </div>
+                        <h3>Simple & intuitive</h3>
+                        <p>Turn it on, place, read. No menus, no modes — just clear, immediate answers.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Product Showcase ============ -->
+    <section class="showcase" id="showcase">
+        <div class="showcase-bg">
+            <div class="showcase-grid"></div>
+        </div>
+        <div class="container">
+            <div class="showcase-layout">
+                <div class="showcase-text reveal">
+                    <span class="eyebrow">The device</span>
+                    <h2 class="section-title">One device.<br>Two vital signs.<br><span class="gradient-text">Zero friction.</span></h2>
+                    <p class="section-lead">VitalSense brings temperature and heart rate measurement into a single, beautifully crafted instrument. The forehead sensor captures infrared readings without contact, while the finger area reads your pulse optically. Both appear instantly on the integrated screen, framed by RGB status lights that translate numbers into meaning.</p>
+
+                    <div class="showcase-specs">
+                        <div class="spec-row">
+                            <span class="spec-label">Sensors</span>
+                            <span class="spec-value">Infrared + Optical</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Display</span>
+                            <span class="spec-value">Integrated LCD</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Indicators</span>
+                            <span class="spec-value">RGB status lights</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Battery</span>
+                            <span class="spec-value">Up to 72 hours</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Connectivity</span>
+                            <span class="spec-value">Bluetooth 5.2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="showcase-visual" id="showcaseVisual">
+                    <div class="showcase-stage">
+                        <div class="stage-glow"></div>
+                        <div class="stage-ring stage-ring-1"></div>
+                        <div class="stage-ring stage-ring-2"></div>
+                        <div class="stage-ring stage-ring-3"></div>
+                        <img src="https://z-cdn-media.chatglm.cn/files/ff224c84-cee8-4dff-9b82-c5a6f115e268.png?auth_key=1882051223-7cbc25c4631d44638a765232be36fd43-0-2f99b6a98fbbbaae3092080ef7ea3223"
+                             alt="VitalSense device detail view"
+                             class="showcase-img" id="showcaseProduct">
+                    </div>
+                    <div class="showcase-labels">
+                        <div class="showcase-label label-1">
+                            <span class="label-dot"></span>
+                            <span>Forehead IR sensor</span>
+                        </div>
+                        <div class="showcase-label label-2">
+                            <span class="label-dot"></span>
+                            <span>Integrated display</span>
+                        </div>
+                        <div class="showcase-label label-3">
+                            <span class="label-dot"></span>
+                            <span>Finger BPM pad</span>
+                        </div>
+                        <div class="showcase-label label-4">
+                            <span class="label-dot"></span>
+                            <span>RGB indicators</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Pricing Section ============ -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">Pricing</span>
+                <h2 class="section-title">Choose your plan.<br>Start sensing today.</h2>
+                <p class="section-lead">Pick the plan that fits your monitoring rhythm. Cancel anytime — the device is yours.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <article class="price-card glass reveal" data-tilt>
+                    <div class="price-head">
+                        <div class="price-name">Monthly</div>
+                        <div class="price-desc">Try it, feel it, keep it flexible.</div>
+                    </div>
+                    <div class="price-amount">
+                        <span class="currency">$</span>
+                        <span class="price-value">29</span>
+                        <span class="price-period">/ month</span>
+                    </div>
+                    <ul class="price-features">
+                        <li>VitalSense device included</li>
+                        <li>Temperature + BPM measurement</li>
+                        <li>Real-time display & RGB indicators</li>
+                        <li>Firmware updates</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="#" class="btn btn-ghost btn-block">Start monthly</a>
+                </article>
+
+                <article class="price-card price-featured glass reveal" data-tilt>
+                    <div class="price-badge">Best value</div>
+                    <div class="price-head">
+                        <div class="price-name">1-Year Plan</div>
+                        <div class="price-desc">The full year of effortless monitoring.</div>
+                    </div>
+                    <div class="price-amount">
+                        <span class="currency">$</span>
+                        <span class="price-value">249</span>
+                        <span class="price-period">/ year</span>
+                    </div>
+                    <div class="price-save">Save $99 vs monthly</div>
+                    <ul class="price-features">
+                        <li>Everything in Monthly</li>
+                        <li>Priority firmware updates</li>
+                        <li>Extended 2-year warranty</li>
+                        <li>Priority chat & call support</li>
+                        <li>Free accessory refill kit</li>
+                        <li>Family sharing (up to 6 profiles)</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary btn-block">Choose 1-year</a>
+                </article>
+
+                <article class="price-card glass reveal" data-tilt>
+                    <div class="price-head">
+                        <div class="price-name">3-Month Plan</div>
+                        <div class="price-desc">A season of consistent care.</div>
+                    </div>
+                    <div class="price-amount">
+                        <span class="currency">$</span>
+                        <span class="price-value">79</span>
+                        <span class="price-period">/ 3 months</span>
+                    </div>
+                    <div class="price-save">Save $8 vs monthly</div>
+                    <ul class="price-features">
+                        <li>Everything in Monthly</li>
+                        <li>Priority firmware updates</li>
+                        <li>Extended 1-year warranty</li>
+                        <li>Priority email support</li>
+                    </ul>
+                    <a href="#" class="btn btn-ghost btn-block">Choose 3-month</a>
+                </article>
+            </div>
+
+            <p class="pricing-note">All plans include the VitalSense device. Shipping calculated at checkout. 30-day money-back guarantee.</p>
+        </div>
+    </section>
+
+    <!-- ============ Trust / Safety ============ -->
+    <section class="trust" id="trust">
+        <div class="container">
+            <div class="trust-layout">
+                <div class="trust-visual reveal">
+                    <div class="trust-image-wrap">
+                        <div class="trust-glow"></div>
+                        <img src="https://z-cdn-media.chatglm.cn/files/ff224c84-cee8-4dff-9b82-c5a6f115e268.png?auth_key=1882051223-7cbc25c4631d44638a765232be36fd43-0-2f99b6a98fbbbaae3092080ef7ea3223"
+                             alt="VitalSense health sensor for daily monitoring">
+                        <div class="trust-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span>Designed for daily use</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="trust-content reveal">
+                    <span class="eyebrow">Trust & safety</span>
+                    <h2 class="section-title">A daily companion,<br>not a replacement.</h2>
+                    <p>VitalSense is designed to help you check on yourself and the people you care about — quickly, calmly, and confidently. Whether it's a morning temperature check, a quick pulse reading after exercise, or monitoring a recovering family member, the device brings clarity to everyday moments.</p>
+                    <p>It supports awareness, not diagnosis. Readings are intended for general wellness tracking and to help you decide when to seek further advice. VitalSense does not replace professional medical evaluation, and important health decisions should always involve a qualified healthcare provider.</p>
+
+                    <div class="trust-points">
+                        <div class="trust-point">
+                            <div class="trust-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                            </div>
+                            <div>
+                                <h4>Calibrated for accuracy</h4>
+                                <p>Sensors are tuned against clinical reference standards.</p>
+                            </div>
+                        </div>
+                        <div class="trust-point">
+                            <div class="trust-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                            </div>
+                            <div>
+                                <h4>Hygienic by design</h4>
+                                <p>Non-contact temperature sensing keeps sharing safe.</p>
+                            </div>
+                        </div>
+                        <div class="trust-point">
+                            <div class="trust-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                            </div>
+                            <div>
+                                <h4>Built for awareness</h4>
+                                <p>Track trends over time — share notes with your doctor when needed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FAQ Section ============ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-head reveal">
+                <span class="eyebrow">FAQ</span>
+                <h2 class="section-title">Questions, answered.</h2>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        <span>How does VitalSense measure temperature and heart rate?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>The device uses an infrared proximity sensor to read forehead temperature without direct skin contact, and an optical sensor in the finger area to detect your pulse. Both readings are processed and displayed on the integrated screen within about a second.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        <span>How do I use the device?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Turn it on, place your finger on the BPM pad at the bottom, and bring the top of the device near your forehead. The screen will show your temperature and heart rate, and the RGB lights will indicate whether your readings are within a normal range.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        <span>Who is VitalSense useful for?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>It's designed for everyday use at home, in clinics, schools, offices and gyms. Parents checking children, professionals monitoring patients, athletes tracking recovery, or anyone who wants quick, reliable health readings on demand.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        <span>What do the RGB indicator lights mean?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Green means readings are within a normal range, amber indicates a slightly elevated value worth attention, and red suggests a reading outside the typical range that may warrant further monitoring or professional advice.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        <span>What are the available purchase plans?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We offer three plans: a flexible monthly plan, a 3-month plan with a small saving, and a 1-year plan that offers the best value. All plans include the VitalSense device and can be cancelled at any time.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question">
+                        <span>Does VitalSense replace a doctor's diagnosis?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. VitalSense is intended for general wellness monitoring and awareness. It does not diagnose, treat or cure any condition. For medical concerns, always consult a qualified healthcare professional.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Final CTA ============ -->
+    <section class="final-cta" id="finalCta">
+        <div class="final-bg">
+            <div class="final-grid"></div>
+            <div class="final-glow"></div>
+        </div>
+        <div class="container">
+            <div class="final-content reveal">
+                <div class="final-product">
+                    <img src="https://z-cdn-media.chatglm.cn/files/ff224c84-cee8-4dff-9b82-c5a6f115e268.png?auth_key=1882051223-7cbc25c4631d44638a765232be36fd43-0-2f99b6a98fbbbaae3092080ef7ea3223"
+                         alt="VitalSense device">
+                </div>
+                <span class="eyebrow">Pre-order now</span>
+                <h2 class="final-title">Health clarity,<br><span class="gradient-text">one touch away.</span></h2>
+                <p class="final-lead">Be among the first to experience effortless, beautiful health sensing. Limited pre-order units shipping soon.</p>
+                <div class="final-cta-buttons">
+                    <a href="#pricing" class="btn btn-primary btn-lg magnetic">
+                        <span>Pre-order VitalSense</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </a>
+                    <a href="#faq" class="btn btn-ghost btn-lg">Read FAQ</a>
+                </div>
+                <div class="final-meta">
+                    <span>· 30-day money-back guarantee</span>
+                    <span>· Free shipping over $99</span>
+                    <span>· 2-year warranty</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ Footer ============ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo">
+                        <span class="logo-mark">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+                        </span>
+                        <span class="logo-text">Vital<span>Sense</span></span>
+                    </a>
+                    <p>Effortless health sensing for every home, clinic and workspace.</p>
+                </div>
+                <div class="footer-cols">
+                    <div class="footer-col">
+                        <h4>Product</h4>
+                        <a href="#benefits">Benefits</a>
+                        <a href="#features">Features</a>
+                        <a href="#how">How it works</a>
+                        <a href="#pricing">Pricing</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#">About</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Press</a>
+                        <a href="#">Contact</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Support</h4>
+                        <a href="#faq">FAQ</a>
+                        <a href="#">Documentation</a>
+                        <a href="#">Warranty</a>
+                        <a href="#">Returns</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 VitalSense. All rights reserved. This device is intended for general wellness monitoring and is not a medical diagnostic tool.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.8c-.7.3-1.5.6-2.4.7.9-.5 1.5-1.3 1.8-2.3-.8.5-1.7.8-2.6 1A4.1 4.1 0 0 0 12 8.7c0 .3 0 .6.1.9-3.4-.2-6.4-1.8-8.5-4.3-.4.6-.6 1.3-.6 2.1 0 1.4.7 2.6 1.8 3.4-.7 0-1.3-.2-1.9-.5v.1c0 2 1.4 3.6 3.3 4-.3.1-.7.1-1 .1-.3 0-.5 0-.8-.1.5 1.6 2 2.8 3.8 2.8a8.2 8.2 0 0 1-5.1 1.8H2a11.6 11.6 0 0 0 6.3 1.8c7.5 0 11.7-6.3 11.7-11.7v-.5c.8-.6 1.5-1.3 2-2.2z"/></svg></a>
+                    <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.3 3.3 0 0 0-3.3-3.3c-.8 0-1.7.5-2.1 1.2v-1H11v8.4h2.6v-4.9c0-.7.6-1.3 1.3-1.3s1.3.6 1.3 1.3v4.9h2.6M6.9 8.6a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2m1.3 10.4V10.6H5.6v8.4h2.6z"/></svg></a>
+                    <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============ CDN Libraries ============ -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.13/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

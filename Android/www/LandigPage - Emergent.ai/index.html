@@ -1,0 +1,443 @@
+"<!doctype html>
+<html lang=\"pt\">
+<head>
+    <meta charset=\"utf-8\" />
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
+    <meta name=\"theme-color\" content=\"#050505\" />
+    <meta name=\"description\" content=\"PulseVita — Sensor inteligente de temperatura corporal e batimentos cardíacos. Medição rápida, precisa e premium.\" />
+    <title>PulseVita — A sua saúde, num toque.</title>
+
+    <!-- Google Fonts -->
+    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />
+    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />
+    <link href=\"https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Manrope:wght@400;500;700&display=swap\" rel=\"stylesheet\" />
+
+    <!-- Landing styles -->
+    <link rel=\"stylesheet\" href=\"%PUBLIC_URL%/style.css\" />
+
+    <!-- Animation libraries (CDN) -->
+    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js\"></script>
+    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js\"></script>
+    <script src=\"https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js\"></script>
+    <script src=\"https://unpkg.com/split-type\"></script>
+
+    <script>window.addEventListener(\"error\",function(e){if(e.error instanceof DOMException&&e.error.name===\"DataCloneError\"&&e.message&&e.message.includes(\"PerformanceServerTiming\")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
+    <script src=\"https://assets.emergent.sh/scripts/emergent-main.js\"></script>
+</head>
+<body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+
+<!-- React root: kept empty -->
+<div id=\"root\" style=\"display:none\"></div>
+
+<!-- =================== LANDING PAGE =================== -->
+
+<!-- Background grain / glow layers -->
+<div class=\"bg-grain\" aria-hidden=\"true\"></div>
+<div class=\"bg-radial\" aria-hidden=\"true\"></div>
+
+<!-- ================ NAVIGATION ================ -->
+<header class=\"nav\" data-testid=\"main-nav\">
+    <div class=\"nav-inner\">
+        <a href=\"#hero\" class=\"brand\" data-testid=\"brand-logo\">
+            <span class=\"brand-dot\"></span>
+            <span class=\"brand-name\">PulseVita</span>
+        </a>
+        <nav class=\"nav-links\">
+            <a href=\"#benefits\" data-testid=\"nav-benefits\">Benefícios</a>
+            <a href=\"#how\" data-testid=\"nav-how\">Como Funciona</a>
+            <a href=\"#features\" data-testid=\"nav-features\">Funcionalidades</a>
+            <a href=\"#pricing\" data-testid=\"nav-pricing\">Preços</a>
+            <a href=\"#faq\" data-testid=\"nav-faq\">FAQ</a>
+        </nav>
+        <a href=\"#pricing\" class=\"btn btn-primary nav-cta\" data-testid=\"nav-cta\">Reservar agora</a>
+    </div>
+</header>
+
+<!-- ================ HERO ================ -->
+<section class=\"hero\" id=\"hero\" data-testid=\"section-hero\">
+    <div class=\"hero-overline overline\">
+        <span class=\"pulse-dot\"></span>
+        <span>NOVA GERAÇÃO · MEDICAL TECH 2026</span>
+    </div>
+
+    <h1 class=\"hero-title split-text\" data-testid=\"hero-title\">
+        A sua saúde,<br/>num toque.
+    </h1>
+
+    <p class=\"hero-sub\" data-testid=\"hero-sub\">
+        O <strong>PulseVita</strong> mede a sua <em>temperatura corporal</em> e os seus
+        <em>batimentos cardíacos</em> em segundos — com precisão clínica
+        e um ecrã que mostra resultados em tempo real.
+    </p>
+
+    <div class=\"hero-ctas\">
+        <a href=\"#pricing\" class=\"btn btn-primary\" data-testid=\"hero-cta-buy\">
+            Comprar PulseVita
+            <span class=\"btn-arrow\">→</span>
+        </a>
+        <a href=\"#how\" class=\"btn btn-secondary\" data-testid=\"hero-cta-learn\">Como funciona</a>
+    </div>
+
+    <!-- Floating product image -->
+    <div class=\"hero-product-wrap\" data-testid=\"hero-product\">
+        <div class=\"hero-product-glow\" aria-hidden=\"true\"></div>
+        <img
+            src=\"https://customer-assets.emergentagent.com/job_925e71b3-c956-45a4-a025-8a6ca730c77a/artifacts/6n623n07_PrototipoSensor.png\"
+            alt=\"PulseVita sensor de saúde mostrando temperatura 36.5°C\"
+            class=\"hero-product-img\"
+            id=\"heroProduct\"
+        />
+        <!-- Floating data chips around the product -->
+        <div class=\"chip chip-temp\" data-testid=\"chip-temp\">
+            <div class=\"chip-label\">TEMPERATURA</div>
+            <div class=\"chip-value\">36.5°C</div>
+        </div>
+        <div class=\"chip chip-bpm\" data-testid=\"chip-bpm\">
+            <div class=\"chip-label\">BPM</div>
+            <div class=\"chip-value\">72<span class=\"chip-unit\">bpm</span></div>
+        </div>
+        <div class=\"chip chip-status\" data-testid=\"chip-status\">
+            <span class=\"status-led\"></span>
+            <span>Estado: Saudável</span>
+        </div>
+    </div>
+
+    <div class=\"hero-scrollhint\" aria-hidden=\"true\">
+        <span>SCROLL</span>
+        <span class=\"scroll-line\"></span>
+    </div>
+</section>
+
+<!-- ================ BENEFITS (BENTO) ================ -->
+<section class=\"section benefits\" id=\"benefits\" data-testid=\"section-benefits\">
+    <div class=\"container\">
+        <div class=\"section-head\">
+            <span class=\"overline\">Porquê PulseVita</span>
+            <h2 class=\"section-title split-text\">Pequeno no formato.<br/>Enorme no impacto.</h2>
+        </div>
+
+        <div class=\"bento\">
+            <div class=\"bento-card bento-lg\" data-testid=\"benefit-fast\">
+                <div class=\"bento-icon\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M13 2L3 14h7l-1 8 10-12h-7l1-8z\"/></svg>
+                </div>
+                <h3>Medição em segundos</h3>
+                <p>Coloque o dedo. Aproxime da testa. Em menos de 3 segundos, vê tudo no ecrã com leituras estabilizadas.</p>
+                <div class=\"bento-stat\"><span class=\"stat-num\" data-count=\"3\">0</span><span class=\"stat-unit\">seg</span></div>
+            </div>
+
+            <div class=\"bento-card\" data-testid=\"benefit-accuracy\">
+                <div class=\"bento-icon\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>
+                </div>
+                <h3>Precisão clínica</h3>
+                <p>Sensores ópticos e infravermelhos calibrados para leituras consistentes.</p>
+            </div>
+
+            <div class=\"bento-card\" data-testid=\"benefit-rgb\">
+                <div class=\"bento-icon\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M12 2v6M12 16v6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M16 12h6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24\"/></svg>
+                </div>
+                <h3>Indicadores RGB</h3>
+                <p>Luzes inteligentes traduzem o estado em cor — verde, âmbar ou vermelho.</p>
+            </div>
+
+            <div class=\"bento-card\" data-testid=\"benefit-design\">
+                <div class=\"bento-icon\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"3\"/><path d=\"M10 18h4\"/></svg>
+                </div>
+                <h3>Design ergonómico</h3>
+                <p>Cabe na palma da mão. Pesa como um smartphone. Pronto a usar em qualquer lugar.</p>
+            </div>
+
+            <div class=\"bento-card bento-wide\" data-testid=\"benefit-versatile\">
+                <div class=\"bento-icon\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z\"/><path d=\"M9 22V12h6v10\"/></svg>
+                </div>
+                <h3>Versátil para casa, clínica, escola ou empresa</h3>
+                <p>Ideal para famílias, equipas de RH, professores e profissionais de saúde — qualquer ambiente onde uma verificação rápida importa.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================ HOW IT WORKS ================ -->
+<section class=\"section how\" id=\"how\" data-testid=\"section-how\">
+    <div class=\"container how-grid\">
+        <div class=\"how-sticky\">
+            <span class=\"overline\">Como funciona</span>
+            <h2 class=\"section-title\">Três gestos.<br/>Uma leitura completa.</h2>
+            <p class=\"how-lead\">Sem aplicações complexas. Sem cabos. Apenas o dispositivo, o seu corpo e o resultado.</p>
+            <div class=\"how-visual\">
+                <img
+                    src=\"https://customer-assets.emergentagent.com/job_925e71b3-c956-45a4-a025-8a6ca730c77a/artifacts/6n623n07_PrototipoSensor.png\"
+                    alt=\"PulseVita em uso\"
+                    class=\"how-product\"
+                    id=\"howProduct\"
+                />
+                <div class=\"how-product-ring\"></div>
+            </div>
+        </div>
+
+        <div class=\"how-steps\">
+            <article class=\"step\" data-step=\"01\" data-testid=\"step-1\">
+                <div class=\"step-num\">01</div>
+                <h3>Coloca o dedo</h3>
+                <p>Posiciona o dedo na zona do sensor óptico inferior. Os LEDs vermelho e verde detetam o fluxo sanguíneo e calculam os batimentos por minuto.</p>
+            </article>
+
+            <article class=\"step\" data-step=\"02\" data-testid=\"step-2\">
+                <div class=\"step-num\">02</div>
+                <h3>Aproxima da testa</h3>
+                <p>Aponta o sensor infravermelho superior a 3–5 cm da testa. A leitura de temperatura corporal é instantânea, sem contacto direto.</p>
+            </article>
+
+            <article class=\"step\" data-step=\"03\" data-testid=\"step-3\">
+                <div class=\"step-num\">03</div>
+                <h3>Lê o resultado</h3>
+                <p>O ecrã OLED mostra temperatura e BPM em grande. As luzes RGB confirmam o estado: verde para normal, âmbar para atenção, vermelho para alerta.</p>
+            </article>
+
+            <article class=\"step\" data-step=\"04\" data-testid=\"step-4\">
+                <div class=\"step-num\">04</div>
+                <h3>Acompanha o histórico</h3>
+                <p>O dispositivo guarda as últimas medições para que possas comparar leituras ao longo do dia ou da semana.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ================ FEATURES ================ -->
+<section class=\"section features\" id=\"features\" data-testid=\"section-features\">
+    <div class=\"container\">
+        <div class=\"section-head\">
+            <span class=\"overline\">Funcionalidades</span>
+            <h2 class=\"section-title split-text\">Construído para<br/>uma só missão: precisão.</h2>
+        </div>
+
+        <div class=\"features-grid\">
+            <div class=\"feature\" data-testid=\"feature-bpm\">
+                <span class=\"feature-tag\">01</span>
+                <h3>BPM em tempo real</h3>
+                <p>Sensor PPG dual-LED capta cada pulsação com baixo ruído e calibração contínua.</p>
+            </div>
+            <div class=\"feature\" data-testid=\"feature-temp\">
+                <span class=\"feature-tag\">02</span>
+                <h3>Temperatura sem contacto</h3>
+                <p>Termómetro infravermelho de grau médico, leitura em ±0,2°C.</p>
+            </div>
+            <div class=\"feature\" data-testid=\"feature-screen\">
+                <span class=\"feature-tag\">03</span>
+                <h3>Ecrã OLED integrado</h3>
+                <p>Display de alto contraste com tipografia legível mesmo em ambientes muito iluminados.</p>
+            </div>
+            <div class=\"feature\" data-testid=\"feature-rgb\">
+                <span class=\"feature-tag\">04</span>
+                <h3>Anel RGB de estado</h3>
+                <p>Feedback visual imediato — saúde verde, atenção âmbar, alerta vermelho.</p>
+            </div>
+            <div class=\"feature\" data-testid=\"feature-compact\">
+                <span class=\"feature-tag\">05</span>
+                <h3>Compacto e leve</h3>
+                <p>Apenas 86g. Carregamento USB-C com autonomia para semanas.</p>
+            </div>
+            <div class=\"feature\" data-testid=\"feature-easy\">
+                <span class=\"feature-tag\">06</span>
+                <h3>Uso intuitivo</h3>
+                <p>Um botão. Dois sensores. Zero curva de aprendizagem.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================ PRODUCT PRESENTATION (PARALLAX) ================ -->
+<section class=\"section showcase\" id=\"showcase\" data-testid=\"section-showcase\">
+    <div class=\"container showcase-grid\">
+        <div class=\"showcase-text\">
+            <span class=\"overline\">O dispositivo</span>
+            <h2 class=\"section-title\">Cada detalhe,<br/>desenhado para servir.</h2>
+            <ul class=\"showcase-list\">
+                <li><span class=\"bullet\"></span> Carcaça em policarbonato médico</li>
+                <li><span class=\"bullet\"></span> Sensores duplos em janela única</li>
+                <li><span class=\"bullet\"></span> Anel luminoso de 360°</li>
+                <li><span class=\"bullet\"></span> Botão único de ativação</li>
+            </ul>
+        </div>
+        <div class=\"showcase-product\">
+            <div class=\"showcase-aura\"></div>
+            <img
+                src=\"https://customer-assets.emergentagent.com/job_925e71b3-c956-45a4-a025-8a6ca730c77a/artifacts/6n623n07_PrototipoSensor.png\"
+                alt=\"PulseVita vista premium\"
+                class=\"showcase-img\"
+                id=\"showcaseProduct\"
+            />
+        </div>
+    </div>
+</section>
+
+<!-- ================ PRICING ================ -->
+<section class=\"section pricing\" id=\"pricing\" data-testid=\"section-pricing\">
+    <div class=\"container\">
+        <div class=\"section-head center\">
+            <span class=\"overline\">Planos</span>
+            <h2 class=\"section-title\">Escolha a sua forma<br/>de cuidar.</h2>
+            <p class=\"section-lead\">Compromisso zero. Cancele a qualquer momento.</p>
+        </div>
+
+        <div class=\"plans\">
+            <article class=\"plan\" data-testid=\"plan-monthly\">
+                <header class=\"plan-head\">
+                    <span class=\"plan-name\">Mensal</span>
+                    <span class=\"plan-period\">Flexível</span>
+                </header>
+                <div class=\"plan-price\"><span class=\"currency\">€</span><span class=\"amount\">29</span><span class=\"per\">/mês</span></div>
+                <ul class=\"plan-feats\">
+                    <li>1 dispositivo PulseVita</li>
+                    <li>Garantia básica</li>
+                    <li>Atualizações de firmware</li>
+                    <li>Suporte por email</li>
+                </ul>
+                <a href=\"#\" class=\"btn btn-secondary plan-cta\" data-testid=\"plan-monthly-cta\">Começar agora</a>
+            </article>
+
+            <article class=\"plan plan-featured\" data-testid=\"plan-year\">
+                <div class=\"plan-badge\">Recomendado</div>
+                <header class=\"plan-head\">
+                    <span class=\"plan-name\">1 Ano</span>
+                    <span class=\"plan-period\">Melhor valor</span>
+                </header>
+                <div class=\"plan-price\"><span class=\"currency\">€</span><span class=\"amount\">199</span><span class=\"per\">/ano</span></div>
+                <div class=\"plan-save\">Poupa €149 vs. plano mensal</div>
+                <ul class=\"plan-feats\">
+                    <li>1 dispositivo PulseVita</li>
+                    <li>Garantia estendida 24 meses</li>
+                    <li>Capa de proteção premium</li>
+                    <li>Suporte prioritário 24/7</li>
+                    <li>Acesso antecipado a novos produtos</li>
+                </ul>
+                <a href=\"#\" class=\"btn btn-primary plan-cta\" data-testid=\"plan-year-cta\">Escolher anual</a>
+            </article>
+
+            <article class=\"plan\" data-testid=\"plan-quarter\">
+                <header class=\"plan-head\">
+                    <span class=\"plan-name\">3 Meses</span>
+                    <span class=\"plan-period\">Equilibrado</span>
+                </header>
+                <div class=\"plan-price\"><span class=\"currency\">€</span><span class=\"amount\">69</span><span class=\"per\">/3 meses</span></div>
+                <ul class=\"plan-feats\">
+                    <li>1 dispositivo PulseVita</li>
+                    <li>Garantia 6 meses</li>
+                    <li>Atualizações de firmware</li>
+                    <li>Suporte prioritário</li>
+                </ul>
+                <a href=\"#\" class=\"btn btn-secondary plan-cta\" data-testid=\"plan-quarter-cta\">Subscrever 3 meses</a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ================ TRUST & SECURITY ================ -->
+<section class=\"section trust\" id=\"trust\" data-testid=\"section-trust\">
+    <div class=\"container trust-grid\">
+        <div class=\"trust-visual\">
+            <img
+                src=\"https://images.pexels.com/photos/5355866/pexels-photo-5355866.jpeg\"
+                alt=\"Profissional de saúde com tablet\"
+                class=\"trust-img\"
+                id=\"trustImg\"
+            />
+            <div class=\"trust-overlay\"></div>
+        </div>
+        <div class=\"trust-content\">
+            <span class=\"overline\">Confiança & Segurança</span>
+            <h2 class=\"section-title\">Pensado para verificações<br/>rápidas e diárias.</h2>
+            <p>
+                O PulseVita foi desenvolvido como um <strong>auxílio inteligente</strong> à
+                monitorização de sinais vitais — em casa, na escola ou no trabalho.
+                Não substitui um diagnóstico médico, mas dá-te uma <em>fotografia
+                imediata</em> da tua temperatura e batimentos para decisões mais informadas.
+            </p>
+            <div class=\"trust-badges\">
+                <div class=\"badge\"><span class=\"badge-num\">±0,2°C</span><span class=\"badge-label\">Precisão térmica</span></div>
+                <div class=\"badge\"><span class=\"badge-num\">CE</span><span class=\"badge-label\">Padrão europeu</span></div>
+                <div class=\"badge\"><span class=\"badge-num\">100%</span><span class=\"badge-label\">Dados locais</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================ FAQ ================ -->
+<section class=\"section faq\" id=\"faq\" data-testid=\"section-faq\">
+    <div class=\"container faq-wrap\">
+        <div class=\"section-head center\">
+            <span class=\"overline\">Perguntas Frequentes</span>
+            <h2 class=\"section-title\">Tudo o que precisas<br/>de saber.</h2>
+        </div>
+
+        <div class=\"faq-list\" data-testid=\"faq-list\">
+            <details class=\"faq-item\" data-testid=\"faq-1\">
+                <summary>Como mede o PulseVita os batimentos cardíacos?</summary>
+                <div class=\"faq-body\">Usa um sensor óptico PPG com LEDs vermelho e verde que detetam variações no fluxo sanguíneo do dedo, traduzindo-as em batimentos por minuto.</div>
+            </details>
+            <details class=\"faq-item\" data-testid=\"faq-2\">
+                <summary>A medição da temperatura é sem contacto?</summary>
+                <div class=\"faq-body\">Sim. O sensor infravermelho lê a temperatura da testa a 3–5 cm de distância, sem precisar de tocar na pele.</div>
+            </details>
+            <details class=\"faq-item\" data-testid=\"faq-3\">
+                <summary>Para quem é útil este sensor?</summary>
+                <div class=\"faq-body\">Famílias, escolas, clínicas, equipas desportivas, empresas e qualquer pessoa interessada em acompanhar a sua saúde no dia-a-dia.</div>
+            </details>
+            <details class=\"faq-item\" data-testid=\"faq-4\">
+                <summary>O que significam as luzes RGB?</summary>
+                <div class=\"faq-body\">Verde indica leituras normais, âmbar indica que vale a pena repetir a medição e vermelho indica valores fora dos parâmetros típicos.</div>
+            </details>
+            <details class=\"faq-item\" data-testid=\"faq-5\">
+                <summary>Quais os planos de compra disponíveis?</summary>
+                <div class=\"faq-body\">Mensal (€29), 3 meses (€69) e 1 ano (€199 — o melhor valor). Todos incluem o dispositivo PulseVita e podem ser cancelados a qualquer momento.</div>
+            </details>
+            <details class=\"faq-item\" data-testid=\"faq-6\">
+                <summary>Substitui um médico?</summary>
+                <div class=\"faq-body\">Não. O PulseVita é uma ferramenta de monitorização e verificação rápida. Para qualquer suspeita clínica, consulta sempre um profissional de saúde.</div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- ================ FINAL CTA ================ -->
+<section class=\"section final-cta\" id=\"cta\" data-testid=\"section-final-cta\">
+    <div class=\"container final-cta-inner\">
+        <span class=\"overline\">Pronto para começar?</span>
+        <h2 class=\"final-title split-text\">Mede. Compreende.<br/>Cuida.</h2>
+        <p>Junta-te a quem já transformou um simples toque numa decisão informada sobre saúde.</p>
+        <div class=\"hero-ctas center\">
+            <a href=\"#pricing\" class=\"btn btn-primary btn-lg\" data-testid=\"final-cta-buy\">
+                Reservar PulseVita
+                <span class=\"btn-arrow\">→</span>
+            </a>
+            <a href=\"#faq\" class=\"btn btn-secondary btn-lg\" data-testid=\"final-cta-faq\">Tirar dúvidas</a>
+        </div>
+    </div>
+</section>
+
+<!-- ================ FOOTER ================ -->
+<footer class=\"footer\" data-testid=\"footer\">
+    <div class=\"container footer-inner\">
+        <div class=\"footer-brand\">
+            <span class=\"brand-dot\"></span>
+            <span class=\"brand-name\">PulseVita</span>
+        </div>
+        <p class=\"footer-copy\">© 2026 PulseVita · Todos os direitos reservados</p>
+        <div class=\"footer-links\">
+            <a href=\"#\">Privacidade</a>
+            <a href=\"#\">Termos</a>
+            <a href=\"#\">Contacto</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Landing script -->
+<script src=\"%PUBLIC_URL%/script.js\"></script>
+
+</body>
+</html>
