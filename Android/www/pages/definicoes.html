@@ -23,7 +23,7 @@
                 <img class="logo" src="../../Imagens/Logo.png" alt="PulseVita">
             </div>
             <div class="profile">
-                <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
+                <img class="img-user" id="header-foto" src="../../Imagens/user.png" alt="Imagem de perfil">
                 <span>Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
@@ -92,145 +92,215 @@
                 <div class="conteudo">
                     <h1>Definições</h1>
                     <div class="info-pessoal">
-                        <div class="foto">
-                            <img src="../../Imagens/user.png" alt="">
+
+                        <!-- Foto clicável -->
+                        <div class="foto" id="foto-wrapper">
+                            <img id="foto-perfil" src="../../Imagens/user.png" alt="Foto de perfil">
+                            <input type="file" id="input-foto" accept="image/*" style="display:none">
+                            <div class="foto-overlay">
+                                <img src="../../Imagens/icon-lapis.png" alt="Editar foto">
+                            </div>
                         </div>
+
                         <div class="lista-info">
+
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/user.png" alt="">
-                                <p class="nome" id="nome">Pedro Silva</p>
-                                <button id="edit-nome" class="edit-btn">
-                                    <img src="../../Imagens/icon-lapis.png" alt="">
-                                </button>
+                                <p class="campo-texto" id="nome">Pedro Silva</p>
                             </div>
+
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-tel.png" alt="">
-                                <p class="telefone" id="telefone">123 456 789</p>
-                                <button id="edit-telefone" class="edit-btn">
-                                    <img src="../../Imagens/icon-lapis.png" alt="">
-                                </button>
+                                <p class="campo-texto" id="telefone">123 456 789</p>
                             </div>
+
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-mail.png" alt="">
-                                <p class="email" id="email">pedro@gmail.com</p>
-                                <button id="edit-email" class="edit-btn">
-                                    <img src="../../Imagens/icon-lapis.png" alt="">
-                                </button>
+                                <p class="campo-texto" id="email">pedro@gmail.com</p>
                             </div>
+
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-cruz.png" alt="">
-                                <p class="n-utente" id="n-utente">123456789</p>
-                                <button id="edit-n-utente" class="edit-btn">
-                                    <img src="../../Imagens/icon-lapis.png" alt="">
-                                </button>
+                                <p class="campo-texto" id="n-utente">123456789</p>
                             </div>
+
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-genero.png" alt="">
-
-                                <select class="edit-select genero" id="genero" disabled>
+                                <select class="edit-select" id="genero" disabled>
                                     <option value="Masculino" selected>Masculino</option>
                                     <option value="Feminino">Feminino</option>
                                     <option value="Prefiro não dizer">Prefiro não dizer</option>
                                     <option value="Outro">Outro</option>
                                 </select>
-
-                                <button id="edit-genero" class="edit-btn" type="button">
-                                    <img src="../../Imagens/icon-lapis.png" alt="">
-                                </button>
                             </div>
+
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-cruz.png" alt="">
-                                <input class="edit-date" id="data-nasc" type="date">
-                                <button id="edit-data-nasc" class="edit-btn">
-                                    <img src="../../Imagens/icon-lapis.png" alt="">
-                                </button>
+                                <input class="edit-date" id="data-nasc" type="date" disabled>
                             </div>
+
+                            <!-- Botões de ação -->
+                            <div class="botoes-acao">
+                                <button id="btn-editar" class="btn-editar" onclick="ativarEdicao()">
+                                    <!-- <img src="../../Imagens/icon-lapis.png" alt="">--> Editar 
+                                </button>
+                                <div id="botoes-confirmacao" style="display:none; gap:10px;">
+                                    <button class="btn-confirmar" onclick="confirmarEdicao()">✓ Confirmar</button>
+                                    <button class="btn-cancelar" onclick="cancelarEdicao()">✗ Cancelar</button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <script>
-            // Ativa edição do género
-            const btnGenero = document.getElementById("edit-genero");
-            const selectGenero = document.getElementById("genero");
 
-            btnGenero.addEventListener("click", function () {
-                selectGenero.disabled = false;
-                selectGenero.focus();
+        <script>
+            // ─── Foto de perfil ───────────────────────────────────────────
+            const fotoWrapper = document.getElementById('foto-wrapper');
+            const inputFoto   = document.getElementById('input-foto');
+            const imgPerfil   = document.getElementById('foto-perfil');
+            const headerFoto  = document.getElementById('header-foto');
+
+            fotoWrapper.addEventListener('click', () => inputFoto.click());
+
+            inputFoto.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    imgPerfil.src = ev.target.result;
+                    headerFoto.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
             });
-            
-            const btnGuardar = Object.assign(document.createElement('button'), {
-                className: 'btn-guardar-inline'
-            });
-            btnGuardar.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                </svg>`;
+
+            // ─── Dados do utilizador (localStorage) ──────────────────────
             const user = JSON.parse(localStorage.getItem('utilizador'));
             if (!user) window.location.href = '../index.html';
 
-            const campos = [
-                { btnId: 'edit-nome',       elemId: 'nome',       campo: 'nomeCompleto' },
-                { btnId: 'edit-telefone',   elemId: 'telefone',   campo: 'telefone' },
-                { btnId: 'edit-email',      elemId: 'email',       campo: 'email' },
-                { btnId: 'edit-n-utente', elemId: 'n-utente', campo: 'n_utente' }
+            // Mapeamento campo HTML → chave no objeto user
+            const camposConfig = [
+                { elemId: 'nome',      campo: 'nomeCompleto' },
+                { elemId: 'telefone',  campo: 'telefone'     },
+                { elemId: 'email',     campo: 'email'        },
+                { elemId: 'n-utente',  campo: 'n_utente'     },
             ];
 
-            // Preenche os dados
-            campos.forEach(({ elemId, campo }) => {
+            // Preenche valores iniciais
+            camposConfig.forEach(({ elemId, campo }) => {
                 document.getElementById(elemId).textContent = user[campo] || 'N/A';
             });
             document.querySelector('.profile span').textContent = user.nomeCompleto || 'Utilizador';
 
-            function ativarEdicao({ btnId, elemId, campo }) {
-                document.getElementById(btnId).addEventListener('click', () => {
-                    const p = document.getElementById(elemId);
-                    const input = Object.assign(document.createElement('input'), {
-                        type: 'text', value: p.textContent === 'N/A' ? '' : p.textContent, className: 'input-inline'
-                    });
-                    const btnGuardar = Object.assign(document.createElement('button'), {
-                        textContent: '✓', className: 'btn-guardar-inline'
-                    });
+            // ─── Lógica de edição global ──────────────────────────────────
+            let valoresOriginais = {};
 
-                    p.replaceWith(input);
-                    document.getElementById(btnId).replaceWith(btnGuardar);
-                    input.focus();
-
-                    async function guardar() {
-                        const res = await fetch(`http://localhost:8080/users/${user.id}`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ [campo]: input.value.trim() })
-                        });
-                        if (!res.ok) return alert('Erro ao guardar.');
-
-                        Object.assign(user, await res.json());
-                        localStorage.setItem('utilizador', JSON.stringify(user));
-
-                        const novop = Object.assign(document.createElement('p'), {
-                            id: elemId, textContent: user[campo] || 'N/A'
-                        });
-                        const novoBtn = document.createElement('button');
-                        novoBtn.id = btnId; novoBtn.className = 'edit-btn';
-                        novoBtn.innerHTML = '<img src="../../Imagens/icon-lapis.png" alt="">';
-
-                        input.replaceWith(novop);
-                        btnGuardar.replaceWith(novoBtn);
-                        ativarEdicao({ btnId, elemId, campo });
-
-                        if (campo === 'nomeCompleto')
-                            document.querySelector('.profile span').textContent = user[campo];
-                    }
-
-                    btnGuardar.addEventListener('click', guardar);
-                    input.addEventListener('keydown', e => e.key === 'Enter' && guardar());
+            function ativarEdicao() {
+                // Guarda valores actuais antes de editar
+                camposConfig.forEach(({ elemId }) => {
+                    valoresOriginais[elemId] = document.getElementById(elemId).textContent;
                 });
+                valoresOriginais['genero']    = document.getElementById('genero').value;
+                valoresOriginais['data-nasc'] = document.getElementById('data-nasc').value;
+
+                // Converte <p> em <input>
+                camposConfig.forEach(({ elemId }) => {
+                    const p = document.getElementById(elemId);
+                    const input = document.createElement('input');
+                    input.type      = 'text';
+                    input.className = 'input-inline';
+                    input.id        = elemId;
+                    input.value     = p.textContent === 'N/A' ? '' : p.textContent;
+                    p.replaceWith(input);
+                });
+
+                // Activa select e date
+                document.getElementById('genero').disabled    = false;
+                document.getElementById('data-nasc').disabled = false;
+
+                // Troca botões
+                document.getElementById('btn-editar').style.display         = 'none';
+                document.getElementById('botoes-confirmacao').style.display = 'flex';
             }
 
-            campos.forEach(ativarEdicao);
+            async function confirmarEdicao() {
+                // Recolhe novos valores
+                const payload = {};
+                camposConfig.forEach(({ elemId, campo }) => {
+                    const input = document.getElementById(elemId);
+                    const novo  = input.value.trim();
+                    // Só inclui no payload se o valor mudou
+                    if (novo !== valoresOriginais[elemId]) payload[campo] = novo;
+                });
+
+                const novoGenero   = document.getElementById('genero').value;
+                const novaData     = document.getElementById('data-nasc').value;
+                if (novoGenero !== valoresOriginais['genero'])       payload['genero']     = novoGenero;
+                if (novaData   !== valoresOriginais['data-nasc'])    payload['dataNasc']   = novaData;
+
+                // Envia para o backend (só se houver alterações)
+                if (Object.keys(payload).length > 0) {
+                    try {
+                        const res = await fetch(`http://localhost:8080/users/${user.id}`, {
+                            method:  'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body:    JSON.stringify(payload)
+                        });
+                        if (!res.ok) { alert('Erro ao guardar alterações.'); return; }
+                        Object.assign(user, await res.json());
+                        localStorage.setItem('utilizador', JSON.stringify(user));
+                    } catch (err) {
+                        console.warn('Backend não disponível, guardando localmente.', err);
+                        Object.assign(user, payload);
+                        localStorage.setItem('utilizador', JSON.stringify(user));
+                    }
+                }
+
+                // Converte <input> de volta para <p>
+                camposConfig.forEach(({ elemId, campo }) => {
+                    const input = document.getElementById(elemId);
+                    const p     = document.createElement('p');
+                    p.className   = 'campo-texto';
+                    p.id          = elemId;
+                    p.textContent = user[campo] || input.value || 'N/A';
+                    input.replaceWith(p);
+                });
+
+                // Desactiva select e date
+                document.getElementById('genero').disabled    = true;
+                document.getElementById('data-nasc').disabled = true;
+
+                // Actualiza nome no header
+                document.querySelector('.profile span').textContent = user.nomeCompleto || 'Utilizador';
+
+                // Troca botões
+                document.getElementById('btn-editar').style.display         = 'flex';
+                document.getElementById('botoes-confirmacao').style.display = 'none';
+            }
+
+            function cancelarEdicao() {
+                // Reverte <input> para <p> com os valores originais
+                camposConfig.forEach(({ elemId }) => {
+                    const input = document.getElementById(elemId);
+                    const p     = document.createElement('p');
+                    p.className   = 'campo-texto';
+                    p.id          = elemId;
+                    p.textContent = valoresOriginais[elemId];
+                    input.replaceWith(p);
+                });
+
+                // Reverte select e date
+                document.getElementById('genero').value    = valoresOriginais['genero'];
+                document.getElementById('genero').disabled = true;
+                document.getElementById('data-nasc').value    = valoresOriginais['data-nasc'];
+                document.getElementById('data-nasc').disabled = true;
+
+                // Troca botões
+                document.getElementById('btn-editar').style.display         = 'flex';
+                document.getElementById('botoes-confirmacao').style.display = 'none';
+            }
         </script>
     </body>
 </html>
