@@ -25,8 +25,8 @@ INSERT INTO doenca (id_utilizador, cronica, nome, observacoes) VALUES
     (2, TRUE, 'Bradicardia sinusal', 'Frequência cardíaca de repouso naturalmente mais baixa que a média, acompanhada por cardiologia.');
 
 -- Médico
-INSERT INTO medico (id_cartao, nome, especializacao) VALUES
-    (100234, 'Dr. Carlos Pinto', 'Cardiologia');
+INSERT INTO medico (id_cartao, numero_medico, password, nome, especializacao) VALUES
+    (100234, '967545', '123', 'Dr. Carlos Pinto', 'Cardiologia');
 
 -- Associação do dispositivo ao utilizador 1 (mac_address fictício, substituir pelo real)
 INSERT INTO utilizador_dispositivo (id_utilizador, id_dispositivo, mac_address, id_dispositivo_curto, data_associacao) VALUES

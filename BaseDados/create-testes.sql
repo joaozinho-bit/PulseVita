@@ -57,7 +57,9 @@ CREATE TABLE doenca (
 
 CREATE TABLE medico (
     id SERIAL PRIMARY KEY,
-    id_cartao INTEGER,
+    id_cartao INTEGER UNIQUE, -- Cartão para login
+    numero_medico VARCHAR(20) UNIQUE, -- Numero do medico para login sem cartao
+    password VARCHAR(100), -- Password para login sem cartao
     nome VARCHAR(100),
     especializacao VARCHAR(100)
 );
