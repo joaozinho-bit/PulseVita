@@ -12,19 +12,50 @@
     justify-content: center;
 }
 
-.info-pessoal .foto{
+/* ─── Foto clicável ─────────────────────────────────────────── */
+.info-pessoal .foto {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 20px;
     padding: 10px;
     border: 3px solid #B6E5E5;
+    cursor: pointer;
+    overflow: hidden;
+    /* mantém o tamanho fixo para o overlay cobrir correctamente */
+    width: fit-content;
+    height: fit-content;
 }
 
-.info-pessoal .foto img{
+.info-pessoal .foto img#foto-perfil {
     width: 250px;
+    display: block;
+    border-radius: 12px;
 }
 
+.foto-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border-radius: 16px;
+}
+
+.info-pessoal .foto:hover .foto-overlay {
+    opacity: 1;
+}
+
+.foto-overlay img {
+    width: 36px;
+    filter: brightness(0) invert(1);
+}
+
+/* ─── Lista de info ─────────────────────────────────────────── */
 .info-pessoal .lista-info{
     margin: 0 0 0 20px;
 }
@@ -36,6 +67,7 @@
     align-items: center;
     gap: 10px;
 }
+
 .info-pessoal .lista-info .dados p{
     color: #ffffff;
 }
@@ -44,20 +76,11 @@
     width: 30px;
 }
 
-.dados .edit-btn{
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.dados .edit-btn img{
-    width: 15px;
-}
-
+/* ─── Select género ─────────────────────────────────────────── */
 .info-pessoal .lista-info .dados .edit-select {
     border-radius: 12px;
     border: none;
-    background-color: #20523600;
+    background-color: transparent;
 
     color: #ffffff;
     font-size: 15px;
@@ -66,35 +89,36 @@
     padding: 5px;
     outline: none;
 
-    /* min-width: 170px;
-    height: 40px; */
-
     cursor: pointer;
     transition: 0.3s ease;
 
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-
 }
 
-/* Quando estiver bloqueado */
 .info-pessoal .lista-info .dados .edit-select:disabled {
     opacity: 1;
     cursor: default;
 }
 
-/* Quando clicar/editar */
+.info-pessoal .lista-info .dados .edit-select:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1.5px solid #138C6E;
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+
 .info-pessoal .lista-info .dados .edit-select:focus {
     background: rgba(255, 255, 255, 0.158);
 }
 
-/* Opções dentro do dropdown */
 .info-pessoal .lista-info .dados .edit-select option {
     background-color: #205236;
     color: #ffffff;
 }
 
+/* ─── Input date ────────────────────────────────────────────── */
 .info-pessoal .lista-info .dados .edit-date {
     background: none;
     border-radius: 12px;
@@ -114,12 +138,20 @@
     cursor: pointer;
 }
 
-/* Quando clicas no input */
+.info-pessoal .lista-info .dados .edit-date:not(:disabled) {
+    border: 1.5px solid #138C6E;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+}
+
+.info-pessoal .lista-info .dados .edit-date:disabled {
+    cursor: default;
+}
+
 .info-pessoal .lista-info .dados .edit-date:focus {
     background: rgba(255, 255, 255, 0.034);
 }
 
-/* Ícone do calendário no Chrome/Edge */
 .info-pessoal .lista-info .dados .edit-date::-webkit-calendar-picker-indicator {
     filter: invert(1);
     cursor: pointer;
@@ -132,27 +164,14 @@
     transform: scale(1.1);
 }
 
-/* Remove estilos automáticos em alguns browsers */
-.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit {
-    color: #ffffff;
-}
-
-.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-fields-wrapper {
-    color: #ffffff;
-}
-
-.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-text {
-    color: #B6E5E5;
-    padding: 0 2px;
-}
-
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit { color: #ffffff; }
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-fields-wrapper { color: #ffffff; }
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-text { color: #B6E5E5; padding: 0 2px; }
 .info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-day-field,
 .info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-month-field,
-.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-year-field {
-    color: #ffffff;
-}
+.info-pessoal .lista-info .dados .edit-date::-webkit-datetime-edit-year-field { color: #ffffff; }
 
-/* Inputs apos clicar em editar */
+/* ─── Input inline (modo edição) ────────────────────────────── */
 .input-inline {
     display: inline-flex;
     align-items: center;
@@ -174,29 +193,71 @@
     box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.18);
 }
 
-.btn-guardar-inline {
-    display: inline-flex;
+/* ─── Botões de acção ───────────────────────────────────────── */
+.botoes-acao {
+    margin-top: 16px;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    background: #138C6E;
-    color: #fff;
+    gap: 10px;
+}
+
+.btn-editar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 22px;
+    background: #205236;
+    color: #ffffff;
     border: none;
-    border-radius: 8px;
-    width: 34px;
-    height: 34px;
-    margin-left: 8px;
-    font-size: 1rem;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(19, 140, 110, 0.25);
     transition: background 0.2s, transform 0.1s;
-    vertical-align: middle;
 }
 
-.btn-guardar-inline:hover {
+.btn-editar img {
+    width: 15px;
+    filter: brightness(0) invert(1);
+}
+
+.btn-editar:hover  { background: #0f7059; }
+.btn-editar:active { transform: scale(0.97); }
+
+#botoes-confirmacao {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-confirmar {
+    padding: 9px 22px;
     background: #34C759;
-    transform: scale(1.08);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
 }
 
-.btn-guardar-inline:active {
-    transform: scale(0.96);
+.btn-confirmar:hover  { background: #28a045; }
+.btn-confirmar:active { transform: scale(0.97); }
+
+.btn-cancelar {
+    padding: 9px 22px;
+    background: transparent;
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.1s;
 }
+
+.btn-cancelar:hover  { background: #e74c3c; color: #ffffff; }
+.btn-cancelar:active { transform: scale(0.97); }
