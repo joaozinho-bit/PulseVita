@@ -1,3 +1,7 @@
+-- Script para criar as tabelas necessárias
+
+-- Limpa as tabelas existentes para evitar conflitos
+DROP TABLE IF EXISTS limite_paciente;
 DROP TABLE IF EXISTS historico_utilizador;
 DROP TABLE IF EXISTS consulta;
 DROP TABLE IF EXISTS estado_consulta;
@@ -7,6 +11,7 @@ DROP TABLE IF EXISTS medico;
 DROP TABLE IF EXISTS utilizador;
 DROP TABLE IF EXISTS dispositivo;
 
+-- Catálogo dos modelos de dispositivo vendidos pela empresa (ex: LinkLife, futuros modelos)
 CREATE TABLE dispositivo (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100),
@@ -27,11 +32,15 @@ CREATE TABLE utilizador (
     data_registo TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Associa uma unidade física de um dispositivo a um utilizador.
+-- mac_address é interno (nunca mostrado ao utilizador).
+-- id_dispositivo_curto é o código impresso no produto que o utilizador introduz na app.
 CREATE TABLE utilizador_dispositivo (
     id SERIAL PRIMARY KEY,
     id_utilizador INTEGER,
     id_dispositivo INTEGER,
-    dispositivo_serial VARCHAR(100),
+    mac_address VARCHAR(17) UNIQUE,
+    id_dispositivo_curto VARCHAR(20) UNIQUE,
     data_associacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_utilizador) REFERENCES utilizador(id),
     FOREIGN KEY (id_dispositivo) REFERENCES dispositivo(id)
@@ -53,16 +62,24 @@ CREATE TABLE medico (
     especializacao VARCHAR(100)
 );
 
+-- Limites de alerta personalizados, definidos pelo médico para cada paciente.
+-- Se não existir registo para o utilizador, o backend aplica os valores padrão (ex: bpm 60-100, temp 37.5).
+CREATE TABLE limite_paciente (
+    id SERIAL PRIMARY KEY,
+    id_utilizador INTEGER,
+    id_medico INTEGER,
+    bpm_minimo INTEGER,
+    bpm_maximo INTEGER,
+    temperatura_maxima DECIMAL(4,2),
+    data_definicao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_utilizador) REFERENCES utilizador(id),
+    FOREIGN KEY (id_medico) REFERENCES medico(id)
+);
+
 CREATE TABLE estado_consulta (
     estado VARCHAR(50) PRIMARY KEY,
     descricao VARCHAR(255)
 );
-
-INSERT INTO estado_consulta (estado, descricao) VALUES
-    ('POR_CONFIRMAR', 'Consulta por confirmar'),
-    ('CONFIRMADA', 'Consulta confirmada'),
-    ('CANCELADA', 'Consulta cancelada'),
-    ('CONCLUIDA', 'Consulta concluída');
 
 CREATE TABLE consulta (
     id SERIAL PRIMARY KEY,
