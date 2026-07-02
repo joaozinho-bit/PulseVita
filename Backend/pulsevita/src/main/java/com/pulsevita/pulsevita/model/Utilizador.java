@@ -22,12 +22,19 @@ public class Utilizador {
     @Column(name = "n_utente")
     private String n_utente;
 
+    @Column(name = "genero")
     private String genero;
-    private String username;
-    private String email;
-    private String telefone;
-    private String password;
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "email")
+    private String email;
+    @Column(name = "telefone")  
+    private String telefone;
+    
+    @Column(name = "password")
+    private String password;
     // Gets e Sets
     public Long getId() {
         return id;
