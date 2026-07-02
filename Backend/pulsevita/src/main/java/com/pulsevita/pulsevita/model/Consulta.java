@@ -18,8 +18,9 @@ public class Consulta {
     private Utilizador utilizador;
 
     // Sem relação JPA por agora - entity Medico ainda não existe
-    @Column(name = "id_medico")
-    private Long idMedico;
+    @ManyToOne
+    @JoinColumn(name = "id_medico")
+    private Medico medico;
 
     @Column(name = "estado")
     private String estado = "POR_CONFIRMAR"; // PENDENTE, CONFIRMADA, CANCELADA
@@ -40,8 +41,8 @@ public class Consulta {
     public Utilizador getUtilizador() { return utilizador; }
     public void setUtilizador(Utilizador utilizador) { this.utilizador = utilizador; }
 
-    public Long getIdMedico() { return idMedico; }
-    public void setIdMedico(Long idMedico) { this.idMedico = idMedico; }
+    public Medico getMedico() { return medico; }
+    public void setMedico(Medico medico) { this.medico = medico; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
