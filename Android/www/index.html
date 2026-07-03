@@ -41,7 +41,7 @@
 
         if (resposta.ok) {
             const dados = await resposta.json();
-            localStorage.setItem('utilizador', JSON.stringify(dados));
+            localStorage.setItem('paciente', JSON.stringify(dados));
             window.location.href = 'pages/dashboard.html';
         } else {
             alert("Email ou senha inválidos!");

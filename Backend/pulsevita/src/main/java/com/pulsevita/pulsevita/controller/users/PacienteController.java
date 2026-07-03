@@ -1,8 +1,8 @@
 
 package com.pulsevita.pulsevita.controller.users;
 
-import com.pulsevita.pulsevita.model.Utilizador;
-import com.pulsevita.pulsevita.service.UtilizadorService;
+import com.pulsevita.pulsevita.model.Paciente;
+import com.pulsevita.pulsevita.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*")
-public class UtilizadorController {
+public class PacienteController {
 
     @Autowired
-    private UtilizadorService service;
+    private PacienteService service;
 
     static class LoginRequest {
         public String email;
@@ -23,10 +23,10 @@ public class UtilizadorController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginData) {
-        Utilizador utilizador = service.fazerLogin(loginData.email, loginData.senha);
+        Paciente paciente = service.fazerLogin(loginData.email, loginData.senha);
 
-        if (utilizador != null) {
-            return ResponseEntity.ok(utilizador);
+        if (paciente != null) {
+            return ResponseEntity.ok(paciente);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou senha incorretos.");
         }
@@ -40,7 +40,7 @@ public class UtilizadorController {
 
 @PostMapping("/register")
 public ResponseEntity<String> register(@RequestBody RegisterRequest dados) {
-    boolean sucesso = service.registarUtilizador(dados.nomeCompleto, dados.email, dados.senha);
+    boolean sucesso = service.registarPaciente(dados.nomeCompleto, dados.email, dados.senha);
     if (sucesso) {
         return ResponseEntity.ok("Conta criada");
     } else {
@@ -49,8 +49,8 @@ public ResponseEntity<String> register(@RequestBody RegisterRequest dados) {
 }
 
 @GetMapping("/{id}")
-public ResponseEntity<?> getUtilizador(@PathVariable Long id) {
-    return service.getUtilizador(id)
+public ResponseEntity<?> getPaciente(@PathVariable Long id) {
+    return service.getPaciente(id)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
 }
@@ -63,8 +63,8 @@ static class UpdateRequest {
 }
 
 @PutMapping("/{id}")
-public ResponseEntity<?> updateUtilizador(@PathVariable Long id, @RequestBody UpdateRequest dados) {
-    Utilizador atualizado = service.atualizarUtilizador(id, dados.nomeCompleto, dados.telefone, dados.email, dados.n_utente);
+public ResponseEntity<?> updatePaciente(@PathVariable Long id, @RequestBody UpdateRequest dados) {
+    Paciente atualizado = service.atualizarPaciente(id, dados.nomeCompleto, dados.telefone, dados.email, dados.n_utente);
     if (atualizado != null) {
         return ResponseEntity.ok(atualizado);
     }

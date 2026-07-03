@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
-    // consultas confirmadas de um utilizador, ordenadas por data/hora
-    List<Consulta> findByUtilizadorIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(Long idUtilizador, String estado);
+    // consultas confirmadas de um paciente, ordenadas por data/hora
+    List<Consulta> findByPacienteIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(Long idPaciente, String estado);
 }
