@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../Imagens/Icon app.png">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/toast.css">
     <title>Pagina de Login</title>
 </head>
 <body>
@@ -27,6 +29,11 @@
             <img src="../Imagens/PulseVita-para-Login.png" alt="PulseVita">
         </div>
     </div>
+
+
+</body>
+<script src="js/toast.js"></script>
+
     <script>
     document.getElementById('btn-entrar').addEventListener('click', async function() {
     const emailValue = document.getElementById('email-input').value;
@@ -44,13 +51,22 @@
             localStorage.setItem('utilizador', JSON.stringify(dados));
             window.location.href = 'pages/dashboard.html';
         } else {
-            alert("Email ou senha inválidos!");
+            toast.error("Email ou senha inválidos.");
         }
     } catch (erro) {
-        alert("Não foi possível contactar o servidor.");
+        toast.error("Não foi possível contactar o servidor.");
     }
 });
 </script>
-</body>
+
+<script>
+toast.success("Dados guardados.");
+
+toast.warning("Existem campos por preencher.", 6000);
+
+toast.error("Erro ao ligar ao servidor.", 10000);
+
+toast.info("Sincronização iniciada.", 2000);
+</script>
 
 </html>
