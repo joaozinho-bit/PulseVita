@@ -28,20 +28,19 @@
         </div>
     </div>
     <script>
-    document.getElementById('btn-entrar').addEventListener('click', async function() {
+document.getElementById('btn-entrar').addEventListener('click', async function() {
     const emailValue = document.getElementById('email-input').value;
     const senhaValue = document.getElementById('senha-input').value;
 
     try {
         const resposta = await fetch('http://localhost:8080/users/login', {
             method: 'POST',
+            credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: emailValue, senha: senhaValue })
         });
 
         if (resposta.ok) {
-            const dados = await resposta.json();
-            localStorage.setItem('paciente', JSON.stringify(dados));
             window.location.href = 'pages/dashboard.html';
         } else {
             alert("Email ou senha inválidos!");

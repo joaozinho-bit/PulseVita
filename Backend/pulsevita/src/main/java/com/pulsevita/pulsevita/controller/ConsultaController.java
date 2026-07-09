@@ -12,33 +12,32 @@ import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/consultas")
-@CrossOrigin(origins = "*")
 public class ConsultaController {
 
     @Autowired
     private ConsultaService service;
 
     static class MarcarRequest {
-        public Long idUtilizador;
+        public Long idPaciente;
         public LocalDate data;
         public LocalTime hora;
     }
 
     @PostMapping
     public ResponseEntity<?> marcar(@RequestBody MarcarRequest dados) {
-        Consulta consulta = service.marcarConsulta(dados.idUtilizador, dados.data, dados.hora);
+        Consulta consulta = service.marcarConsulta(dados.idPaciente, dados.data, dados.hora);
         if (consulta != null) {
             return ResponseEntity.ok(consulta);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilizador não encontrado.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado.");
     }
 
-    @GetMapping("/utilizador/{id}")
+    @GetMapping("/paciente/{id}")
     public ResponseEntity<?> listar(@PathVariable Long id) {
         return ResponseEntity.ok(service.listarConsultasConfirmadas(id));
     }
 
-    @GetMapping("/utilizador/{id}/proxima")
+    @GetMapping("/paciente/{id}/proxima")
     public ResponseEntity<?> proxima(@PathVariable Long id) {
         return service.proximaConsulta(id)
                 .map(ResponseEntity::ok)

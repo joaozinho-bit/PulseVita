@@ -14,7 +14,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         
-        <title>Dashboard do Utilizador</title>
+        <title>Dashboard do Paciente</title>
     </head>
     <body>
         <!-- Header -->
@@ -82,7 +82,7 @@
                         </a>
                     </ul>
                     <div class="btn-sair">
-                        <a href="../index.html">        
+                        <a href="../index.html" id="btn-sair">        
                             <p class="sair">Sair</p>
                         </a>
                     </div>
@@ -121,7 +121,7 @@
 
                             <div class="dados">
                                 <img class="icon" src="../../Imagens/icon-cruz.png" alt="">
-                                <p class="campo-texto" id="n-utente">123456789</p>
+                                <p class="campo-texto" id="n-paciente">123456789</p>
                             </div>
 
                             <div class="dados">
@@ -157,150 +157,162 @@
         </section>
 
         <script>
-            // ─── Foto de perfil ───────────────────────────────────────────
-            const fotoWrapper = document.getElementById('foto-wrapper');
-            const inputFoto   = document.getElementById('input-foto');
-            const imgPerfil   = document.getElementById('foto-perfil');
-            const headerFoto  = document.getElementById('header-foto');
+    // ─── Mapeamento género (frontend ↔ backend) ────────────────────
+    const generoParaBackend = { 'Masculino': 'M', 'Feminino': 'F', 'Prefiro não dizer': 'P', 'Outro': 'O' };
+    const generoParaFrontend = { 'M': 'Masculino', 'F': 'Feminino', 'P': 'Prefiro não dizer', 'O': 'Outro' };
 
-            fotoWrapper.addEventListener('click', () => inputFoto.click());
+    // ─── Foto de perfil ───────────────────────────────────────────
+    const fotoWrapper = document.getElementById('foto-wrapper');
+    const inputFoto   = document.getElementById('input-foto');
+    const imgPerfil   = document.getElementById('foto-perfil');
+    const headerFoto  = document.getElementById('header-foto');
 
-            inputFoto.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    imgPerfil.src = ev.target.result;
-                    headerFoto.src = ev.target.result;
-                };
-                reader.readAsDataURL(file);
+    fotoWrapper.addEventListener('click', () => inputFoto.click());
+
+    inputFoto.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            imgPerfil.src = ev.target.result;
+            headerFoto.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Mapeamento campo HTML → chave no objeto user
+    const camposConfig = [
+        { elemId: 'nome',      campo: 'nomeCompleto' },
+        { elemId: 'telefone',  campo: 'telefone'     },
+        { elemId: 'email',     campo: 'email'        },
+        { elemId: 'n-paciente',campo: 'n_paciente'   },
+    ];
+
+    let user = null;
+    let valoresOriginais = {};
+
+    (async function carregarPaciente() {
+        try {
+            const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+            if (!resp.ok) { window.location.href = '../index.html'; return; }
+            user = await resp.json();
+        } catch (erro) {
+            window.location.href = '../index.html';
+            return;
+        }
+
+        camposConfig.forEach(({ elemId, campo }) => {
+            document.getElementById(elemId).textContent = user[campo] || 'N/A';
+        });
+        document.querySelector('.profile span').textContent = user.nomeCompleto || 'Paciente';
+        document.getElementById('genero').value = generoParaFrontend[user.genero] || 'Masculino';
+        document.getElementById('data-nasc').value = user.dataNascimento || '';
+    })();
+
+    function ativarEdicao() {
+        camposConfig.forEach(({ elemId }) => {
+            valoresOriginais[elemId] = document.getElementById(elemId).textContent;
+        });
+        valoresOriginais['genero']    = document.getElementById('genero').value;
+        valoresOriginais['data-nasc'] = document.getElementById('data-nasc').value;
+
+        camposConfig.forEach(({ elemId }) => {
+            const p = document.getElementById(elemId);
+            const input = document.createElement('input');
+            input.type      = 'text';
+            input.className = 'input-inline';
+            input.id        = elemId;
+            input.value     = p.textContent === 'N/A' ? '' : p.textContent;
+            p.replaceWith(input);
+        });
+
+        document.getElementById('genero').disabled    = false;
+        document.getElementById('data-nasc').disabled = false;
+
+        document.getElementById('btn-editar').style.display         = 'none';
+        document.getElementById('botoes-confirmacao').style.display = 'flex';
+    }
+
+    async function confirmarEdicao() {
+        const payload = {};
+        camposConfig.forEach(({ elemId, campo }) => {
+            const input = document.getElementById(elemId);
+            const novo  = input.value.trim();
+            if (novo !== valoresOriginais[elemId]) payload[campo] = novo;
+        });
+
+        const novoGenero = document.getElementById('genero').value;
+        const novaData   = document.getElementById('data-nasc').value;
+        if (novoGenero !== valoresOriginais['genero']) payload['genero']   = generoParaBackend[novoGenero];
+        if (novaData   !== valoresOriginais['data-nasc']) payload['dataNasc'] = novaData;
+
+        if (Object.keys(payload).length > 0) {
+            try {
+                const res = await fetch(`http://localhost:8080/users/${user.id}`, {
+                    method:  'PUT',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify(payload)
+                });
+                if (!res.ok) { alert('Erro ao guardar alterações.'); return; }
+                user = await res.json();
+            } catch (err) {
+                alert('Não foi possível contactar o servidor.');
+                return;
+            }
+        }
+
+        camposConfig.forEach(({ elemId, campo }) => {
+            const input = document.getElementById(elemId);
+            const p     = document.createElement('p');
+            p.className   = 'campo-texto';
+            p.id          = elemId;
+            p.textContent = user[campo] || input.value || 'N/A';
+            input.replaceWith(p);
+        });
+
+        document.getElementById('genero').value    = generoParaFrontend[user.genero] || novoGenero;
+        document.getElementById('data-nasc').value = user.dataNascimento || novaData;
+
+        document.getElementById('genero').disabled    = true;
+        document.getElementById('data-nasc').disabled = true;
+
+        document.querySelector('.profile span').textContent = user.nomeCompleto || 'Paciente';
+
+        document.getElementById('btn-editar').style.display         = 'flex';
+        document.getElementById('botoes-confirmacao').style.display = 'none';
+    }
+
+    function cancelarEdicao() {
+        camposConfig.forEach(({ elemId }) => {
+            const input = document.getElementById(elemId);
+            const p     = document.createElement('p');
+            p.className   = 'campo-texto';
+            p.id          = elemId;
+            p.textContent = valoresOriginais[elemId];
+            input.replaceWith(p);
+        });
+
+        document.getElementById('genero').value    = valoresOriginais['genero'];
+        document.getElementById('genero').disabled = true;
+        document.getElementById('data-nasc').value    = valoresOriginais['data-nasc'];
+        document.getElementById('data-nasc').disabled = true;
+
+        document.getElementById('btn-editar').style.display         = 'flex';
+        document.getElementById('botoes-confirmacao').style.display = 'none';
+    }
+
+    document.getElementById('btn-sair').addEventListener('click', async function (e) {
+        e.preventDefault();
+        try {
+            await fetch('http://localhost:8080/users/logout', {
+                method: 'POST',
+                credentials: 'include'
             });
-
-            // ─── Dados do utilizador (localStorage) ──────────────────────
-            const user = JSON.parse(localStorage.getItem('utilizador'));
-            if (!user) window.location.href = '../index.html';
-
-            // Mapeamento campo HTML → chave no objeto user
-            const camposConfig = [
-                { elemId: 'nome',      campo: 'nomeCompleto' },
-                { elemId: 'telefone',  campo: 'telefone'     },
-                { elemId: 'email',     campo: 'email'        },
-                { elemId: 'n-utente',  campo: 'n_utente'     },
-            ];
-
-            // Preenche valores iniciais
-            camposConfig.forEach(({ elemId, campo }) => {
-                document.getElementById(elemId).textContent = user[campo] || 'N/A';
-            });
-            document.querySelector('.profile span').textContent = user.nomeCompleto || 'Utilizador';
-
-            // ─── Lógica de edição global ──────────────────────────────────
-            let valoresOriginais = {};
-
-            function ativarEdicao() {
-                // Guarda valores actuais antes de editar
-                camposConfig.forEach(({ elemId }) => {
-                    valoresOriginais[elemId] = document.getElementById(elemId).textContent;
-                });
-                valoresOriginais['genero']    = document.getElementById('genero').value;
-                valoresOriginais['data-nasc'] = document.getElementById('data-nasc').value;
-
-                // Converte <p> em <input>
-                camposConfig.forEach(({ elemId }) => {
-                    const p = document.getElementById(elemId);
-                    const input = document.createElement('input');
-                    input.type      = 'text';
-                    input.className = 'input-inline';
-                    input.id        = elemId;
-                    input.value     = p.textContent === 'N/A' ? '' : p.textContent;
-                    p.replaceWith(input);
-                });
-
-                // Activa select e date
-                document.getElementById('genero').disabled    = false;
-                document.getElementById('data-nasc').disabled = false;
-
-                // Troca botões
-                document.getElementById('btn-editar').style.display         = 'none';
-                document.getElementById('botoes-confirmacao').style.display = 'flex';
-            }
-
-            async function confirmarEdicao() {
-                // Recolhe novos valores
-                const payload = {};
-                camposConfig.forEach(({ elemId, campo }) => {
-                    const input = document.getElementById(elemId);
-                    const novo  = input.value.trim();
-                    // Só inclui no payload se o valor mudou
-                    if (novo !== valoresOriginais[elemId]) payload[campo] = novo;
-                });
-
-                const novoGenero   = document.getElementById('genero').value;
-                const novaData     = document.getElementById('data-nasc').value;
-                if (novoGenero !== valoresOriginais['genero'])       payload['genero']     = novoGenero;
-                if (novaData   !== valoresOriginais['data-nasc'])    payload['dataNasc']   = novaData;
-
-                // Envia para o backend (só se houver alterações)
-                if (Object.keys(payload).length > 0) {
-                    try {
-                        const res = await fetch(`http://localhost:8080/users/${user.id}`, {
-                            method:  'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body:    JSON.stringify(payload)
-                        });
-                        if (!res.ok) { alert('Erro ao guardar alterações.'); return; }
-                        Object.assign(user, await res.json());
-                        localStorage.setItem('utilizador', JSON.stringify(user));
-                    } catch (err) {
-                        console.warn('Backend não disponível, guardando localmente.', err);
-                        Object.assign(user, payload);
-                        localStorage.setItem('utilizador', JSON.stringify(user));
-                    }
-                }
-
-                // Converte <input> de volta para <p>
-                camposConfig.forEach(({ elemId, campo }) => {
-                    const input = document.getElementById(elemId);
-                    const p     = document.createElement('p');
-                    p.className   = 'campo-texto';
-                    p.id          = elemId;
-                    p.textContent = user[campo] || input.value || 'N/A';
-                    input.replaceWith(p);
-                });
-
-                // Desactiva select e date
-                document.getElementById('genero').disabled    = true;
-                document.getElementById('data-nasc').disabled = true;
-
-                // Actualiza nome no header
-                document.querySelector('.profile span').textContent = user.nomeCompleto || 'Utilizador';
-
-                // Troca botões
-                document.getElementById('btn-editar').style.display         = 'flex';
-                document.getElementById('botoes-confirmacao').style.display = 'none';
-            }
-
-            function cancelarEdicao() {
-                // Reverte <input> para <p> com os valores originais
-                camposConfig.forEach(({ elemId }) => {
-                    const input = document.getElementById(elemId);
-                    const p     = document.createElement('p');
-                    p.className   = 'campo-texto';
-                    p.id          = elemId;
-                    p.textContent = valoresOriginais[elemId];
-                    input.replaceWith(p);
-                });
-
-                // Reverte select e date
-                document.getElementById('genero').value    = valoresOriginais['genero'];
-                document.getElementById('genero').disabled = true;
-                document.getElementById('data-nasc').value    = valoresOriginais['data-nasc'];
-                document.getElementById('data-nasc').disabled = true;
-
-                // Troca botões
-                document.getElementById('btn-editar').style.display         = 'flex';
-                document.getElementById('botoes-confirmacao').style.display = 'none';
-            }
-        </script>
+        } catch (erro) {
+        }
+        window.location.href = '../index.html';
+    });
+</script>
     </body>
 </html>

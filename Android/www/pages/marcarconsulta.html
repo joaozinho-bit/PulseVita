@@ -14,7 +14,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         
-        <title>Dashboard do Utilizador</title>
+        <title>Dashboard do Paciente</title>
     </head>
     <body>
         <!-- Header -->
@@ -24,7 +24,7 @@
             </div>
             <div class="profile">
                 <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
-                <span id="nome-utilizador">Pedro Silva</span>
+                <span id="nome-paciente">Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
         </div>
@@ -82,7 +82,7 @@
                         </a>
                     </ul>
                     <div class="btn-sair">
-                        <a href="../index.html">        
+                        <a href="../index.html" id="btn-sair">        
                             <p class="sair">Sair</p>
                         </a>
                     </div>
@@ -174,93 +174,111 @@
         </section>       
         </div>
         <script>
-            const dEl=document.getElementById('mc-dia'),mEl=document.getElementById('mc-mes'),aEl=document.getElementById('mc-ano');
-            const btn=document.getElementById('mc-btn'),prev=document.getElementById('mc-preview');
-            const formArea=document.getElementById('mc-form-area'),succ=document.getElementById('mc-success');
-            const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-            let hora='';
+    const dEl=document.getElementById('mc-dia'),mEl=document.getElementById('mc-mes'),aEl=document.getElementById('mc-ano');
+    const btn=document.getElementById('mc-btn'),prev=document.getElementById('mc-preview');
+    const formArea=document.getElementById('mc-form-area'),succ=document.getElementById('mc-success');
+    const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    let hora='';
+    let paciente = null;
 
-            const utilizador = JSON.parse(localStorage.getItem('utilizador'));
-            if (!utilizador) {
-                window.location.href = '../index.html';
-            }else {
-                document.getElementById('nome-utilizador').textContent = utilizador.nomeCompleto;
-            }
+    (async function carregarPaciente() {
+        try {
+            const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+            if (!resp.ok) { window.location.href = '../index.html'; return; }
+            paciente = await resp.json();
+            document.getElementById('nome-paciente').textContent = paciente.nomeCompleto;
+        } catch (erro) {
+            window.location.href = '../index.html';
+        }
+    })();
 
-            const hoje=new Date();
-            for(let a=hoje.getFullYear();a<=hoje.getFullYear()+2;a++){const o=document.createElement('option');o.value=a;o.textContent=a;aEl.appendChild(o);}
+    const hoje=new Date();
+    for(let a=hoje.getFullYear();a<=hoje.getFullYear()+2;a++){const o=document.createElement('option');o.value=a;o.textContent=a;aEl.appendChild(o);}
 
-            function fillDias(){
-                const m=parseInt(mEl.value)||1,a=parseInt(aEl.value)||hoje.getFullYear();
-                const max=new Date(a,m,0).getDate(),cur=parseInt(dEl.value);
-                dEl.innerHTML='<option value="">--</option>';
-                for(let d=1;d<=max;d++){const o=document.createElement('option');o.value=d;o.textContent=String(d).padStart(2,'0');dEl.appendChild(o);}
-                if(cur&&cur<=max)dEl.value=cur;
-            }
-            mEl.addEventListener('change',fillDias);aEl.addEventListener('change',fillDias);fillDias();
+    function fillDias(){
+        const m=parseInt(mEl.value)||1,a=parseInt(aEl.value)||hoje.getFullYear();
+        const max=new Date(a,m,0).getDate(),cur=parseInt(dEl.value);
+        dEl.innerHTML='<option value="">--</option>';
+        for(let d=1;d<=max;d++){const o=document.createElement('option');o.value=d;o.textContent=String(d).padStart(2,'0');dEl.appendChild(o);}
+        if(cur&&cur<=max)dEl.value=cur;
+    }
+    mEl.addEventListener('change',fillDias);aEl.addEventListener('change',fillDias);fillDias();
 
-            function update(){
-                const d=dEl.value,m=mEl.value,a=aEl.value,ready=d&&m&&a&&hora;
-                if(ready){
-                    prev.innerHTML='Consulta para <strong>'+String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+'</strong> às <strong>'+hora+'</strong>.';
-                } else {
-                    const pts=[];if(!d||!m||!a)pts.push('uma data');if(!hora)pts.push('um horário');
-                    prev.innerHTML='Falta selecionar '+pts.join(' e ')+'.';
-                }
-                btn.disabled=!ready;
-            }
-            dEl.addEventListener('change',update);mEl.addEventListener('change',update);aEl.addEventListener('change',update);
+    function update(){
+        const d=dEl.value,m=mEl.value,a=aEl.value,ready=d&&m&&a&&hora;
+        if(ready){
+            prev.innerHTML='Consulta para <strong>'+String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+'</strong> às <strong>'+hora+'</strong>.';
+        } else {
+            const pts=[];if(!d||!m||!a)pts.push('uma data');if(!hora)pts.push('um horário');
+            prev.innerHTML='Falta selecionar '+pts.join(' e ')+'.';
+        }
+        btn.disabled=!ready;
+    }
+    dEl.addEventListener('change',update);mEl.addEventListener('change',update);aEl.addEventListener('change',update);
 
-            document.querySelectorAll('.mc-h').forEach(b=>{
-                b.addEventListener('click',()=>{
-                    document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('active'));
-                    b.classList.add('active');hora=b.dataset.h;update();
-                });
+    document.querySelectorAll('.mc-h').forEach(b=>{
+        b.addEventListener('click',()=>{
+            document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('active'));
+            b.classList.add('active');hora=b.dataset.h;update();
+        });
+    });
+
+    btn.addEventListener('click', async ()=>{
+        const d=dEl.value,m=mEl.value,a=aEl.value;
+        const dataStr = `${a}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+        btn.disabled = true;
+        btn.textContent = 'A marcar...';
+
+        try {
+            const resposta = await fetch('http://localhost:8080/consultas', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    idPaciente: paciente.id,
+                    data: dataStr,
+                    hora: hora
+                })
             });
 
-            btn.addEventListener('click', async ()=>{
-                const d=dEl.value,m=mEl.value,a=aEl.value;
-                const dataStr = `${a}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-
-                btn.disabled = true;
-                btn.textContent = 'A marcar...';
-
-                try {
-                    const resposta = await fetch('http://localhost:8080/consultas', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            idUtilizador: utilizador.id,
-                            data: dataStr,
-                            hora: hora
-                        })
-                    });
-
-                    if (resposta.ok) {
-                        document.getElementById('mc-s-text').textContent =
-                            String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+' às '+hora+'.';
-                        formArea.style.display = 'none';
-                        succ.classList.add('show');
-                    } else {
-                        alert('Não foi possível marcar a consulta. Tenta novamente.');
-                        btn.disabled = false;
-                        btn.textContent = 'Confirmar';
-                    }
-                } catch (erro) {
-                    alert('Não foi possível contactar o servidor.');
-                    btn.disabled = false;
-                    btn.textContent = 'Confirmar';
-                }
-            });
-
-            function mcReset(){
-                dEl.value='';mEl.value='';aEl.value='';hora='';
-                document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('active'));
-                prev.innerHTML='Seleciona data e horário para confirmar';
-                btn.disabled=true;btn.textContent='Confirmar';
-                formArea.style.display='';succ.classList.remove('show');
-                fillDias();
+            if (resposta.ok) {
+                document.getElementById('mc-s-text').textContent =
+                    String(d).padStart(2,'0')+' de '+meses[parseInt(m)-1]+' de '+a+' às '+hora+'.';
+                formArea.style.display = 'none';
+                succ.classList.add('show');
+            } else {
+                alert('Não foi possível marcar a consulta. Tenta novamente.');
+                btn.disabled = false;
+                btn.textContent = 'Confirmar';
             }
+        } catch (erro) {
+            alert('Não foi possível contactar o servidor.');
+            btn.disabled = false;
+            btn.textContent = 'Confirmar';
+        }
+    });
+
+    function mcReset(){
+        dEl.value='';mEl.value='';aEl.value='';hora='';
+        document.querySelectorAll('.mc-h').forEach(x=>x.classList.remove('active'));
+        prev.innerHTML='Seleciona data e horário para confirmar';
+        btn.disabled=true;btn.textContent='Confirmar';
+        formArea.style.display='';succ.classList.remove('show');
+        fillDias();
+    }
+
+    document.getElementById('btn-sair').addEventListener('click', async function (e) {
+        e.preventDefault();
+        try {
+            await fetch('http://localhost:8080/users/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (erro) {
+        }
+        window.location.href = '../index.html';
+    });
 </script>
     </body>
 </html>
