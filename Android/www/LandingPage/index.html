@@ -3,29 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Interativo</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
-    <title>Pulse vita</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">
-                <img class="logo" src="../../Imagens/Logo.png" alt="PulseVita">
-            </div>
 
-            <div class="nav-links">
-                <ul>
-                    <li>Home</li>
-                    <li>Sobre-nos</li>
-                    <li>Produto</li>
-                    <li>Planos</li>
-                    <div class="btn-nav-comprar">
-                        <a href="#">Comprar agora</a>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="background-interativo">
+        <header class="header">
+            <nav class="navbar">
+                <a class="navlink" href="#">Home</a>
+                <a class="navlink" href="#">Sobre nós</a>
+                <a class="navlink" href="#">Produto</a>
+                <a class="navlink" href="#">Comprar</a>
+            </nav>
+        </header>
+        <main class="conteudo">
+            <section class="primeira-sessao">
+                <div class="titulos">
+                    <p>Porquê o PulseVita</p>
+                    <h1>Saúde sob controlo</h1>
+                    <h2>sem complicações.</h2>
+                </div>
+                <div class="box">
+                    <div class="first-box">
+                        <h1>Medições rápidas</h1>
+                        <p>Resultados de temperatura e batimentos em poucos segundos, sempre que precisar.</p>
                     </div>
-                </ul>
-            </div>
-        </nav>
-    </header>
+
+                    <div class="second-box">
+                        <h1>Resultados em tempo real</h1>
+                        <p>Visualize a temperatura diretamente no ecrã integrado, sem precisar de outro aparelho.</p>
+                    </div>
+
+                    <div class="third-box">
+                        <h1>Sistema de controlo</h1>
+                        <p>Ao adquirir o nosso produto, voce ira ter acesso a um sistema para controlar o dispositivo e marcar consultas medicas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="segunda-sessao">
+                <div class="titulos">
+                    <p>Simples como deve ser</p>
+                    <h1>Como funciona</h1>
+                    <h2>em 3 passos</h2>
+                </div>
+                <div class="box">
+                    <div class="first-box">
+                        <!-- <p>Faça o teste utilizando o dispositivo</p> -->
+                    </div>
+
+                    <div class="second-box">
+                        <!-- <p>Visualize os resultados em simultâneo</p> -->
+                    </div>
+
+                    <div class="third-box">
+                        <!-- <p>Marque uma consulta com nossos especialistas</p> -->
+                    </div>
+                </div>
+            </section>
+
+            <section class="terceira-sessao">
+                <div class="titulos">
+                    <p>Tecnologia num so dispositivo</p>
+                    <h1>O que você precisa</h1>
+                    <h2>num so lugar</h2>
+                </div>
+                <div class="box">
+                    <div class="first-box">
+                        Medições de Batimentos cardíacos 
+                    </div>
+
+                    <div class="second-box">
+                        Medições de Temperatura corporal
+                    </div>
+
+                    <div class="third-box">
+                        Sistema onde pode gerir tudo
+                    </div>
+
+                    <div class="fourth-box">
+                        Sistema onde pode gerir tudo<br>poucos cliques
+                    </div>
+                </div>
+            </section>
+
+            <section class="quarta-sessao">
+                <div class="box">
+                    <div class="logo">
+                        <img src="../../Imagens/Elementos/logo-com-raio.png ">
+                    </div>
+
+                    <div class="meio">
+                        <div class="pessoa-topo">
+                            <img class="img-utilizador" src="">
+                            <div class="caixa-texto">
+                                <h1></h1>
+                                <p></p>
+                            </div>
+                            <img class="icons" src="">
+                        </div>
+
+                        <img class="sensor" src="../../Imagens/Elementos/SensorComFundo.png">
+
+                        <div class="pessoa-footer">
+                            <img class="img-utilizador" src="">
+                            <div class="caixa-texto">
+                                <h1></h1>
+                                <p></p>
+                            </div>
+                            <img class="icons" src="">
+                        </div>
+                        
+                    </div>
+
+                    <div class="especificacoes">
+                        <div class="item-especificacao ativo">
+                            <div class="top">
+                                <h1>Descrição</h1>
+
+                                <button class="btn-toggle" type="button">
+                                    −
+                                </button>
+                            </div>
+
+                            <p class="conteudo-especificacao">
+                                O sensor da Pulse Vita é um dispositivo criado para ser pequeno, prático e fácil de transportar, permitindo levá-lo consigo para qualquer lugar.
+                            </p>
+                        </div>
+
+                        <div class="item-especificacao">
+                            <div class="top">
+                                <h1>Materiais</h1>
+
+                                <button class="btn-toggle" type="button">
+                                    +
+                                </button>
+                            </div>
+
+                            <p class="conteudo-especificacao">
+                                O dispositivo é construído com materiais leves, resistentes e confortáveis, pensados para garantir praticidade, segurança e durabilidade no uso diário.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="quinta-sessao">
+                <div class="titulos">
+                    <p>Adquira o seu</p>
+                    <h1>Escolha o melhor</h1>
+                    <h2>Escolha Pulse Vita</h2>
+                </div>
+                <div class="box">
+                    <div class="img">
+                        <img src="../../Imagens/Elementos/sensor-para-encomenda.png">
+                    </div>
+
+                    <div class="txt-inputs">
+                        <h1>Garanta ja o seu !</h1>
+                        <p>Apos clicar em enviar, irá receber um email para continuar o processo de compra!</p>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="exemplo@email.com">
+                        <button>Enviar</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="sexta-sessao">
+                <div class="titulos">
+                    <p>Perguntas frequentes</p>
+                    <h1>Ainda tem duvidas ?</h1>
+                </div>
+                <div class="box">
+
+                    <div class="faq-item">
+                        <div class="faq-topo">
+                            <h2>Como funciona o sensor PulseVita?</h2>
+                            <button class="faq-btn">+</button>
+                        </div>
+                        <p class="faq-conteudo">O PulseVita combina um sensor ótico de batimentos e um sensor de temperatura. Coloca o dedo para medir os BPM e aproxima o dispositivo da testa para medir a temperatura. O resultado surge no ecrã e as luzes RGB indicam o estado.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-topo">
+                            <h2>O dispositivo é resistente à água?</h2>
+                            <button class="faq-btn">+</button>
+                        </div>
+                        <p class="faq-conteudo">O PulseVita possui resistência básica a salpicos, mas não deve ser submerso em água. Recomendamos mantê-lo afastado de líquidos para garantir a sua durabilidade.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-topo">
+                            <h2>Quanto tempo dura a bateria?</h2>
+                            <button class="faq-btn">+</button>
+                        </div>
+                        <p class="faq-conteudo">Com uso moderado, a bateria do PulseVita dura até 7 dias. O carregamento completo leva aproximadamente 90 minutos através do cabo USB-C incluído.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-topo">
+                            <h2>Os dados ficam guardados no dispositivo?</h2>
+                            <button class="faq-btn">+</button>
+                        </div>
+                        <p class="faq-conteudo">Sim, o PulseVita guarda o histórico das últimas medições localmente. Ao ligar à aplicação PulseVita, os dados são sincronizados automaticamente e ficam disponíveis no teu perfil.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
