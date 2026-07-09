@@ -55,6 +55,14 @@
             </div>
         </main>
     </body>
+    <script>
+    const medicoAtual = JSON.parse(localStorage.getItem('medico'));
+    if (!medicoAtual) {
+        window.location.href = 'login.html';
+    } else {
+        document.querySelector('.profile span').textContent = medicoAtual.nome;
+    }
+</script>
     <script src="../js/appMedicos.js"></script>
     <script src="../js/calendarioMedico.js"></script>
     <script src="../js/marcacoesMedico.js"></script>

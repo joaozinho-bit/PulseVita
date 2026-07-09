@@ -34,6 +34,9 @@ public class Consulta {
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
+    @Column(name = "motivo")
+    private String motivo;
+
     // Gets e Sets
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -55,4 +58,7 @@ public class Consulta {
 
     public LocalDateTime getDataCriacao() { return dataCriacao; }
     public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+
+    public String getMotivo() { return motivo; }
+    public void setMotivo(String motivo) { this.motivo = motivo; }
 }
