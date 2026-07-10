@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "utilizador", schema = "pulsevita") 
+@Table(name = "paciente", schema = "pulsevita") 
 
-public class Utilizador {
+public class Paciente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,15 +18,11 @@ public class Utilizador {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
     
-
-    @Column(name = "n_utente")
-    private String n_utente;
+    @Column(name = "n_paciente")
+    private String n_paciente;
 
     @Column(name = "genero")
     private String genero;
-
-    @Column(name = "username")
-    private String username;
 
     @Column(name = "email")
     private String email;
@@ -68,14 +64,6 @@ public class Utilizador {
         this.genero = genero;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -97,10 +85,10 @@ public class Utilizador {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-    public String getN_utente() {
-        return n_utente;
+    public String getN_paciente() {
+        return n_paciente;
     }
-    public void setN_utente(String n_utente) {
-        this.n_utente = n_utente;
+    public void setN_paciente(String n_paciente) {
+        this.n_paciente = n_paciente;
     }
 }

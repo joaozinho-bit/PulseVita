@@ -2,10 +2,10 @@ package com.pulsevita.pulsevita.service;
 
 import com.pulsevita.pulsevita.model.Consulta;
 import com.pulsevita.pulsevita.model.Medico;
-import com.pulsevita.pulsevita.model.Utilizador;
+import com.pulsevita.pulsevita.model.Paciente;
 import com.pulsevita.pulsevita.repository.ConsultaRepository;
 import com.pulsevita.pulsevita.repository.MedicoRepository;
-import com.pulsevita.pulsevita.repository.UtilizadorRepository;
+import com.pulsevita.pulsevita.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +23,16 @@ public class ConsultaService {
     private ConsultaRepository consultaRepository;
 
     @Autowired
-    private UtilizadorRepository utilizadorRepository;
-
-    @Autowired
+    private PacienteRepository pacienteRepository;
+ @Autowired
     private MedicoRepository medicoRepository;
-
-    public Consulta marcarConsulta(Long idUtilizador, LocalDate data, LocalTime hora, String motivo) {
-        Utilizador utilizador = utilizadorRepository.findById(idUtilizador).orElse(null);
-        if (utilizador == null) return null;
+    // Cria uma marcação com estado 
+    public Consulta marcarConsulta(Long idPaciente, LocalDate data, LocalTime hora, String motivo) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
+        if (paciente == null) return null;
 
         Consulta consulta = new Consulta();
-        consulta.setUtilizador(utilizador);
+        consulta.setPaciente(paciente);
         consulta.setDataConsulta(data);
         consulta.setHoraConsulta(hora);
         consulta.setEstado("POR_CONFIRMAR");
@@ -42,12 +41,14 @@ public class ConsultaService {
         return consultaRepository.save(consulta);
     }
 
-    public List<Consulta> listarConsultasConfirmadas(Long idUtilizador) {
-        return consultaRepository.findByUtilizadorIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(idUtilizador, "CONFIRMADA");
+    // Todas as consultas confirmadas
+    public List<Consulta> listarConsultasConfirmadas(Long idPaciente) {
+        return consultaRepository.findByPacienteIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(idPaciente, "CONFIRMADA");
     }
 
-    public Optional<Consulta> proximaConsulta(Long idUtilizador) {
-        return listarConsultasConfirmadas(idUtilizador).stream()
+    // Apenas a próxima consulta confirmada 
+    public Optional<Consulta> proximaConsulta(Long idPaciente) {
+        return listarConsultasConfirmadas(idPaciente).stream()
                 .filter(c -> !c.getDataConsulta().isBefore(LocalDate.now()))
                 .findFirst();
     }

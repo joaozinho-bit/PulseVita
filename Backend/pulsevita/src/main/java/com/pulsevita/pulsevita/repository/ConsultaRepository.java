@@ -11,11 +11,10 @@ import java.util.List;
 @Repository
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
-    // consultas confirmadas de um utilizador, ordenadas por data/hora
-    List<Consulta> findByUtilizadorIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(Long idUtilizador, String estado);
+    // consultas confirmadas de um paciente, ordenadas por data/hora
+    List<Consulta> findByPacienteIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(Long idPaciente, String estado);
 
-    // Todas as consultas de um mês, para o calendário do médico
-    List<Consulta> findByDataConsultaBetweenOrderByDataConsultaAscHoraConsultaAsc(LocalDate inicio, LocalDate fim);
+     List<Consulta> findByDataConsultaBetweenOrderByDataConsultaAscHoraConsultaAsc(LocalDate inicio, LocalDate fim);
 
     // Usado para recusar automaticamente os outros pedidos do mesmo horário
     List<Consulta> findByDataConsultaAndHoraConsultaAndEstado(LocalDate data, LocalTime hora, String estado);

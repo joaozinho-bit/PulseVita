@@ -14,7 +14,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         
-        <title>Dashboard do Utilizador</title>
+        <title>Dashboard do Paciente</title>
     </head>
     <body>
         <!-- Header -->
@@ -24,7 +24,7 @@
             </div>
             <div class="profile">
                 <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
-                <span id="nome-utilizador">Pedro Silva</span>
+                <span id="nome-paciente">Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
         </div>
@@ -82,7 +82,7 @@
                         </a>
                     </ul>
                     <div class="btn-sair">
-                        <a href="../index.html">        
+                        <a href="../index.html" id="btn-sair">        
                             <p class="sair">Sair</p>
                         </a>
                     </div>
@@ -109,7 +109,7 @@
                             </div>
                             <div class="dados">
                                 <img src="../../Imagens/icon-cruz.png" alt="">
-                                <p id="n-utente" class="n-utente">123456789</p>
+                                <p id="n-paciente" class="n-paciente">123456789</p>
                             </div>
                         </div>
                     </div>
@@ -139,17 +139,34 @@
 
 
         <script>
-        const dados = JSON.parse(localStorage.getItem('utilizador'));
-        if (!dados) {
-            window.location.href = '../index.html';
-        } else {
-            document.getElementById('nome-utilizador').textContent = dados.nomeCompleto;
-            document.getElementById('nome-info').textContent = dados.nomeCompleto;
-            document.getElementById('email').textContent = dados.email || 'N/A';
-            document.getElementById('telefone').textContent = dados.telefone ||'N/A';
-            document.getElementById('n-utente').textContent = dados.n_utente || 'N/A';
-        }
-        </script>
+(async function () {
+    try {
+        const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+        if (!resp.ok) { window.location.href = '../index.html'; return; }
+        const dados = await resp.json();
+
+        document.getElementById('nome-paciente').textContent = dados.nomeCompleto;
+        document.getElementById('nome-info').textContent = dados.nomeCompleto;
+        document.getElementById('email').textContent = dados.email || 'N/A';
+        document.getElementById('telefone').textContent = dados.telefone || 'N/A';
+        document.getElementById('n-paciente').textContent = dados.n_paciente || 'N/A';
+    } catch (erro) {
+        window.location.href = '../index.html';
+    }
+})();
+
+document.getElementById('btn-sair').addEventListener('click', async function (e) {
+    e.preventDefault();
+    try {
+        await fetch('http://localhost:8080/users/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+    } catch (erro) {
+    }
+    window.location.href = '../index.html';
+});
+</script>
     
     </body>
 

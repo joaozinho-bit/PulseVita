@@ -14,8 +14,8 @@ public class Consulta {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_utilizador")
-    private Utilizador utilizador;
+    @JoinColumn(name = "id_paciente")
+    private Paciente paciente;
 
     // Sem relação JPA por agora - entity Medico ainda não existe
     @ManyToOne
@@ -41,8 +41,8 @@ public class Consulta {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Utilizador getUtilizador() { return utilizador; }
-    public void setUtilizador(Utilizador utilizador) { this.utilizador = utilizador; }
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 
     public Medico getMedico() { return medico; }
     public void setMedico(Medico medico) { this.medico = medico; }
