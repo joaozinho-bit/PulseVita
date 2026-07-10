@@ -2,6 +2,7 @@ package com.pulsevita.pulsevita.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "paciente", schema = "pulsevita") 
@@ -31,6 +32,14 @@ public class Paciente {
     
     @Column(name = "password")
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "id_dispositivo")
+    private Dispositivo dispositivo;
+
+    @Column(name = "data_associacao")
+    private LocalDateTime dataAssociacao;
+
     // Gets e Sets
     public Long getId() {
         return id;
@@ -90,5 +99,23 @@ public class Paciente {
     }
     public void setN_paciente(String n_paciente) {
         this.n_paciente = n_paciente;
+    }
+
+    // ***** DISPOSITIVO *****
+
+    public Dispositivo getDispositivo() { 
+        return dispositivo; 
+    }
+    public void setDispositivo(Dispositivo dispositivo) {
+        this.dispositivo = dispositivo; 
+    }
+
+    public LocalDateTime getDataAssociacao() {
+        return dataAssociacao; 
+    
+    }
+    
+    public void setDataAssociacao(LocalDateTime dataAssociacao) {
+        this.dataAssociacao = dataAssociacao; 
     }
 }

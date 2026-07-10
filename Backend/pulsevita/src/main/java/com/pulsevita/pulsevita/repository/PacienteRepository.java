@@ -12,4 +12,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
     @Query("SELECT p FROM Paciente p WHERE p.n_paciente = :numero")
     Paciente findByNumeroPaciente(@Param("numero") String numero);
+
+    // Verifica se outro paciente já tem este dispositivo associado
+    boolean existsByDispositivoId(Integer idDispositivo);
 }

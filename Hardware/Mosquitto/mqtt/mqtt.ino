@@ -4,6 +4,125 @@
 #include "mbedtls/aes.h"
 #include "mbedtls/base64.h"
 
+//===== pinos do ESP32 =====
+const int pinLed = 2; // LED integrado do ESP32
+const int pinBuzzer = 15; // pino do buzzer
+
+// Estados possíveis do feedback (LEDs, buzzer, etc.) do dispositivo
+enum EstadoFeedback { ESTADO_INATIVO, ESTADO_SUCESSO, ESTADO_ERRO, ESTADO_CARREGANDO };
+EstadoFeedback estadoAtual = ESTADO_INATIVO;
+
+// Variáveis para controlar o tempo de cada estado e o piscar do LED
+unsigned long inicioEstado = 0;
+unsigned long ultimoPiscar = 0;
+bool piscarLigado = false;
+
+void definirSucesso() {
+  estadoAtual = ESTADO_SUCESSO;
+  inicioEstado = millis();
+  tone(pinBuzzer, 1000, 200);
+}
+
+void definirErro() {
+  estadoAtual = ESTADO_ERRO;
+  inicioEstado = millis();
+  tone(pinBuzzer, 300, 500);
+}
+
+void definirCarregando() {
+  estadoAtual = ESTADO_CARREGANDO;
+  inicioEstado = millis();
+}
+
+// chamada a cada iteração do loop(), nunca bloqueia porque usa millis() para controlar o tempo
+void atualizarFeedback() {
+  unsigned long agora = millis();
+
+  switch (estadoAtual) {
+    case ESTADO_SUCESSO:
+      definirCorLed(0, 255, 0);
+      if (agora - inicioEstado > 1500) { 
+        apagarLed(); estadoAtual = ESTADO_INATIVO; 
+      }
+      break;
+
+    case ESTADO_ERRO:
+      definirCorLed(255, 0, 0);
+      if (agora - inicioEstado > 1500) { 
+        apagarLed(); estadoAtual = ESTADO_INATIVO; 
+      }
+      break;
+
+    case ESTADO_CARREGANDO:
+      // pisca amarelo a cada 300ms
+      if (agora - ultimoPiscar > 300) {
+        piscarLigado = !piscarLigado;
+        ultimoPiscar = agora;
+        if (piscarLigado) {
+          definirCorLed(255, 255, 0);
+        } else {
+          apagarLed();
+        }
+      }
+      break;
+
+    // estado inativo, não faz nada
+    case ESTADO_INATIVO:
+      break;
+  }
+}
+
+// envia o MAC address ao backend em resposta a um pedido "pedirMac"
+// usa o mesmo envelope AES+CRC32 de todas as outras mensagens
+void enviarMacAddress() {
+  String mac = WiFi.macAddress();
+
+  StaticJsonDocument<100> dados;
+  dados["idDispositivo"] = "PV-X7K2M9";
+  dados["macAddress"] = mac;
+
+  String dadosJson;
+  serializeJson(dados, dadosJson);
+
+  uint32_t crc32 = calcularCrc32(dadosJson);
+
+  StaticJsonDocument<200> envelope;
+  envelope["dados"] = dadosJson;
+  envelope["crc32"] = crc32;
+
+  String envelopeJson;
+  serializeJson(envelope, envelopeJson);
+
+  String envelopeComPadding = aplicarPadding(envelopeJson);
+  String mensagemEncriptada = encriptarEConverter(envelopeComPadding);
+
+  client.publish("pulsevita/registo", mensagemEncriptada.c_str());
+  Serial.println("MAC enviado: " + mac);
+}
+
+// verifica se a mensagem recebida é um pedido imediato e despacha sem esperar o loop
+// pedirMac é tratado aqui porque a resposta tem de ser enviada assim que o pedido chega
+void processarComandoImediato(const String& mensagemBase64) {
+  String envelopeJson = desencriptarEConverter(mensagemBase64);
+  if (envelopeJson.isEmpty()) return;
+
+  StaticJsonDocument<300> envelope;
+  if (deserializeJson(envelope, envelopeJson) != DeserializationError::Ok) return;
+
+  String dados = envelope["dados"].as<String>();
+
+  StaticJsonDocument<100> json;
+  if (deserializeJson(json, dados) != DeserializationError::Ok) return;
+
+  String tipo = json["tipo"].as<String>();
+
+  if (tipo == "pedirMac") {
+    enviarMacAddress();
+  } else if (tipo == "pedirLeitura") {
+    enviarMensagemTeste();
+  }
+}
+
 // ===== configuracao de rede =====
 // Casa
 //const char* ssidWifi = "NOS-BB34";
@@ -149,6 +268,13 @@ void aoReceberMensagem(char* topico, byte* payload, unsigned int tamanho) {
   for (unsigned int i = 0; i < tamanho; i++) {
     mensagem += (char)payload[i];
   }
+
+  // comandos que precisam de resposta imediata são despachados aqui,
+  // sem esperar pelo bloco de log periódico do loop
+  if (String(topico) == topicoComandos) {
+    processarComandoImediato(mensagem);
+  }
+
   ultimaMensagemRecebida = mensagem;
   novaMensagemDisponivel = true;
 }

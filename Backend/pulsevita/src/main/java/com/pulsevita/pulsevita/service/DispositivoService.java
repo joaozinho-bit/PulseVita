@@ -1,7 +1,7 @@
 package com.pulsevita.pulsevita.service;
 
 import com.pulsevita.pulsevita.model.Dispositivo;
-import com.pulsevita.pulsevita.model.Utilizador;
+import com.pulsevita.pulsevita.model.Paciente;
 import com.pulsevita.pulsevita.repository.DispositivoRepository;
 import com.pulsevita.pulsevita.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class DispositivoService {
@@ -21,20 +20,19 @@ public class DispositivoService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    
-    public Paciente associarDispositivo(Integer idPaciente, String idDispositivo) {
-        Dispositivo dispositivo = dispositivoRepository.findByIdDispositivo(idDispositivo)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dispositivo não encontrado."));
-
-        if (pacienteRepository.existsByDispositivoId(dispositivo.getId())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Dispositivo já associado a outra conta.");
-        }
-
+    public Paciente associar(Long idPaciente, String idDispositivo) {
         Paciente paciente = pacienteRepository.findById(idPaciente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente não encontrado."));
 
         if (paciente.getDispositivo() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Este paciente já tem um dispositivo associado.");
+        }
+
+        Dispositivo dispositivo = dispositivoRepository.findByIdDispositivo(idDispositivo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dispositivo não encontrado."));
+
+        if (pacienteRepository.existsByDispositivoId(dispositivo.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Dispositivo já associado a outra conta.");
         }
 
         paciente.setDispositivo(dispositivo);
@@ -43,12 +41,12 @@ public class DispositivoService {
         return pacienteRepository.save(paciente);
     }
 
-    public Paciente desassociarDispositivo(Integer idPaciente) {
+    public Paciente desassociar(Long idPaciente) {
         Paciente paciente = pacienteRepository.findById(idPaciente)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente não encontrado."));
 
         if (paciente.getDispositivo() == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Este paciente não tem nenhum dispositivo associado.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum dispositivo associado a este paciente.");
         }
 
         paciente.setDispositivo(null);
@@ -57,7 +55,8 @@ public class DispositivoService {
         return pacienteRepository.save(paciente);
     }
 
-    public Optional<Paciente> obterAssociacao(Integer idPaciente) {
-        return pacienteRepository.findById(idPaciente);
+    public Paciente obter(Long idPaciente) {
+        return pacienteRepository.findById(idPaciente)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente não encontrado."));
     }
 }

@@ -5,7 +5,7 @@
 Abrir o terminal na pasta do projeto e executar:
 
 ```bash
-cd backend/pulsevita
+cd Backend/pulsevita
 ./mvnw clean spring-boot:run
 ```
 

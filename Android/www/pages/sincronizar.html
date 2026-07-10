@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
 
-        <!-- CSS -->
-        <link rel="stylesheet" href="../css/dashboard.css">
+        <link rel="stylesheet" href="../css/sincronizar.css">
         <link rel="stylesheet" href="../css/global.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-        <!-- Font montserrat -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        
-        <title>Dashboard do Utilizador</title>
+
+        <title>Sincronizar - PulseVita</title>
     </head>
-    
+
     <body>
         <!-- Header -->
         <div class="header">
@@ -41,28 +40,24 @@
                                 <p>Dashboard</p>
                             </li>
                         </a>
-
                         <a href="marcacoes.html">
                             <li class="menu-links">
                                 <img src="../../Imagens/icon-marcacoes.png" alt="">
                                 <p>Marcações</p>
                             </li>
                         </a>
-                        
                         <a href="resultados.html">
                             <li class="menu-links">
                                 <img src="../../Imagens/icon-resultados.png" alt="">
                                 <p>Resultados</p>
                             </li>
                         </a>
-
                         <a href="marcarconsulta.html">
                             <li class="menu-links">
                                 <img src="../../Imagens/icon-marcarconsulta.png" alt="">
                                 <p>Marcar Consulta</p>
                             </li>
                         </a>
-                        
                         <a href="contactar.html">
                             <li class="menu-links">
                                 <img src="../../Imagens/icon-contactar.png" alt="">
@@ -70,7 +65,7 @@
                             </li>
                         </a>
                         <a href="sincronizar.html">
-                            <li class="menu-links">
+                            <li class="menu-links active">
                                 <img src="../../Imagens/icon-sync.png" alt="">
                                 <p>Sincronizar</p>
                             </li>
@@ -83,17 +78,199 @@
                         </a>
                     </ul>
                     <div class="btn-sair">
-                        <a href="../index.html">        
+                        <a href="../index.html">
                             <p class="sair">Sair</p>
                         </a>
                     </div>
                 </div>
             </div>
+
             <div class="direita">
-                <div class="conteudo">
-                    
+                <div id="conteudo" class="conteudo">
+                    <h1>Sincronizar dispositivo</h1>
+                    <h2>Associe o seu LinkLife à sua conta para começar a monitorizar os seus dados de saúde.</h2>
+
+                    <!-- Estado: sem dispositivo associado -->
+                    <div class="cartao-estado" id="estadoSemDispositivo">
+                        <div class="estadoIcone">
+                            <i class="bi bi-broadcast"></i>
+                        </div>
+                        <div>
+                            <p class="estadoTitulo">Ainda não tem um dispositivo associado</p>
+                            <p class="estadoDescricao">Introduza o código do seu LinkLife para o associar à sua conta e começar a receber os seus dados de saúde.</p>
+                        </div>
+
+                        <div class="notaCodigo">
+                            <i class="bi bi-info-circle"></i>
+                            <p>O código pode ser encontrado na parte de trás do dispositivo, junto ao código de barras, ou no documento que acompanha o manual de instruções dentro da caixa.</p>
+                        </div>
+
+                        <button class="btnAssociar" id="btnMostrarForm" onclick="mostrarForm()">
+                            <i class="bi bi-plus-lg"></i>Associar dispositivo
+                        </button>
+
+                        <div class="formAssociar" id="formAssociar">
+                            <label for="codigoDispositivo">Código do dispositivo</label>
+                            <input
+                                type="text"
+                                id="codigoDispositivo"
+                                placeholder="Ex: PV-X7K2M9"
+                                maxlength="20"
+                                autocomplete="off"
+                                oninput="this.value = this.value.toUpperCase()"
+                            >
+                            <p class="mensagemErro" id="erroAssociar">
+                                <i class="bi bi-exclamation-circle"></i>
+                                <span id="erroAssociarTexto"></span>
+                            </p>
+                            <div class="formAcoes">
+                                <button class="btnAssociar" onclick="submeterAssociacao()">Confirmar</button>
+                                <button class="btnCancelar" onclick="cancelarForm()">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado: dispositivo já associado -->
+                    <div class="cartao-estado" id="estadoComDispositivo" style="display:none;">
+                        <div class="estadoIcone">
+                            <i class="bi bi-check-circle" style="color:#69f0ae;"></i>
+                        </div>
+                        <div>
+                            <p class="estadoTitulo">Dispositivo associado</p>
+                            <p class="estadoDescricao">O seu LinkLife está ligado à sua conta e a enviar dados de saúde.</p>
+                        </div>
+
+                        <div class="infoDispositivo">
+                            <div class="infoLinha">
+                                <span class="infoLabel">Código</span>
+                                <span class="infoValor" id="codigoAssociado"></span>
+                            </div>
+                            <hr class="infoDivider">
+                            <div class="infoLinha">
+                                <span class="infoLabel">Associado em</span>
+                                <span class="infoValor" id="dataAssociacao"></span>
+                            </div>
+                        </div>
+
+                        <button class="btnRemover" onclick="abrirModalRemover()">
+                            <i class="bi bi-trash3"></i>Remover dispositivo
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- Modal de confirmação de remoção -->
+        <div class="overlay" id="overlayRemover">
+            <div class="modal">
+                <div class="modalHeader">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Remover dispositivo?</h3>
+                </div>
+                <hr class="modalDivider">
+                <p>O seu LinkLife ficará desassociado da sua conta e deixará de enviar dados. Pode voltar a associá-lo a qualquer momento utilizando o mesmo código.</p>
+                <div class="modalAcoes">
+                    <button class="btnConfirmarRemover" onclick="confirmarRemocao()">
+                        <i class="bi bi-trash3"></i>Remover
+                    </button>
+                    <button class="btnModalCancelar" onclick="fecharModalRemover()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const API = "http://localhost:8080";
+
+            // Substituir por chamada real: GET /utilizadores/me/dispositivo
+            const dispositivoAssociado = null;
+            // Para testar o estado com dispositivo: { codigo: "PV-X7K2M9", dataAssociacao: "12/06/2026" }
+
+            async function inicializar() {
+                const idUtilizador = 1; // TODO: substituir por id real
+                const resposta = await fetch(`${API}/utilizadores/${idUtilizador}/dispositivo`);
+                if (resposta.status === 200) {
+                    const data = await resposta.json();
+                    mostrarEstadoComDispositivo(data.idDispositivo, new Date(data.dataAssociacao).toLocaleDateString("pt-PT"));
+                }
+            }
+
+            function mostrarEstadoComDispositivo(codigo, dataAssociacao) {
+                document.getElementById("estadoSemDispositivo").style.display = "none";
+                document.getElementById("estadoComDispositivo").style.display = "flex";
+                document.getElementById("codigoAssociado").textContent = codigo;
+                document.getElementById("dataAssociacao").textContent = dataAssociacao;
+            }
+
+            function mostrarForm() {
+                document.getElementById("btnMostrarForm").style.display = "none";
+                document.getElementById("formAssociar").classList.add("visivel");
+                document.getElementById("codigoDispositivo").focus();
+            }
+
+            function cancelarForm() {
+                document.getElementById("formAssociar").classList.remove("visivel");
+                document.getElementById("btnMostrarForm").style.display = "flex";
+                document.getElementById("codigoDispositivo").value = "";
+                document.getElementById("erroAssociar").classList.remove("visivel");
+            }
+
+            async function submeterAssociacao() { 
+                const idUtilizador = 1; // TODO: substituir por id real
+                const codigo = document.getElementById("codigoDispositivo").value.trim();
+                const erroEl = document.getElementById("erroAssociar");
+                const erroTexto = document.getElementById("erroAssociarTexto");
+                erroEl.classList.remove("visivel");
+
+                if (!codigo) {
+                    erroTexto.textContent = "Introduza o código do dispositivo.";
+                    erroEl.classList.add("visivel");
+                    return;
+                }
+
+                try {
+                    const resposta = await fetch(`${API}/utilizadores/${idUtilizador}/dispositivo`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ idDispositivo: codigo })
+                    });
+                    if (!resposta.ok) throw new Error();
+                    const data = await resposta.json();
+                    mostrarEstadoComDispositivo(data.idDispositivo, new Date(data.dataAssociacao).toLocaleDateString("pt-PT"));
+                } catch {
+                    erroTexto.textContent = "Código inválido ou dispositivo já associado a outra conta. Verifique o código e tente novamente.";
+                    erroEl.classList.add("visivel");
+                }
+            }
+
+            function abrirModalRemover() {
+                document.getElementById("overlayRemover").classList.add("visivel");
+            }
+
+            function fecharModalRemover() {
+                document.getElementById("overlayRemover").classList.remove("visivel");
+            }
+
+            // Fecha o modal ao clicar fora do painel
+            document.getElementById("overlayRemover").addEventListener("click", function(e) {
+                if (e.target === this) fecharModalRemover();
+            });
+
+            async function confirmarRemocao() {
+                const utilizador = JSON.parse(localStorage.getItem("utilizador"));
+                const idUtilizador = utilizador.id;
+                await fetch(`${API}/utilizadores/${idUtilizador}/dispositivo`, { method: "DELETE" });
+
+                fecharModalRemover();
+
+                // Aguarda o fade-out do modal antes de trocar o estado visível
+                setTimeout(() => {
+                    document.getElementById("estadoComDispositivo").style.display = "none";
+                    document.getElementById("estadoSemDispositivo").style.display = "flex";
+                    cancelarForm();
+                }, 280);
+            }
+
+            inicializar();
+        </script>
     </body>
 </html>
