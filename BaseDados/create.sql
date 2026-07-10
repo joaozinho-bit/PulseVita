@@ -85,7 +85,7 @@ CREATE TABLE estado_consulta (
 
 CREATE TABLE consulta (
     id SERIAL PRIMARY KEY,
-    id_medico INTEGER NOT NULL,
+    id_medico INTEGER,
     id_paciente INTEGER NOT NULL,
     estado VARCHAR(50) NOT NULL DEFAULT 'POR_CONFIRMAR',
     data_consulta DATE NOT NULL,

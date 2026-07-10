@@ -30,7 +30,7 @@ public class ConsultaController {
 
     @PostMapping
     public ResponseEntity<?> marcar(@RequestBody MarcarRequest dados) {
-        Consulta consulta = service.marcarConsulta(dados.idPaciente, dados.data, dados.hora);
+        Consulta consulta = service.marcarConsulta(dados.idPaciente, dados.data, dados.hora, dados.motivo);
         if (consulta != null) {
             return ResponseEntity.ok(consulta);
         }
@@ -104,17 +104,17 @@ public class ConsultaController {
         dto.estado = mapearEstado(c.getEstado());
         dto.motivo = c.getMotivo();
 
-        if (c.getUtilizador() != null) {
-            var u = c.getUtilizador();
-            var p = new ConsultaMedicoDTO.PacienteDTO();
-            p.nome = u.getNomeCompleto();
-            p.genero = u.getGenero();
-            p.telefone = u.getTelefone();
-            p.email = u.getEmail();
-            p.idade = u.getDataNascimento() != null
-                    ? Period.between(u.getDataNascimento(), LocalDate.now()).getYears()
+        if (c.getPaciente() != null) {
+            var p = c.getPaciente();
+            var pac = new ConsultaMedicoDTO.PacienteDTO();
+            pac.nome = p.getNomeCompleto();
+            pac.genero = p.getGenero();
+            pac.telefone = p.getTelefone();
+            pac.email = p.getEmail();
+            pac.idade = p.getDataNascimento() != null
+                    ? Period.between(p.getDataNascimento(), LocalDate.now()).getYears()
                     : null;
-            dto.paciente = p;
+            dto.paciente = pac;
         }
         return dto;
     }
