@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpSession;
+
+
 @RestController
 @RequestMapping("/medicos")
-@CrossOrigin(origins = "*")
 public class MedicoController {
 
     @Autowired
@@ -21,20 +23,25 @@ public class MedicoController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginData) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginData, HttpSession session) {
         Medico medico = service.fazerLogin(loginData.numero_medico, loginData.password);
 
         if (medico != null) {
+            session.setAttribute("medicoId", medico.getId());
             return ResponseEntity.ok(medico);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Número de médico ou senha incorretos.");
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getMedico(@PathVariable Long id) {
+    @GetMapping("/me")
+    public ResponseEntity<?> getMedico(HttpSession session) {
+        Long id = (Long) session.getAttribute("medicoId");
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return service.getMedico(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 }
