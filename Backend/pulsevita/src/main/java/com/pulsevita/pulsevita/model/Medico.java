@@ -11,6 +11,7 @@ public class Medico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "nome_completo")
     private String nome;
 
     private String especializacao;
@@ -18,7 +19,7 @@ public class Medico {
     @Column(name = "id_cartao")
     private Long idCartao;
 
-    @Column(name = "numero_medico")
+    @Column(name = "n_medico")
     private String numeroMedico;
 
     @Column(name = "password")

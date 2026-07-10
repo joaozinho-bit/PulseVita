@@ -35,28 +35,27 @@
 <script src="js/toast.js"></script>
 
 <script>
-    document.getElementById('btn-entrar').addEventListener('click', async function () {
-        const emailValue = document.getElementById('email-input').value;
-        const senhaValue = document.getElementById('senha-input').value;
+document.getElementById('btn-entrar').addEventListener('click', async function() {
+    const emailValue = document.getElementById('email-input').value;
+    const senhaValue = document.getElementById('senha-input').value;
 
-        try {
-            const resposta = await fetch('http://localhost:8080/users/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailValue, senha: senhaValue })
-            });
+    try {
+        const resposta = await fetch('http://localhost:8080/users/login', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailValue, senha: senhaValue })
+        });
 
-            if (resposta.ok) {
-                const dados = await resposta.json();
-                localStorage.setItem('utilizador', JSON.stringify(dados));
-                window.location.href = 'pages/dashboard.html';
-            } else {
-                toast.error("Email ou senha inválidos.");
-            }
-        } catch (erro) {
-            toast.error("Não foi possível contactar o servidor.");
+        if (resposta.ok) {
+            window.location.href = 'pages/dashboard.html';
+        } else {
+            alert("Email ou senha inválidos!");
         }
-    });
+    } catch (erro) {
+        alert("Não foi possível contactar o servidor.");
+    }
+});
 </script>
 
 <!-- <script>

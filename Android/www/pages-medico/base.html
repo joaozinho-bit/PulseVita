@@ -56,12 +56,16 @@
         </main>
     </body>
     <script>
-    const medicoAtual = JSON.parse(localStorage.getItem('medico'));
-    if (!medicoAtual) {
-        window.location.href = 'login.html';
-    } else {
+    (async function () {
+    try {
+        const resp = await fetch('http://localhost:8080/medicos/me', { credentials: 'include' });
+        if (!resp.ok) { window.location.href = 'login.html'; return; }
+        const medicoAtual = await resp.json();
         document.querySelector('.profile span').textContent = medicoAtual.nome;
+    } catch (erro) {
+        window.location.href = 'login.html';
     }
+})();
 </script>
     <script src="../js/appMedicos.js"></script>
     <script src="../js/calendarioMedico.js"></script>

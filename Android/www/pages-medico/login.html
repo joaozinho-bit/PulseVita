@@ -44,24 +44,18 @@
 
   <script>
     document.getElementById('btn-entrar-medico').addEventListener('click', async function () {
-        const numeroMedico = document.getElementById('cartao-input').value.trim();
+        const numeroMedico = document.getElementById('cartao-input').value;
         const senha = document.getElementById('senha-input').value;
- 
-        if (!numeroMedico || !senha) {
-            alert("Preenche o número de médico e a senha.");
-            return;
-        }
- 
+
         try {
             const resposta = await fetch('http://localhost:8080/medicos/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ numero_medico: numeroMedico, password: senha })
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ numero_medico: numeroMedico, password: senha })
             });
- 
+            
             if (resposta.ok) {
-                const dados = await resposta.json();
-                localStorage.setItem('medico', JSON.stringify(dados));
                 window.location.href = 'base.html';
             } else {
                 alert("Número de médico ou senha incorretos!");
