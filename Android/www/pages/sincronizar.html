@@ -186,7 +186,7 @@
             // Para testar o estado com dispositivo: { codigo: "PV-X7K2M9", dataAssociacao: "12/06/2026" }
 
             async function inicializar() {
-                const idUtilizador = 1; // TODO: substituir por id real
+                const idUtilizador = 1;
                 const resposta = await fetch(`${API}/utilizadores/${idUtilizador}/dispositivo`);
                 if (resposta.status === 200) {
                     const data = await resposta.json();
