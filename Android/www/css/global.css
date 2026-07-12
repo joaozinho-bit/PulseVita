@@ -2,134 +2,215 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
 }
 
 body {
     font-family: "Montserrat", sans-serif;
     background: #B6E5E5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100dvh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
 }
 
-
-/* Header */
-.header{
-    padding: 40px 70px;
+/* Header fixo no topo, comum a todas as paginas.
+   O padding-top soma env(safe-area-inset-top) para nao ficar por baixo do notch/status bar dentro do Capacitor. */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
     display: flex;
     flex-direction: row;
-    width: 100%;
+    align-items: center;
     justify-content: space-between;
+    padding: calc(env(safe-area-inset-top) + 14px) 18px 14px;
+    background: #B6E5E5;
+    border-bottom: 1px solid rgba(32, 82, 54, 0.08);
+}
+
+.header .menuToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #205236;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
 }
 
 .header .logo {
-    width: 100%;
-}
-
-.header .logo {
-    width: 250px;
+    width: 130px;
 }
 
 .header .profile {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 6px;
 }
 
-.profile .img-user{
-    width: 50px;
+.profile .img-user {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-.profile span{
-    color: #205236;
-    font-size: 1rem;
-    font-weight: 400;
+.profile span {
+    /* Nome escondido no header por falta de espaco no ecra pequeno; mantido no DOM para reaproveitar noutros contextos */
+    display: none;
 }
 
-/* Conteudo padrao em todas as paginas */
-.container{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
+.profile .point {
+    width: 8px;
 }
 
-/* Menu lateral */
-.esquerda{
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    width: 25%;
-    height: 60vh;
+/* Overlay escuro por tras do menu. Como o menu passou a ocupar o ecra todo fica coberto por ele,
+   mas mantem-se para uma transicao suave enquanto o drawer desliza a abrir/fechar. */
+.menuOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 33, 24, 0);
+    visibility: hidden;
+    opacity: 0;
+    z-index: 90;
+    transition: opacity 0.25s ease, background 0.25s ease, visibility 0s linear 0.25s;
 }
 
-.esquerda .menu{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
+.menuOverlay.aberto {
+    visibility: visible;
+    opacity: 1;
+    background: rgba(8, 33, 24, 0.5);
+    transition: opacity 0.25s ease, background 0.25s ease, visibility 0s linear 0s;
 }
 
-.esquerda .menu .menu-links{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    padding: 10px 10px 10px 70px;
-    align-items: center;
-    gap: 10px;
-}
-
-.esquerda .menu ul{
+/* Menu passa de drawer lateral estreito para ecra inteiro, com espaco confortavel para cada opcao (icone + texto).
+   O botao de hamburguer e o comportamento (abrirMenu/fecharMenu) mantem-se iguais, so a superficie do menu muda. */
+.esquerda {
+    position: fixed;
+    inset: 0;
+    background: #1a5c47;
+    z-index: 95;
     display: flex;
     flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 12px) 24px calc(env(safe-area-inset-bottom) + 24px);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow-y: auto;
 }
 
-.esquerda .menu a{
-    text-decoration: none;
-    color:#205236;
+.esquerda.aberto {
+    transform: translateX(0);
 }
 
-.esquerda .menu img{
-    width: 30px;
-    height: 30px;
-}
-
-.esquerda .btn-sair{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.esquerda .btn-sair a{
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 90%;
-    background: #34C759;
-    color: #205236;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 10px 20px;
+.esquerda .menuFechar {
+    align-self: flex-end;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
     border: none;
-    border-radius: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 17px;
     cursor: pointer;
 }
 
-/* Conteudo principal */
-.direita{
-    border-radius: 15px;
-    margin: 20px 20px 20px 0;
+/* Ocupa o espaco entre o botao de fechar e o "Sair", para centrar as opcoes nesse espaco */
+.esquerda .menu {
+    flex: 1;
     display: flex;
-    width: 100%;
-    flex-grow: 1;
-    background: #138C6E;
+    flex-direction: column;
+    min-height: 0;
 }
 
+.esquerda .menu ul {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
 
+.esquerda .menu a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.68);
+}
+
+.esquerda .menu .menu-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 18px 20px;
+    border-radius: 14px;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.esquerda .menu .menu-links.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #34C759;
+}
+
+.esquerda .menu img {
+    width: 26px;
+    height: 26px;
+    /* Icones sao PNGs escuros pensados para fundo claro; o filtro clareia-os para ficarem legiveis sobre o verde escuro do drawer */
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+}
+
+.esquerda .btn-sair {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.esquerda .btn-sair a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 52px;
+    background: #34C759;
+    color: #0d4535;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+/* Conteudo padrao em todas as paginas, empurrado para baixo do header fixo */
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100dvh;
+    padding-top: calc(env(safe-area-inset-top) + 68px);
+}
+
+/* Painel principal de conteudo.
+   Margem igual dos dois lados (10px/10px) para ficar centrado no ecra, e padding proprio
+   para o conteudo nunca ficar colado as bordas, independentemente do que cada pagina mete la dentro. */
+.direita {
+    border-radius: 22px;
+    margin: 0 10px calc(env(safe-area-inset-bottom) + 10px);
+    padding: 24px 20px;
+    display: flex;
+    flex: 1;
+    background: #138C6E;
+}

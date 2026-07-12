@@ -1,15 +1,22 @@
-.conteudo h1{
-    color: #ffffff;
-    font-size: 2rem;
-    padding: 40px 0 0  70px;
+.conteudo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 24px;
 }
 
-.conteudo .info-pessoal{
-    padding: 40px 70px;
+.conteudo h1 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.conteudo .info-pessoal {
     display: flex;
-    flex-direction: row;
-    gap: 20px;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    width: 100%;
 }
 
 /* ─── Foto clicável ─────────────────────────────────────────── */
@@ -19,50 +26,52 @@
     justify-content: center;
     align-items: center;
     border-radius: 20px;
-    padding: 10px;
+    padding: 6px;
     border: 3px solid #B6E5E5;
     cursor: pointer;
-    overflow: hidden;
-    /* mantém o tamanho fixo para o overlay cobrir correctamente */
     width: fit-content;
     height: fit-content;
 }
 
 .info-pessoal .foto img#foto-perfil {
-    width: 250px;
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
     display: block;
-    border-radius: 12px;
+    border-radius: 14px;
 }
 
+/* Selo de edição sempre visível — em ecrã tátil não existe hover fiável,
+   por isso o icone de editar deixa de depender de :hover e passa a estar sempre no canto da foto */
 .foto-overlay {
     position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    right: -2px;
+    bottom: -2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #205236;
+    border: 2px solid #B6E5E5;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    border-radius: 16px;
-}
-
-.info-pessoal .foto:hover .foto-overlay {
-    opacity: 1;
 }
 
 .foto-overlay img {
-    width: 36px;
+    width: 16px;
     filter: brightness(0) invert(1);
 }
 
 /* ─── Lista de info ─────────────────────────────────────────── */
-.info-pessoal .lista-info{
-    margin: 0 0 0 20px;
+.info-pessoal .lista-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.info-pessoal .lista-info .dados{
+.info-pessoal .lista-info .dados {
     display: flex;
-    margin: 0 0 10px 0;
     flex-direction: row;
     align-items: center;
     gap: 10px;
@@ -73,7 +82,8 @@
 }
 
 .info-pessoal .lista-info .dados .icon {
-    width: 30px;
+    width: 22px;
+    flex-shrink: 0;
 }
 
 /* ─── Select género ─────────────────────────────────────────── */
@@ -86,7 +96,7 @@
     font-size: 15px;
     font-family: inherit;
 
-    padding: 5px;
+    padding: 8px 6px;
     outline: none;
 
     cursor: pointer;
@@ -106,7 +116,7 @@
     background: rgba(255, 255, 255, 0.1);
     border: 1.5px solid #138C6E;
     border-radius: 8px;
-    padding: 5px 10px;
+    padding: 10px 14px;
 }
 
 .info-pessoal .lista-info .dados .edit-select:focus {
@@ -132,7 +142,7 @@
     outline: none;
 
     min-width: 160px;
-    height: 38px;
+    height: 42px;
 
     transition: 0.3s ease;
     cursor: pointer;
@@ -178,12 +188,13 @@
     background: #ffffff;
     border: 1.5px solid #138C6E;
     border-radius: 8px;
-    padding: 6px 12px;
+    padding: 10px 12px;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.95rem;
     color: #205236;
     outline: none;
-    width: 220px;
+    flex: 1;
+    min-width: 0;
     box-shadow: 0 0 0 3px rgba(19, 140, 110, 0.12);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -195,7 +206,7 @@
 
 /* ─── Botões de acção ───────────────────────────────────────── */
 .botoes-acao {
-    margin-top: 16px;
+    margin-top: 6px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -204,8 +215,10 @@
 .btn-editar {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 9px 22px;
+    min-height: 44px;
     background: #205236;
     color: #ffffff;
     border: none;
@@ -232,6 +245,7 @@
 
 .btn-confirmar {
     padding: 9px 22px;
+    min-height: 44px;
     background: #34C759;
     color: #ffffff;
     border: none;
@@ -248,6 +262,7 @@
 
 .btn-cancelar {
     padding: 9px 22px;
+    min-height: 44px;
     background: transparent;
     color: #e74c3c;
     border: 2px solid #e74c3c;
