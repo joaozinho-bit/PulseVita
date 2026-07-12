@@ -18,7 +18,7 @@ public class Medico {
     @Column(name = "id_cartao")
     private Long idCartao;
 
-    @Column(name = "numero_medico")
+    @Column(name = "n_medico")
     private String numeroMedico;
 
     @Column(name = "password")

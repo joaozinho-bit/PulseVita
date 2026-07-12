@@ -1,99 +1,109 @@
-.conteudo{
-    padding: 40px 70px;
+.conteudo {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
     gap: 20px;
 }
 
-.conteudo .container{
+.conteudo .lista-motivos {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 14px;
     width: 100%;
-    height: 100%;
 }
 
-.conteudo h1 ,h2{
+.conteudo h1,
+.conteudo h2 {
     color: white;
 }
 
-.conteudo h2{
-    font-size: 1.2em;
+.conteudo h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.conteudo h2 {
+    font-size: 0.95rem;
     font-weight: normal;
 }
 
-.conteudo .container button{
+.conteudo .lista-motivos button {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    gap: 12px;
     background-color: #205236;
     color: #b6e5e5;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 18px 20px;
+    border-radius: 12px;
     width: 100%;
     border: none;
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
 }
 
-.conteudo .container button p{
-    font-size: 1em;
+.conteudo .lista-motivos button p {
+    font-size: 0.9rem;
     font-weight: normal;
+    line-height: 1.5;
+    text-align: left;
 }
 
-.conteudo .container button img{
-    width: 20px;
-    height: 15px;
+.conteudo .lista-motivos button img {
+    width: 18px;
+    height: 14px;
+    flex-shrink: 0;
 }
 
 /* paginas de motivos */
-.container-motivos{
+.container-motivos {
     color: white;
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
     gap: 20px;
 }
 
-.container-motivos .topo{
+.container-motivos .topo {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.container-motivos .topo h1{
+.container-motivos .topo h1 {
     color: white;
+    font-size: 1.2rem;
 }
 
-.container-motivos .topo .btn-voltar{
+.container-motivos .topo .btn-voltar {
     text-decoration: none;
     background: #B6E5E5;
     border-radius: 10px;
-    padding: 5px 20px;
+    padding: 8px 18px;
 }
 
-.container-motivos .topo .btn-voltar a{
+.container-motivos .topo .btn-voltar a {
     text-decoration: none;
     color: #205236;
-    font-size: 1em;
+    font-size: 0.95rem;
     border-radius: 10px;
 }
 
-.container-motivos h2{
+.container-motivos h2 {
     color: white;
-    font-size: 1.2em;
+    font-size: 1rem;
     font-weight: normal;
 }
 
-.container-motivos .siga{
+.container-motivos .siga {
     font-weight: bold;
 }
 
-.dicas p{
+.dicas p {
     font-weight: bold;
 }
-.dicas ul{
-    margin-left: 30px;
+.dicas ul {
+    margin-left: 24px;
 }
