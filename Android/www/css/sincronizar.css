@@ -3,6 +3,7 @@
     flex-direction: column;
     width: 100%;
     gap: 18px;
+    padding: 15px;
 }
 
 .conteudo h1 {

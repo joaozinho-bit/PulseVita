@@ -3,6 +3,7 @@
     flex-direction: column;
     width: 100%;
     gap: 20px;
+    padding: 15px;
 }
 
 .conteudo .lista-motivos {

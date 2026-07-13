@@ -3,14 +3,15 @@
     flex-direction: column;
     width: 100%;
     gap: 28px;
+    padding: 15px;
 }
 
 .conteudo .info-pessoal {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 18px;
+    gap: 30px;
 }
 
 .info-pessoal .foto {
@@ -23,8 +24,7 @@
 }
 
 .info-pessoal .foto img {
-    width: 96px;
-    height: 96px;
+    width: 100px;
     border-radius: 14px;
     object-fit: cover;
 }
@@ -56,11 +56,13 @@
 .conteudo .container-direita {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 16px;
 }
 
 .prox-consultas {
+    width: 50%;
+    height: 200px;
     gap: 12px;
     padding: 20px;
     border-radius: 16px;
@@ -71,7 +73,7 @@
 
 .prox-consultas h2 {
     color: #205236;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .prox-consultas .data {
@@ -84,7 +86,7 @@
 
 .prox-consultas .data p {
     color: #205236;
-    font-size: 14px;
+    font-size: 1rem;
 }
 
 .prox-consultas .data img {
@@ -93,6 +95,8 @@
 }
 
 .notify {
+    width: 50%;
+    height: 200px;
     gap: 12px;
     padding: 20px;
     border-radius: 16px;
@@ -103,7 +107,7 @@
 
 .notify h2 {
     color: #205236;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .notify .conteudo-notify {
@@ -116,9 +120,25 @@
 
 .notify p {
     color: #205236;
-    font-size: 14px;
+    font-size: 1rem;
 }
 
 .notify img {
     width: 24px;
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+    .conteudo .container-direita {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .prox-consultas{
+        width: 100%;
+    }
+    .notify{
+        width: 100%;
+    }
 }
