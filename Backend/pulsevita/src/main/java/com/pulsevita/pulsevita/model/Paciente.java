@@ -40,6 +40,9 @@ public class Paciente {
     @Column(name = "data_associacao")
     private LocalDateTime dataAssociacao;
 
+    @Column(name = "foto_perfil")
+    private String fotoPerfil;
+
     // Gets e Sets
     public Long getId() {
         return id;
@@ -99,6 +102,14 @@ public class Paciente {
     }
     public void setN_paciente(String n_paciente) {
         this.n_paciente = n_paciente;
+    }
+
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
     }
 
     // ***** DISPOSITIVO *****

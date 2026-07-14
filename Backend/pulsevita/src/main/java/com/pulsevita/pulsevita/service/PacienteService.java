@@ -6,7 +6,12 @@ import com.pulsevita.pulsevita.model.Paciente;
 import com.pulsevita.pulsevita.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 @Service
 public class PacienteService {
 
@@ -58,5 +63,38 @@ public class PacienteService {
         if (dataNascimento != null) u.setDataNascimento(dataNascimento);
         return repository.save(u);
     }).orElse(null);
+    }
+
+    public String guardarFoto(Long id, MultipartFile file) throws IOException {
+    Paciente paciente = repository.findById(id).orElse(null);
+    if (paciente == null) return null;
+
+    // Apaga a foto anterior, se existir
+    String fotoAntiga = paciente.getFotoPerfil();
+    if (fotoAntiga != null && !fotoAntiga.isBlank()) {
+        Path caminhoAntigo = Paths.get("uploads").resolve(fotoAntiga);
+        Files.deleteIfExists(caminhoAntigo);
+    }
+
+    String extensao = "";
+    String nomeOriginal = file.getOriginalFilename();
+    if (nomeOriginal != null && nomeOriginal.contains(".")) {
+        extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
+    }
+
+    String nomeFicheiro = "paciente_" + id + "_" + UUID.randomUUID() + extensao;
+
+    Path pastaUploads = Paths.get("uploads");
+    if (!Files.exists(pastaUploads)) {
+        Files.createDirectories(pastaUploads);
+    }
+
+    Path destino = pastaUploads.resolve(nomeFicheiro);
+    Files.copy(file.getInputStream(), destino);
+
+    paciente.setFotoPerfil(nomeFicheiro);
+    repository.save(paciente);
+
+    return nomeFicheiro;
     }
 }

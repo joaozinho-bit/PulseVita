@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 public class PacienteController {
@@ -94,4 +98,17 @@ public class PacienteController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping("/{id}/foto")
+public ResponseEntity<?> uploadFoto(@PathVariable Long id, @RequestParam("foto") MultipartFile file) {
+    try {
+        String nomeFicheiro = service.guardarFoto(id, file);
+        if (nomeFicheiro == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Map.of("foto_perfil", nomeFicheiro));
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao guardar a imagem.");
+    }
+}
 }

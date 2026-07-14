@@ -27,7 +27,7 @@
             </button>
             <img class="logo" src="../../Imagens/Logo.png" alt="PulseVita">
             <div class="profile">
-                <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
+                <img class="img-user" id="header-foto" src="../../Imagens/user.png" alt="Imagem de perfil">
                 <span id="nome-paciente">Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
@@ -104,7 +104,7 @@
                 <div class="conteudo">
                     <div class="info-pessoal">
                         <div class="foto">
-                            <img src="../../Imagens/user.png" alt="">
+                            <img src="../../Imagens/user.png" alt="" id="img-perfil">
                         </div>
                         <div class="lista-info">
                             <div class="dados">
@@ -173,6 +173,11 @@
                     document.getElementById('email').textContent = dados.email || 'N/A';
                     document.getElementById('telefone').textContent = dados.telefone || 'N/A';
                     document.getElementById('n-paciente').textContent = dados.n_paciente || 'N/A';
+
+                    if (dados.fotoPerfil) {
+                        document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
+                        document.getElementById('img-perfil').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
+                    }
                 } catch (erro) {
                     window.location.href = '../index.html';
                 }

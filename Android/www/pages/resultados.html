@@ -29,8 +29,8 @@
                 <img class="logo" src="../../Imagens/Logo.png" alt="PulseVita">
             </div>
             <div class="profile">
-                <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
-                <span>Pedro Silva</span>
+                <img class="img-user" id="header-foto" src="../../Imagens/user.png" alt="Imagem de perfil">
+                <span id="nome-paciente">Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
         </div>
@@ -125,6 +125,36 @@
                 document.getElementById("menuOverlay").classList.remove("aberto");
                 document.body.style.overflow = "";
             }
+
+            (async function () {
+                try {
+                    const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+                    if (!resp.ok) { window.location.href = '../index.html'; return; }
+                    const dados = await resp.json();
+
+                    document.getElementById('nome-paciente').textContent = dados.nomeCompleto;
+
+                    if (dados.fotoPerfil) {
+                        document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
+
+                    }
+                } catch (erro) {
+                    window.location.href = '../index.html';
+                }
+            })();
+
+            document.getElementById('btn-sair').addEventListener('click', async function (e) {
+                e.preventDefault();
+                try {
+                    await fetch('http://localhost:8080/users/logout', {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                } catch (erro) {
+                }
+                window.location.href = '../index.html';
+            });
+
         </script>
     </body>
 <script src="../js/app.js"></script>

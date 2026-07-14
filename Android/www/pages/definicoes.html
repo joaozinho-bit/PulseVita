@@ -189,16 +189,35 @@
 
     fotoWrapper.addEventListener('click', () => inputFoto.click());
 
-    inputFoto.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            imgPerfil.src = ev.target.result;
-            headerFoto.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
+    inputFoto.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Preview imediato
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        imgPerfil.src = ev.target.result;
+        headerFoto.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    // Envia para o backend
+    const formData = new FormData();
+    formData.append('foto', file);
+
+    try {
+        const res = await fetch(`http://localhost:8080/users/${user.id}/foto`, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
+        if (!res.ok) { alert('Erro ao guardar a foto.'); return; }
+        const dados = await res.json();
+        user.fotoPerfil = dados.foto_perfil;
+    } catch (err) {
+        alert('Não foi possível contactar o servidor.');
+    }
+});
 
     // Mapeamento campo HTML → chave no objeto user
     const camposConfig = [
@@ -219,6 +238,11 @@
         } catch (erro) {
             window.location.href = '../index.html';
             return;
+        }
+
+        if (user.fotoPerfil) {
+            imgPerfil.src = `http://localhost:8080/uploads/${user.fotoPerfil}`;
+            headerFoto.src = `http://localhost:8080/uploads/${user.fotoPerfil}`;
         }
 
         camposConfig.forEach(({ elemId, campo }) => {

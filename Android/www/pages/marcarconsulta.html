@@ -26,7 +26,7 @@
             </button>
             <img class="logo" src="../../Imagens/Logo.png" alt="PulseVita">
             <div class="profile">
-                <img class="img-user" src="../../Imagens/user.png" alt="Imagem de perfil">
+                <img class="img-user" id="header-foto" src="../../Imagens/user.png" alt="Imagem de perfil">
                 <span id="nome-paciente">Pedro Silva</span>
                 <img class="point" src="../../Imagens/PontoVerde.png" alt="">
             </div>
@@ -211,6 +211,11 @@
             if (!resp.ok) { window.location.href = '../index.html'; return; }
             paciente = await resp.json();
             document.getElementById('nome-paciente').textContent = paciente.nomeCompleto;
+
+            if (paciente.fotoPerfil) {
+                document.getElementById('header-foto').src = `http://localhost:8080/uploads/${paciente.fotoPerfil}`;
+
+            }
         } catch (erro) {
             window.location.href = '../index.html';
         }
