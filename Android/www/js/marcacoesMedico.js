@@ -258,12 +258,10 @@ function renderizarDadosPacienteMarcacoes() {
 }
 
 async function aceitarMarcacaoMedico(idMarcacao) {
-    const medico = JSON.parse(localStorage.getItem("medico"));
     try {
         const resposta = await fetch(`${API_BASE_URL}/consultas/${idMarcacao}/confirmar`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ idMedico: medico ? medico.id : null })
+            credentials: "include"
         });
         if (!resposta.ok) { alert("Não foi possível confirmar a consulta."); return; }
         await carregarMarcacoesMedico();

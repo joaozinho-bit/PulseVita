@@ -2,6 +2,9 @@ package com.pulsevita.pulsevita.controller;
 
 import com.pulsevita.pulsevita.model.Consulta;
 import com.pulsevita.pulsevita.service.ConsultaService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,13 +61,17 @@ public class ConsultaController {
         return ResponseEntity.ok(lista);
     }
 
-    static class ConfirmarRequest {
+    /*static class ConfirmarRequest {
         public Long idMedico;
-    }
+    }*/
 
     @PostMapping("/{id}/confirmar")
-    public ResponseEntity<?> confirmar(@PathVariable Long id, @RequestBody(required = false) ConfirmarRequest body) {
-        Long idMedico = body != null ? body.idMedico : null;
+    public ResponseEntity<?> confirmar(@PathVariable Long id, HttpSession session) {
+        Long idMedico = (Long) session.getAttribute("medicoId");
+        if (idMedico == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sessão de médico inválida.");
+        }
+
         Consulta consulta = service.confirmarConsulta(id, idMedico);
         if (consulta == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(paraDTO(consulta));
