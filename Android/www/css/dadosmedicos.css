@@ -1,0 +1,141 @@
+/* ===== Conteúdo - Dados Médicos ===== */
+.direita {
+    background-color: #B6E5E5;
+    border-radius: 24px;
+    padding: 6px;
+}
+
+.conteudo {
+    width: 100%;
+    background-color: #138C6E;
+    border-radius: 20px;
+    padding: 32px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.ultimas-medicoes h1,
+.historico-medicoes h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.historico-medicoes {
+    margin-top: 32px;
+}
+
+/* Cartões de última medição */
+.ultimas-medicoes .box-info {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.ultimas-medicoes .box-dados {
+    background-color: #fff;
+    border-radius: 14px;
+    padding: 16px 24px;
+    flex: 1;
+    min-width: 220px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.ultimas-medicoes .box-dados h1 {
+    color: #205236;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.ultimas-medicoes .dados p {
+    color: #34C759;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Lista de histórico */
+.lista-historico {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lista-historico .box-info {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 14px 24px;
+}
+
+.lista-historico .box-dados {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.lista-historico .box-dados p {
+    color: #205236;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.lista-historico .box-dados p span {
+    color: #34C759;
+    font-weight: 700;
+}
+
+.lista-historico .box-dados p.data {
+    color: #205236;
+    opacity: 0.85;
+    font-weight: 600;
+}
+
+/* Paginação */
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.paginacao button {
+    background-color: #fff;
+    color: #138C6E;
+    border: none;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.paginacao button:hover:not(:disabled) {
+    background-color: #34C759;
+    color: #fff;
+}
+
+.paginacao button.ativo {
+    background-color: #205236;
+    color: #fff;
+}
+
+.paginacao button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .lista-historico .box-dados {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -6,7 +6,7 @@
         <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
 
         <!-- CSS -->
-        <link rel="stylesheet" href="../css/resultados.css">
+        <link rel="stylesheet" href="../css/dadosmedicos.css">
         <link rel="stylesheet" href="../css/global.css">
 
         <!-- Icons -->
@@ -62,14 +62,14 @@
                         </a>
 
                         <a href="resultados.html">
-                            <li class="menu-links active">
+                            <li class="menu-links">
                                 <img src="../../Imagens/icon-resultados.png" alt="">
                                 <p>Resultados</p>
                             </li>
                         </a>
 
                         <a href="dadosmedicos.html">
-                            <li class="menu-links">
+                            <li class="menu-links active">
                                 <img src="../../Imagens/icon-dados-medicos.png" alt="">
                                 <p>Dados Médicos</p>
                             </li>
@@ -110,11 +110,35 @@
             </div>
             <div class="direita">
                 <div id="conteudo" class="conteudo">
-                    <h2>Resultados</h2>
-                    <div class="result">
-                        <button onclick="carregarPaginaDeResultados('resultados-page2')">
-                            <p><strong>Resultado</strong> - Triagem do dia <span>05/05/2026</span></p>
-                        </button>
+                    <div class="ultimas-medicoes">
+                        <h1>Últimas medicoes</h1>
+                        <div class="box-info">
+                            <div class="box-dados">
+                                <h1>Batimentos Cardíacos</h1>
+                                <div class="dados">
+                                    <p id="ultimo-bpm">-- bpm</p>
+                                </div>
+                            </div>
+
+                            <div class="box-dados">
+                                <h1>Temperatura corporal</h1>
+                                <div class="dados">
+                                    <p id="ultima-temp">-- °C</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="historico-medicoes">
+                        <h1>Histórico de medições</h1>
+
+                        <div id="lista-historico" class="lista-historico">
+                            <!-- Preenchido dinamicamente pelo dadosmedicos.js -->
+                        </div>
+
+                        <div id="paginacao" class="paginacao">
+                            <!-- Botões de página gerados pelo JS -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -164,5 +188,6 @@
 
         </script>
     </body>
-<script src="../js/app.js"></script>
+<script src="../js/app.js"></script<script src="../js/app.js"></script>
+<script src="../js/dadosmedicos.js"></script>>
 </html>
