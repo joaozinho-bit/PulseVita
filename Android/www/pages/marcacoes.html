@@ -111,69 +111,94 @@
             <div class="direita">
                 <div class="conteudo">
                     <h2>Marcações</h2>
-                    <div class="marcacoes">
-                        <ul>
-                            <li>
-                                <p>17/06/2026</p>
-                                <img src="../../Imagens/PontoVerde.png"></img>
-                                <p>09:00</p>
-                                <img src="../../Imagens/PontoVerde.png"></img>
-                                <p>Triagem</p>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>
-                                <p>22/06/2026</p>
-                                <img src="../../Imagens/PontoVerde.png"></img>
-                                <p>09:00</p>
-                                <img src="../../Imagens/PontoVerde.png"></img>
-                                <p>Triagem</p>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>
-                                <p>32/07/2026</p>
-                                <img src="../../Imagens/PontoVerde.png"></img>
-                                <p>09:00</p>
-                                <img src="../../Imagens/PontoVerde.png"></img>
-                                <p>Triagem</p>
-                            </li>
-                        </ul>
+                    <div class="marcacoes" id="lista-marcacoes">
+    
                     </div>                        
                 </div>
             </div>
         </section>
         <script>
-            // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
-            function abrirMenu() {
-                document.getElementById("menuLateral").classList.add("aberto");
-                document.getElementById("menuOverlay").classList.add("aberto");
-                document.body.style.overflow = "hidden";
+    // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
+    function abrirMenu() {
+        document.getElementById("menuLateral").classList.add("aberto");
+        document.getElementById("menuOverlay").classList.add("aberto");
+        document.body.style.overflow = "hidden";
+    }
+
+    function fecharMenu() {
+        document.getElementById("menuLateral").classList.remove("aberto");
+        document.getElementById("menuOverlay").classList.remove("aberto");
+        document.body.style.overflow = "";
+    }
+
+    function formatarData(dataISO) {
+        const [ano, mes, dia] = dataISO.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function formatarHora(horaISO) {
+        return horaISO.slice(0, 5);
+    }
+
+    (async function () {
+        let dados;
+
+        try {
+            const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+            if (!resp.ok) { window.location.href = '../index.html'; return; }
+            dados = await resp.json();
+
+            document.getElementById('nome-paciente').textContent = dados.nomeCompleto;
+
+            if (dados.fotoPerfil) {
+                document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
             }
+        } catch (erro) {
+            window.location.href = '../index.html';
+            return;
+        }
 
-            function fecharMenu() {
-                document.getElementById("menuLateral").classList.remove("aberto");
-                document.getElementById("menuOverlay").classList.remove("aberto");
-                document.body.style.overflow = "";
-            }
+        try {
+            const respMarc = await fetch(`http://localhost:8080/consultas/paciente/${dados.id}`, { credentials: 'include' });
+            if (respMarc.ok) {
+                const lista = await respMarc.json();
+                const container = document.getElementById('lista-marcacoes');
+                container.innerHTML = '';
 
-
-            (async function () {
-                try {
-                    const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
-                    if (!resp.ok) { window.location.href = '../index.html'; return; }
-                    const dados = await resp.json();
-
-                    document.getElementById('nome-paciente').textContent = dados.nomeCompleto;
-
-                    if (dados.fotoPerfil) {
-                        document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
-
-                    }
-                } catch (erro) {
-                    window.location.href = '../index.html';
+                if (lista.length === 0) {
+                    container.innerHTML = '<p style="color:white;">Não tens consultas confirmadas.</p>';
+                } else {
+                    lista.forEach(consulta => {
+                        const ul = document.createElement('ul');
+                        ul.innerHTML = `
+                            <li>
+                                <p>${formatarData(consulta.dataConsulta)}</p>
+                                <img src="../../Imagens/PontoVerde.png">
+                                <p>${formatarHora(consulta.horaConsulta)}</p>
+                                <img src="../../Imagens/PontoVerde.png">
+                                <p>${consulta.motivo || 'Consulta'}</p>
+                            </li>
+                        `;
+                        container.appendChild(ul);
+                    });
                 }
-            })();
-        </script>
+            }
+        } catch (erro) {
+            console.warn('Erro ao carregar marcações.', erro);
+        }
+    })();
+
+    document.getElementById('btn-sair').addEventListener('click', async function (e) {
+        e.preventDefault();
+        try {
+            await fetch('http://localhost:8080/users/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (erro) {
+        }
+        window.location.href = '../index.html';
+    });
+</script>
     </body>
 </html>

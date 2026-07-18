@@ -136,11 +136,11 @@
                         <div class="prox-consultas">
                             <h2>Próximas consultas</h2>
                             <div class="data">
-                                <p>17/06/2026</p>
+                                 <p id="prox-data">--/--/----</p>
                                 <img src="../../Imagens/PontoVerde.png" alt="">
-                                <p>09:00</p>
+                                <p id="prox-hora">--:--</p>
                                 <img src="../../Imagens/PontoVerde.png" alt="">
-                                <p>Triagem</p>
+                                <p id="prox-motivo">Sem consultas agendadas</p>
                             </div>
                         </div>
                         <div class="notify">
@@ -156,51 +156,77 @@
         </section>
 
         <script>
-            // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
-            function abrirMenu() {
-                document.getElementById("menuLateral").classList.add("aberto");
-                document.getElementById("menuOverlay").classList.add("aberto");
-                document.body.style.overflow = "hidden";
+    // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
+    function abrirMenu() {
+        document.getElementById("menuLateral").classList.add("aberto");
+        document.getElementById("menuOverlay").classList.add("aberto");
+        document.body.style.overflow = "hidden";
+    }
+
+    function fecharMenu() {
+        document.getElementById("menuLateral").classList.remove("aberto");
+        document.getElementById("menuOverlay").classList.remove("aberto");
+        document.body.style.overflow = "";
+    }
+
+    function formatarData(dataISO) {
+        const [ano, mes, dia] = dataISO.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function formatarHora(horaISO) {
+        return horaISO.slice(0, 5);
+    }
+
+    (async function () {
+        let dados;
+
+        try {
+            const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+            if (!resp.ok) { window.location.href = '../index.html'; return; }
+            dados = await resp.json();
+
+            document.getElementById('nome-paciente').textContent = dados.nomeCompleto;
+            document.getElementById('nome-info').textContent = dados.nomeCompleto;
+            document.getElementById('email').textContent = dados.email || 'N/A';
+            document.getElementById('telefone').textContent = dados.telefone || 'N/A';
+            document.getElementById('n-paciente').textContent = dados.n_paciente || 'N/A';
+
+            if (dados.fotoPerfil) {
+                document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
+                document.getElementById('img-perfil').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
             }
+        } catch (erro) {
+            window.location.href = '../index.html';
+            return;
+        }
 
-            function fecharMenu() {
-                document.getElementById("menuLateral").classList.remove("aberto");
-                document.getElementById("menuOverlay").classList.remove("aberto");
-                document.body.style.overflow = "";
-            }
+        try {
+    const respProx = await fetch(`http://localhost:8080/consultas/paciente/${dados.id}/proxima`, { credentials: 'include' });
+    if (respProx.status === 204) {
+        // Não há consultas futuras, mantém o texto padrão
+    } else if (respProx.ok) {
+        const consulta = await respProx.json();
+        document.getElementById('prox-data').textContent = formatarData(consulta.dataConsulta);
+        document.getElementById('prox-hora').textContent = formatarHora(consulta.horaConsulta);
+        document.getElementById('prox-motivo').textContent = consulta.motivo || 'Consulta';
+    }
+} catch (erro) {
+    console.warn('Erro ao carregar próxima consulta.', erro);
+}
+    })();
 
-            (async function () {
-                try {
-                    const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
-                    if (!resp.ok) { window.location.href = '../index.html'; return; }
-                    const dados = await resp.json();
-
-                    document.getElementById('nome-paciente').textContent = dados.nomeCompleto;
-                    document.getElementById('nome-info').textContent = dados.nomeCompleto;
-                    document.getElementById('email').textContent = dados.email || 'N/A';
-                    document.getElementById('telefone').textContent = dados.telefone || 'N/A';
-                    document.getElementById('n-paciente').textContent = dados.n_paciente || 'N/A';
-
-                    if (dados.fotoPerfil) {
-                        document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
-                        document.getElementById('img-perfil').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
-                    }
-                } catch (erro) {
-                    window.location.href = '../index.html';
-                }
-            })();
-
-            document.getElementById('btn-sair').addEventListener('click', async function (e) {
-                e.preventDefault();
-                try {
-                    await fetch('http://localhost:8080/users/logout', {
-                        method: 'POST',
-                        credentials: 'include'
-                    });
-                } catch (erro) {
-                }
-                window.location.href = '../index.html';
+    document.getElementById('btn-sair').addEventListener('click', async function (e) {
+        e.preventDefault();
+        try {
+            await fetch('http://localhost:8080/users/logout', {
+                method: 'POST',
+                credentials: 'include'
             });
-        </script>
+        } catch (erro) {
+        }
+        window.location.href = '../index.html';
+    });
+</script>
     </body>
 </html>
