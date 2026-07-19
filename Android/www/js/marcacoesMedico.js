@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080";
+// API_BASE_URL vem do config.js, incluido pelas paginas antes deste ficheiro
 
 let mesAtualMarcacoes = new Date().getMonth();
 let anoAtualMarcacoes = new Date().getFullYear();

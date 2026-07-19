@@ -1,0 +1,5 @@
+# Dependencias Node: regeneradas por cada pessoa com "npm install" na pasta Android
+Android/node_modules/
+
+# Configuracao pessoal do Android Studio
+Android/android/.idea/

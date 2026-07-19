@@ -6,6 +6,7 @@
     <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
     <link rel="stylesheet" href="../css/signup.css">
     <title>Pagina de Signup</title>
+  <script src="../js/config.js"></script>
 </head>
 <body>
     <div class="div-logo">
@@ -40,7 +41,7 @@
             }
 
             try {
-                const resposta = await fetch('http://localhost:8080/users/register', {
+                const resposta = await fetch(API_BASE_URL + '/users/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nomeCompleto: nome, email: email, senha: senha })

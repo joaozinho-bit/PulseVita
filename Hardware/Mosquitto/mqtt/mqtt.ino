@@ -1,12 +1,52 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include <SPI.h>
+#include <MFRC522.h>
 #include "mbedtls/aes.h"
 #include "mbedtls/base64.h"
 
 //===== pinos do ESP32 =====
-const int pinLed = 2; // LED integrado do ESP32
-const int pinBuzzer = 15; // pino do buzzer
+const int pinBuzzer = 25;
+const int pinLedR = 27;
+const int pinLedG = 26;
+const int pinLedB = 32;
+const int pinRfidSS = 5;   // NSS do RC522
+const int pinRfidRST = 4;  // RST do RC522
+const int pinBotao = 33;   // botao ligar/desligar (RTC GPIO, acorda do deep sleep)
+// SPI do RC522 usa os pinos por defeito: SCK=18, MISO=19, MOSI=23
+// reservados para os proximos passos: I2C temperatura SDA=21/SCL=22,
+// sensor de pulsacao S=34 (ADC1)
+
+MFRC522 rfid(pinRfidSS, pinRfidRST);
+
+// ===== configuracao de rede =====
+// Casa
+const char* ssidWifi = "NOS-BB34";
+const char* passwordWifi = "RY6FRT3G";
+const char* brokerMqtt = "192.168.1.10";
+
+// Telemóvel
+// const char* ssidWifi = "OPPO Reno14 5G B4C6";
+// const char* passwordWifi = "spsu8597";
+// const char* brokerMqtt = "10.169.110.231";
+
+const int portaMqtt = 1883;
+const char* topicoLeituras = "pulsevita/leituras";
+const char* topicoComandos = "pulsevita/comandos/PV-X7K2M9";
+const char* topicoLogin = "pulsevita/login";
+
+// chave AES-128 de 16 bytes, tem de ser EXATAMENTE igual no Spring Boot
+const uint8_t chaveAes[16] = {
+  'P','u','l','s','e','V','i','t','a','A','E','S','1','2','3','!'
+};
+
+WiFiClient wifiClient;
+PubSubClient client(wifiClient);
+
+// guarda a ultima mensagem recebida do backend, para so ser impressa no log periodico
+String ultimaMensagemRecebida = "";
+bool novaMensagemDisponivel = false;
 
 // Estados possíveis do feedback (LEDs, buzzer, etc.) do dispositivo
 enum EstadoFeedback { ESTADO_INATIVO, ESTADO_SUCESSO, ESTADO_ERRO, ESTADO_CARREGANDO };
@@ -16,6 +56,37 @@ EstadoFeedback estadoAtual = ESTADO_INATIVO;
 unsigned long inicioEstado = 0;
 unsigned long ultimoPiscar = 0;
 bool piscarLigado = false;
+
+// controlo da leitura de cartoes e da espera pela resposta do backend
+unsigned long ultimaLeituraCartao = 0;
+bool aguardaRespostaLogin = false;
+unsigned long inicioEsperaLogin = 0;
+
+// gestao de energia: o botao desliga (deep sleep) e a inatividade prolongada tambem
+const unsigned long tempoMaxInatividade = 5UL * 60UL * 1000UL; // baixar para testar mais depressa
+unsigned long ultimaAtividade = 0;
+volatile bool botaoPremido = false;
+volatile unsigned long ultimoToqueBotao = 0;
+
+void IRAM_ATTR aoPremirBotao() {
+  unsigned long agora = millis();
+  if (agora - ultimoToqueBotao > 300) { // debounce
+    botaoPremido = true;
+    ultimoToqueBotao = agora;
+  }
+}
+
+// LED RGB de catodo comum, cada canal simplesmente ligado ou desligado
+// digitalWrite em vez de PWM para nao partilhar canais LEDC com o tone() do buzzer
+void definirCorLed(int r, int g, int b) {
+  digitalWrite(pinLedR, r > 0 ? HIGH : LOW);
+  digitalWrite(pinLedG, g > 0 ? HIGH : LOW);
+  digitalWrite(pinLedB, b > 0 ? HIGH : LOW);
+}
+
+void apagarLed() {
+  definirCorLed(0, 0, 0);
+}
 
 void definirSucesso() {
   estadoAtual = ESTADO_SUCESSO;
@@ -32,6 +103,10 @@ void definirErro() {
 void definirCarregando() {
   estadoAtual = ESTADO_CARREGANDO;
   inicioEstado = millis();
+  // o piscar comeca sempre na fase acesa, para o feedback ser consistente
+  piscarLigado = true;
+  ultimoPiscar = millis();
+  definirCorLed(0, 0, 255);
 }
 
 // chamada a cada iteração do loop(), nunca bloqueia porque usa millis() para controlar o tempo
@@ -54,12 +129,12 @@ void atualizarFeedback() {
       break;
 
     case ESTADO_CARREGANDO:
-      // pisca amarelo a cada 300ms
+      // pisca azul a cada 300ms
       if (agora - ultimoPiscar > 300) {
         piscarLigado = !piscarLigado;
         ultimoPiscar = agora;
         if (piscarLigado) {
-          definirCorLed(255, 255, 0);
+          definirCorLed(0, 0, 255);
         } else {
           apagarLed();
         }
@@ -100,6 +175,57 @@ void enviarMacAddress() {
   Serial.println("MAC enviado: " + mac);
 }
 
+// verifica se ha um cartao novo no leitor e envia o pedido de login ao backend
+// cooldown de 3s para nao processar o mesmo cartao varias vezes seguidas
+void verificarCartao() {
+  if (millis() - ultimaLeituraCartao < 3000) return;
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) return;
+
+  String uid = "";
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    if (rfid.uid.uidByte[i] < 0x10) uid += "0";
+    uid += String(rfid.uid.uidByte[i], HEX);
+  }
+  uid.toUpperCase();
+
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+
+  ultimaLeituraCartao = millis();
+  ultimaAtividade = millis();
+  Serial.println("Cartao lido, UID: " + uid);
+  enviarLoginCartao(uid);
+}
+
+// envia o UID ao backend no envelope AES+CRC32 habitual e fica a aguardar resposta
+void enviarLoginCartao(const String& uid) {
+  StaticJsonDocument<150> dados;
+  dados["deviceId"] = "PV-X7K2M9";
+  dados["idCartao"] = uid;
+  dados["timestamp"] = millis();
+
+  String dadosJson;
+  serializeJson(dados, dadosJson);
+
+  uint32_t crc32 = calcularCrc32(dadosJson);
+
+  StaticJsonDocument<250> envelope;
+  envelope["dados"] = dadosJson;
+  envelope["crc32"] = crc32;
+
+  String envelopeJson;
+  serializeJson(envelope, envelopeJson);
+
+  String envelopeComPadding = aplicarPadding(envelopeJson);
+  String mensagemEncriptada = encriptarEConverter(envelopeComPadding);
+
+  client.publish(topicoLogin, mensagemEncriptada.c_str());
+
+  definirCarregando();
+  aguardaRespostaLogin = true;
+  inicioEsperaLogin = millis();
+}
+
 // verifica se a mensagem recebida é um pedido imediato e despacha sem esperar o loop
 // pedirMac é tratado aqui porque a resposta tem de ser enviada assim que o pedido chega
 void processarComandoImediato(const String& mensagemBase64) {
@@ -111,7 +237,7 @@ void processarComandoImediato(const String& mensagemBase64) {
 
   String dados = envelope["dados"].as<String>();
 
-  StaticJsonDocument<100> json;
+  StaticJsonDocument<200> json;
   if (deserializeJson(json, dados) != DeserializationError::Ok) return;
 
   String tipo = json["tipo"].as<String>();
@@ -120,35 +246,16 @@ void processarComandoImediato(const String& mensagemBase64) {
     enviarMacAddress();
   } else if (tipo == "pedirLeitura") {
     enviarMensagemTeste();
+  } else if (tipo == "respostaLogin") {
+    aguardaRespostaLogin = false;
+    String resultado = json["resultado"].as<String>();
+    if (resultado == "sucesso") {
+      definirSucesso();
+    } else {
+      definirErro();
+    }
   }
 }
-
-// ===== configuracao de rede =====
-// Casa
-//const char* ssidWifi = "NOS-BB34";
-//const char* passwordWifi = "RY6FRT3G";
-// const char* brokerMqtt = "192.168.1.10";
-
-// Telemóvel
-const char* ssidWifi = "OPPO Reno14 5G B4C6";
-const char* passwordWifi = "spsu8597";
-
-const char* brokerMqtt = "10.169.110.231";
-const int portaMqtt = 1883;
-const char* topicoLeituras = "pulsevita/leituras";
-const char* topicoComandos = "pulsevita/comandos/PV-X7K2M9";
-
-// chave AES-128 de 16 bytes, tem de ser EXATAMENTE igual no Spring Boot
-const uint8_t chaveAes[16] = {
-  'P','u','l','s','e','V','i','t','a','A','E','S','1','2','3','!'
-};
-
-WiFiClient wifiClient;
-PubSubClient client(wifiClient);
-
-// guarda a ultima mensagem recebida do backend, para so ser impressa no log periodico
-String ultimaMensagemRecebida = "";
-bool novaMensagemDisponivel = false;
 
 // calcula CRC32 de uma string, mesma logica que o Java vai usar para validar
 uint32_t calcularCrc32(const String& texto) {
@@ -264,6 +371,8 @@ void conectarWifi() {
 // chamada automaticamente sempre que chega uma mensagem num topico subscrito
 // nao imprime nada aqui, so guarda o estado, para o log do loop controlar a cadencia
 void aoReceberMensagem(char* topico, byte* payload, unsigned int tamanho) {
+  ultimaAtividade = millis(); // contacto do backend conta como atividade
+
   String mensagem;
   for (unsigned int i = 0; i < tamanho; i++) {
     mensagem += (char)payload[i];
@@ -324,10 +433,62 @@ void enviarMensagemTeste() {
   Serial.println("Publish sucesso: " + String(sucesso));
 }
 
+// desliga o dispositivo: feedback sonoro, desconexao limpa e deep sleep
+// no deep sleep o consumo do chip cai para a ordem dos 10uA e so o botao (ext0) o acorda
+void entrarDeepSleep(const char* motivo) {
+  Serial.println(String("A entrar em deep sleep, motivo: ") + motivo);
+  Serial.println("Premir o botao para voltar a ligar");
+
+  apagarLed();
+  tone(pinBuzzer, 800, 150);
+  delay(200);
+  tone(pinBuzzer, 500, 150);
+  delay(200);
+  tone(pinBuzzer, 300, 250);
+  delay(300);
+
+  client.disconnect();
+  WiFi.disconnect(true);
+
+  // se o botao ainda estivesse premido, o ext0 acordava o ESP32 logo de seguida
+  while (digitalRead(pinBotao) == LOW) {
+    delay(10);
+  }
+  delay(100);
+
+  esp_sleep_enable_ext0_wakeup((gpio_num_t)pinBotao, 0);
+  Serial.flush();
+  esp_deep_sleep_start();
+}
+
 void setup() {
   Serial.begin(115200);
+
+  pinMode(pinBuzzer, OUTPUT);
+  pinMode(pinLedR, OUTPUT);
+  pinMode(pinLedG, OUTPUT);
+  pinMode(pinLedB, OUTPUT);
+  apagarLed();
+
+  pinMode(pinBotao, INPUT_PULLUP);
+
+  // distingue arranque normal de acordar do deep sleep, visivel no Serial Monitor
+  if (esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT0) {
+    Serial.println("\nAcordado do deep sleep pelo botao");
+    tone(pinBuzzer, 1200, 150);
+  } else {
+    Serial.println("\nArranque normal");
+  }
+
+  attachInterrupt(digitalPinToInterrupt(pinBotao), aoPremirBotao, FALLING);
+
+  SPI.begin();
+  rfid.PCD_Init();
+
   conectarWifi();
   conectarMqtt();
+
+  ultimaAtividade = millis();
 }
 
 void loop() {
@@ -336,21 +497,32 @@ void loop() {
   }
   client.loop(); // processa publish e callbacks em segundo plano, continuamente
 
-  // o log e o envio so acontecem a cada 5 segundos, para nao encher o Serial Monitor
-  static unsigned long ultimoLog = 0;
-  if (millis() - ultimoLog > 5000) {
-    Serial.println("--- ESP32: a enviar dados ---");
-    enviarMensagemTeste();
+  atualizarFeedback();
+  verificarCartao();
 
-    if (novaMensagemDisponivel) {
-      Serial.println("--- ESP32: mensagem recebida do backend ---");
-      String comandoDesencriptado = desencriptarEConverter(ultimaMensagemRecebida);
-      Serial.println(comandoDesencriptado);
-      novaMensagemDisponivel = false;
-    } else {
-      Serial.println("--- ESP32: nenhuma mensagem nova do backend ---");
+  // se o backend nao responder ao login dentro de 5s, assume erro
+  if (aguardaRespostaLogin && millis() - inicioEsperaLogin > 5000) {
+    aguardaRespostaLogin = false;
+    definirErro();
+  }
+
+  // botao premido = desligar; toques nos primeiros 3s apos o arranque sao
+  // ignorados, porque podem ser ricochete do toque que acordou o dispositivo
+  if (botaoPremido) {
+    botaoPremido = false;
+    if (millis() > 3000) {
+      entrarDeepSleep("botao premido");
     }
+  }
 
-    ultimoLog = millis();
+  if (millis() - ultimaAtividade > tempoMaxInatividade) {
+    entrarDeepSleep("inatividade");
+  }
+
+  // imprime mensagens do backend aqui e nao no callback, para nao atrasar o MQTT
+  if (novaMensagemDisponivel) {
+    novaMensagemDisponivel = false;
+    Serial.println("--- ESP32: mensagem recebida do backend ---");
+    Serial.println(desencriptarEConverter(ultimaMensagemRecebida));
   }
 }

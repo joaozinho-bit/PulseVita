@@ -22,6 +22,11 @@ public class MedicoService {
         return null;
     }
 
+    // Login com cartão RFID lido pelo dispositivo
+    public Medico loginPorCartao(String idCartao) {
+        return repository.findByIdCartao(idCartao);
+    }
+
 
     public Optional<Medico> getMedico(Long id) {
         return repository.findById(id);

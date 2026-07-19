@@ -16,7 +16,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         
         <title>Dashboard do Paciente</title>
-    </head>
+      <script src="../js/config.js"></script>
+</head>
     <body>
         <!-- Header fixo -->
         <div class="header">
@@ -213,7 +214,7 @@
     formData.append('foto', file);
 
     try {
-        const res = await fetch(`http://localhost:8080/users/${user.id}/foto`, {
+        const res = await fetch(`${API_BASE_URL}/users/${user.id}/foto`, {
             method: 'POST',
             credentials: 'include',
             body: formData
@@ -239,7 +240,7 @@
 
     (async function carregarPaciente() {
         try {
-            const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+            const resp = await fetch(API_BASE_URL + '/users/me', { credentials: 'include' });
             if (!resp.ok) { window.location.href = '../index.html'; return; }
             user = await resp.json();
         } catch (erro) {
@@ -248,8 +249,8 @@
         }
 
         if (user.fotoPerfil) {
-            imgPerfil.src = `http://localhost:8080/uploads/${user.fotoPerfil}`;
-            headerFoto.src = `http://localhost:8080/uploads/${user.fotoPerfil}`;
+            imgPerfil.src = `${API_BASE_URL}/uploads/${user.fotoPerfil}`;
+            headerFoto.src = `${API_BASE_URL}/uploads/${user.fotoPerfil}`;
         }
 
         camposConfig.forEach(({ elemId, campo }) => {
@@ -299,7 +300,7 @@
 
         if (Object.keys(payload).length > 0) {
             try {
-                const res = await fetch(`http://localhost:8080/users/${user.id}`, {
+                const res = await fetch(`${API_BASE_URL}/users/${user.id}`, {
                     method:  'PUT',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
@@ -356,7 +357,7 @@
     document.getElementById('btn-sair').addEventListener('click', async function (e) {
         e.preventDefault();
         try {
-            await fetch('http://localhost:8080/users/logout', {
+            await fetch(API_BASE_URL + '/users/logout', {
                 method: 'POST',
                 credentials: 'include'
             });

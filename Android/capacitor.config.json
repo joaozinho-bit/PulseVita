@@ -1,5 +1,13 @@
 {
   "appId": "com.PulseVita.app",
   "appName": "PulseVita",
-  "webDir": "www"
+  "webDir": "www",
+  "android": {
+    "adjustMarginsForEdgeToEdge": "force"
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
 }

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
     Medico findByNumeroMedico(String numeroMedico); // login sem cartão
+
+    Medico findByIdCartao(String idCartao); // login com cartão RFID
 }

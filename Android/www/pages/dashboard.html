@@ -18,7 +18,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
         <title>Dashboard do Paciente</title>
-    </head>
+      <script src="../js/config.js"></script>
+</head>
     <body>
         <!-- Header fixo -->
         <div class="header">
@@ -182,7 +183,7 @@
         let dados;
 
         try {
-            const resp = await fetch('http://localhost:8080/users/me', { credentials: 'include' });
+            const resp = await fetch(API_BASE_URL + '/users/me', { credentials: 'include' });
             if (!resp.ok) { window.location.href = '../index.html'; return; }
             dados = await resp.json();
 
@@ -193,8 +194,8 @@
             document.getElementById('n-paciente').textContent = dados.n_paciente || 'N/A';
 
             if (dados.fotoPerfil) {
-                document.getElementById('header-foto').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
-                document.getElementById('img-perfil').src = `http://localhost:8080/uploads/${dados.fotoPerfil}`;
+                document.getElementById('header-foto').src = `${API_BASE_URL}/uploads/${dados.fotoPerfil}`;
+                document.getElementById('img-perfil').src = `${API_BASE_URL}/uploads/${dados.fotoPerfil}`;
             }
         } catch (erro) {
             window.location.href = '../index.html';
@@ -202,7 +203,7 @@
         }
 
         try {
-    const respProx = await fetch(`http://localhost:8080/consultas/paciente/${dados.id}/proxima`, { credentials: 'include' });
+    const respProx = await fetch(`${API_BASE_URL}/consultas/paciente/${dados.id}/proxima`, { credentials: 'include' });
     if (respProx.status === 204) {
         // Não há consultas futuras, mantém o texto padrão
     } else if (respProx.ok) {
@@ -219,7 +220,7 @@
     document.getElementById('btn-sair').addEventListener('click', async function (e) {
         e.preventDefault();
         try {
-            await fetch('http://localhost:8080/users/logout', {
+            await fetch(API_BASE_URL + '/users/logout', {
                 method: 'POST',
                 credentials: 'include'
             });

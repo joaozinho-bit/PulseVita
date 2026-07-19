@@ -29,7 +29,7 @@ VALUES
 INSERT INTO medico
 (id_cartao, n_medico, password, nome_completo, especializacao)
 VALUES
-    (100234, '967545', '123', 'Dr. Carlos Pinto', 'Cardiologia');
+    (92674206, '967545', '123', 'Dr. Carlos Pinto', 'Cardiologia');
 
 
 -- Catálogo de doenças

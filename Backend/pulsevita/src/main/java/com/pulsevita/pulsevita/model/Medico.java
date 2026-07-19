@@ -17,7 +17,7 @@ public class Medico {
     private String especializacao;
 
     @Column(name = "id_cartao")
-    private Long idCartao;
+    private String idCartao;
 
     @Column(name = "n_medico")
     private String numeroMedico;
@@ -50,11 +50,11 @@ public class Medico {
         this.especializacao = especializacao;
     }
 
-    public Long getIdCartao() {
+    public String getIdCartao() {
         return idCartao;
     }
 
-    public void setIdCartao(Long idCartao) {
+    public void setIdCartao(String idCartao) {
         this.idCartao = idCartao;
     }
 

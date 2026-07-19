@@ -22,11 +22,16 @@ public class MqttConfig {
     @Value("${mqtt.topic.leituras}")
     private String topicoLeituras;
 
-    private MqttClient client;
-    private final LeituraMqttListener listener;
+    @Value("${mqtt.topic.login}")
+    private String topicoLogin;
 
-    public MqttConfig(LeituraMqttListener listener) {
-        this.listener = listener;
+    private MqttClient client;
+    private final LeituraMqttListener leituraListener;
+    private final LoginMqttListener loginListener;
+
+    public MqttConfig(LeituraMqttListener leituraListener, LoginMqttListener loginListener) {
+        this.leituraListener = leituraListener;
+        this.loginListener = loginListener;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -34,8 +39,9 @@ public class MqttConfig {
         try {
             client = new MqttClient(brokerUrl, clientId, new MemoryPersistence());
             client.connect();
-            client.subscribe(topicoLeituras, (topic, msg) -> listener.processarMensagem(topic, msg));
-            System.out.println("MQTT ligado e a escuta no topico: " + topicoLeituras);
+            client.subscribe(topicoLeituras, (topic, msg) -> leituraListener.processarMensagem(topic, msg));
+            client.subscribe(topicoLogin, (topic, msg) -> loginListener.processarMensagem(topic, msg));
+            System.out.println("MQTT ligado e a escuta nos topicos: " + topicoLeituras + ", " + topicoLogin);
         } catch (MqttException e) {
             System.out.println("Erro ao ligar ao MQTT: " + e.getMessage());
         }

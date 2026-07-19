@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="../../Imagens/Icon app.png">
-  <link rel="stylesheet" href="../css-medicos/login.css"> 
+  <link rel="stylesheet" href="../css-medicos/login.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../css/toast.css">
   <title>Iniciar sessão</title>
+  <script src="../js/config.js"></script>
 </head>
 <body>
   <header>
@@ -42,28 +45,59 @@
     </div>
   </main>
 
+  <script src="../js/toast.js"></script>
   <script>
     document.getElementById('btn-entrar-medico').addEventListener('click', async function () {
         const numeroMedico = document.getElementById('cartao-input').value;
         const senha = document.getElementById('senha-input').value;
 
         try {
-            const resposta = await fetch('http://localhost:8080/medicos/login', {
+            const resposta = await fetch(API_BASE_URL + '/medicos/login', {
               method: 'POST',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ numero_medico: numeroMedico, password: senha })
             });
-            
+
             if (resposta.ok) {
                 window.location.href = 'base.html';
             } else {
-                alert("Número de médico ou senha incorretos!");
+                toast.error("Número de médico ou senha incorretos.");
             }
         } catch (erro) {
-            alert("Não foi possível contactar o servidor.");
+            toast.error("Não foi possível contactar o servidor.");
         }
     });
+
+    // enquanto a pagina esta aberta, pergunta ao backend se um cartao
+    // foi lido no dispositivo: 200 = login feito, 401 = cartao invalido
+    let erroPollingMostrado = false;
+
+    setInterval(async function () {
+        try {
+            const resposta = await fetch(API_BASE_URL + '/medicos/login-cartao/estado', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (resposta.status === 200) {
+                window.location.href = 'base.html';
+            } else if (resposta.status === 401) {
+                toast.error("Cartão não reconhecido. Tente novamente ou use o número de médico.");
+            } else if (resposta.status !== 204) {
+                // erro inesperado do servidor: mostra so uma vez ate recuperar,
+                // para o polling nao repetir o toast a cada 1.5s
+                if (!erroPollingMostrado) {
+                    toast.error("Ocorreu um erro ao verificar o cartão.");
+                    erroPollingMostrado = true;
+                }
+            } else {
+                erroPollingMostrado = false;
+            }
+        } catch (erro) {
+            // servidor indisponivel, tenta de novo no proximo ciclo
+        }
+    }, 1500);
   </script>
 </body>
 </html>

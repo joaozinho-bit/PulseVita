@@ -1,5 +1,5 @@
 // ===== Dados Médicos: histórico + paginação =====
-// TODO: substituir HISTORICO_MOCK por fetch('http://localhost:8080/medicoes/historico')
+// TODO: substituir HISTORICO_MOCK por fetch(API_BASE_URL + '/medicoes/historico')
 
 const ITENS_POR_PAGINA = 4;
 let paginaAtual = 1;
