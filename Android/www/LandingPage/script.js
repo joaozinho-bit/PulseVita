@@ -43,21 +43,21 @@ itens.forEach(item => {
 //utilizadore de like e compra fake
 
 const usuarios = [
-    { nome: "Pedro Silva", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=1" },
-    { nome: "Leticia Santos", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=2" },
-    { nome: "Flavio Campus", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=3" },
-    { nome: "Ana Ribeiro", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=4" },
-    { nome: "Carlos Mendes", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=5" },
-    { nome: "Mariana Costa", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=6" },
-    { nome: "Rui Almeida", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=7" },
-    { nome: "Beatriz Lopes", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=8" },
-    { nome: "Tiago Ferreira", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=9" },
-    { nome: "Sofia Martins", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=10" },
-    { nome: "Diogo Pereira", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=11" },
-    { nome: "Catarina Sousa", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=12" },
-    { nome: "Miguel Rocha", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=13" },
-    { nome: "Inês Carvalho", acao: "Comprou esse produto", icone: "../../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=14" },
-    { nome: "Bruno Tavares", acao: "Deu like nesse produto", icone: "../../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=15" },
+    { nome: "Pedro Silva", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=1" },
+    { nome: "Leticia Santos", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=2" },
+    { nome: "Flavio Campus", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=3" },
+    { nome: "Ana Ribeiro", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=4" },
+    { nome: "Carlos Mendes", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=5" },
+    { nome: "Mariana Costa", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=6" },
+    { nome: "Rui Almeida", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=7" },
+    { nome: "Beatriz Lopes", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=8" },
+    { nome: "Tiago Ferreira", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=9" },
+    { nome: "Sofia Martins", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=10" },
+    { nome: "Diogo Pereira", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=11" },
+    { nome: "Catarina Sousa", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=12" },
+    { nome: "Miguel Rocha", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=13" },
+    { nome: "Inês Carvalho", acao: "Comprou esse produto", icone: "../Imagens/Elementos/Carrinho.png", avatar: "https://i.pravatar.cc/300?img=14" },
+    { nome: "Bruno Tavares", acao: "Deu like nesse produto", icone: "../Imagens/Elementos/Coracao.png", avatar: "https://i.pravatar.cc/300?img=15" },
 ];
 
 function iniciarNotificacoes(seletor, listaUsuarios, intervalo) {

@@ -72,8 +72,29 @@ body {
     display: none;
 }
 
-.profile .point {
-    width: 8px;
+/* Enquanto a foto do header nao tem a classe "pronta", um circulo neutro
+   pulsante cobre o espaco, para a imagem por defeito nao aparecer por um
+   instante antes da fotografia real do utilizador */
+.header .profile {
+    position: relative;
+}
+
+.header .profile:has(.img-user:not(.pronta))::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #9fd4d0;
+    animation: pulsar-placeholder 1.2s ease-in-out infinite;
+}
+
+@keyframes pulsar-placeholder {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
 }
 
 /* Overlay escuro por tras do menu. Como o menu passou a ocupar o ecra todo fica coberto por ele,

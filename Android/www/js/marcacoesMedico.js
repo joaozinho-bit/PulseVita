@@ -263,24 +263,24 @@ async function aceitarMarcacaoMedico(idMarcacao) {
             method: "POST",
             credentials: "include"
         });
-        if (!resposta.ok) { alert("Não foi possível confirmar a consulta."); return; }
+        if (!resposta.ok) { toast.error("Não foi possível confirmar a consulta."); return; }
         await carregarMarcacoesMedico();
         pacienteSelecionadoMarcacoes = marcacoesMedico.find(m => m.id === idMarcacao) || null;
         renderizarMarcacoesMedico();
     } catch (erro) {
-        alert("Não foi possível contactar o servidor.");
+        toast.error("Não foi possível contactar o servidor.");
     }
 }
 
 async function recusarMarcacaoMedico(idMarcacao) {
     try {
         const resposta = await fetch(`${API_BASE_URL}/consultas/${idMarcacao}/recusar`, { method: "POST" });
-        if (!resposta.ok) { alert("Não foi possível recusar a consulta."); return; }
+        if (!resposta.ok) { toast.error("Não foi possível recusar a consulta."); return; }
         await carregarMarcacoesMedico();
         pacienteSelecionadoMarcacoes = marcacoesMedico.find(m => m.id === idMarcacao) || null;
         renderizarMarcacoesMedico();
     } catch (erro) {
-        alert("Não foi possível contactar o servidor.");
+        toast.error("Não foi possível contactar o servidor.");
     }
 }
 

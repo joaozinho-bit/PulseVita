@@ -1,0 +1,17 @@
+/* Loader partilhado da aplicacao */
+
+@keyframes loader-rodar {
+    to { transform: rotate(360deg); }
+}
+
+/* Spinner para botoes de acao (fundo verde, conteudo branco) */
+.loader-botao {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: loader-rodar 0.7s linear infinite;
+    vertical-align: middle;
+}

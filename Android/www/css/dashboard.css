@@ -6,15 +6,18 @@
     padding: 15px;
 }
 
+/* Perfil em coluna centrada: foto, nome em destaque e por fim os contactos.
+   Evita que textos longos (sobretudo o email) disputem espaco com a foto na horizontal. */
 .conteudo .info-pessoal {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 14px;
 }
 
 .info-pessoal .foto {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,10 +26,42 @@
     border: 3px solid #B6E5E5;
 }
 
+/* Enquanto a fotografia carrega, a area fica coberta por um placeholder com spinner */
+.info-pessoal .foto:has(img:not(.pronta))::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 14px;
+    background: #0f7a63;
+}
+
+.info-pessoal .foto:has(img:not(.pronta))::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: loader-rodar 0.7s linear infinite;
+}
+
 .info-pessoal .foto img {
     width: 100px;
+    height: 100px;
     border-radius: 14px;
     object-fit: cover;
+}
+
+.info-pessoal .nome-perfil {
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-align: center;
 }
 
 .info-pessoal .lista-info {
@@ -45,6 +80,9 @@
 .info-pessoal .lista-info .dados p {
     color: #ffffff;
     font-size: 14px;
+    /* permite quebrar emails/textos longos em vez de sair do fundo verde */
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .info-pessoal .lista-info .dados img {

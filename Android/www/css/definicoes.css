@@ -287,3 +287,116 @@
         width: 100%;
     }
 }
+/* ─── Modal de recorte da foto de perfil ─────────────────────── */
+.crop-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 33, 24, 0.65);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.crop-overlay.aberto {
+    display: flex;
+}
+
+.crop-caixa {
+    background: #B6E5E5;
+    border-radius: 20px;
+    padding: 18px;
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.crop-caixa h2 {
+    color: #205236;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.crop-dica {
+    color: #205236;
+    font-size: 0.82rem;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.crop-area {
+    width: 100%;
+    height: 300px;
+    background: #082118;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.crop-area img {
+    display: block;
+    max-width: 100%;
+}
+
+/* janela de recorte circular, igual ao formato da foto no header */
+.crop-area .cropper-view-box,
+.crop-area .cropper-face {
+    border-radius: 50%;
+}
+
+.crop-botoes {
+    display: flex;
+    gap: 10px;
+}
+
+.crop-botoes button {
+    flex: 1;
+    min-height: 44px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-crop-cancelar {
+    background: transparent;
+    border: 2px solid #205236;
+    color: #205236;
+}
+
+.btn-crop-guardar {
+    background: #138C6E;
+    color: #ffffff;
+}
+
+/* Enquanto a fotografia carrega, a area fica coberta por um placeholder com spinner */
+.info-pessoal .foto:has(img#foto-perfil:not(.pronta))::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 14px;
+    background: #0f7a63;
+}
+
+.info-pessoal .foto:has(img#foto-perfil:not(.pronta))::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: loader-rodar 0.7s linear infinite;
+}
+
+/* o selo de edicao fica acima do placeholder de carregamento */
+.foto-overlay {
+    z-index: 2;
+}

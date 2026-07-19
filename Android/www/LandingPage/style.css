@@ -168,7 +168,7 @@ html{
 /* Header */
 
 .header {
-    background: url(../../Imagens/Background.png);
+    background: url(../Imagens/Background.png);
     position: relative;
     z-index: 2;
 
@@ -267,7 +267,7 @@ html{
 }
 
 .primeira-sessao .first-box{
-    background: url(../../Imagens/Elementos/box-raio.png);
+    background: url(../Imagens/Elementos/box-raio.png);
     background-repeat: no-repeat;
     width: 400px;
     height: 267px;
@@ -292,7 +292,7 @@ html{
 }
 
 .primeira-sessao .second-box{
-    background: url(../../Imagens/Elementos/box-time.png);
+    background: url(../Imagens/Elementos/box-time.png);
     background-repeat: no-repeat;
     width: 400px;
     height: 267px;
@@ -317,7 +317,7 @@ html{
 }
 
 .primeira-sessao .third-box{
-    background: url(../../Imagens/Elementos/box-config.png);
+    background: url(../Imagens/Elementos/box-config.png);
     background-repeat: no-repeat;
     width: 400px;
     height: 267px;
@@ -356,7 +356,7 @@ html{
 }
 
 .segunda-sessao .first-box{
-    background: url(../../Imagens/Elementos/box-1.png);
+    background: url(../Imagens/Elementos/box-1.png);
     background-repeat: no-repeat;
     width: 580px;
     height: 151px;
@@ -369,7 +369,7 @@ html{
     align-self: flex-start;
 }
 .segunda-sessao .second-box{
-    background: url(../../Imagens/Elementos/box-2.png);
+    background: url(../Imagens/Elementos/box-2.png);
     background-repeat: no-repeat;
     width: 580px;
     height: 151px;
@@ -384,7 +384,7 @@ html{
 }
 
 .segunda-sessao .third-box{
-    background: url(../../Imagens/Elementos/box-3.png);
+    background: url(../Imagens/Elementos/box-3.png);
     background-repeat: no-repeat;
     width: 580px;
     height: 151px;
