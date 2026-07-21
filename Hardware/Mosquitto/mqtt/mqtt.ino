@@ -3,6 +3,8 @@
 #include <ArduinoJson.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Wire.h>
+#include <Adafruit_MLX90614.h>
 #include "mbedtls/aes.h"
 #include "mbedtls/base64.h"
 
@@ -19,6 +21,30 @@ const int pinBotao = 33;   // botao ligar/desligar (RTC GPIO, acorda do deep sle
 // sensor de pulsacao S=34 (ADC1)
 
 MFRC522 rfid(pinRfidSS, pinRfidRST);
+
+// sensor de temperatura por infravermelhos no I2C (SDA=21, SCL=22)
+Adafruit_MLX90614 sensorTemp = Adafruit_MLX90614();
+bool sensorTempOk = false;
+
+// offset de calibracao afinado no sketch TesteTemperatura: um sensor IV le a
+// temperatura da pele, 2 a 3 graus abaixo da corporal
+const float offsetCalibracao = 2.5;
+
+// sessao de medicao: amostra a cada 200ms ate juntar 20 amostras validas (~4s)
+const int amostrasPorMedicao = 20;
+const unsigned long intervaloAmostraMs = 200;
+const unsigned long timeoutMedicaoMs = 10000;
+
+bool medicaoEmCurso = false;
+long idMedicaoAtual = 0;
+unsigned long inicioMedicao = 0;
+unsigned long ultimaAmostra = 0;
+int amostrasRecolhidas = 0;
+float somaTemperatura = 0;
+
+// depois de enviar o resultado, aguarda a avaliacao do backend para o feedback
+bool aguardaRespostaMedicao = false;
+unsigned long inicioEsperaRespostaMedicao = 0;
 
 // ===== configuracao de rede =====
 // Casa
@@ -63,7 +89,8 @@ bool aguardaRespostaLogin = false;
 unsigned long inicioEsperaLogin = 0;
 
 // gestao de energia: o botao desliga (deep sleep) e a inatividade prolongada tambem
-const unsigned long tempoMaxInatividade = 5UL * 60UL * 1000UL; // baixar para testar mais depressa
+// 30 min durante o desenvolvimento para nao adormecer a meio dos testes; repor 5 min na versao final
+const unsigned long tempoMaxInatividade = 30UL * 60UL * 1000UL;
 unsigned long ultimaAtividade = 0;
 volatile bool botaoPremido = false;
 volatile unsigned long ultimoToqueBotao = 0;
@@ -226,6 +253,116 @@ void enviarLoginCartao(const String& uid) {
   inicioEsperaLogin = millis();
 }
 
+// publica no envelope habitual uma mensagem de estado da medicao
+// ("iniciada" quando o comando e aceite, "erro" quando nao e possivel medir)
+void enviarEstadoMedicao(const char* estado) {
+  StaticJsonDocument<200> dados;
+  dados["deviceId"] = "PV-X7K2M9";
+  dados["tipo"] = "estadoMedicao";
+  dados["idMedicao"] = idMedicaoAtual;
+  dados["estado"] = estado;
+
+  String dadosJson;
+  serializeJson(dados, dadosJson);
+
+  uint32_t crc32 = calcularCrc32(dadosJson);
+
+  StaticJsonDocument<300> envelope;
+  envelope["dados"] = dadosJson;
+  envelope["crc32"] = crc32;
+
+  String envelopeJson;
+  serializeJson(envelope, envelopeJson);
+
+  String mensagemEncriptada = encriptarEConverter(aplicarPadding(envelopeJson));
+  client.publish(topicoLeituras, mensagemEncriptada.c_str());
+}
+
+void enviarResultadoMedicao(float temperatura) {
+  StaticJsonDocument<200> dados;
+  dados["deviceId"] = "PV-X7K2M9";
+  dados["tipo"] = "resultadoMedicao";
+  dados["idMedicao"] = idMedicaoAtual;
+  dados["temperatura"] = ((int)(temperatura * 100)) / 100.0;
+
+  String dadosJson;
+  serializeJson(dados, dadosJson);
+
+  uint32_t crc32 = calcularCrc32(dadosJson);
+
+  StaticJsonDocument<300> envelope;
+  envelope["dados"] = dadosJson;
+  envelope["crc32"] = crc32;
+
+  String envelopeJson;
+  serializeJson(envelope, envelopeJson);
+
+  String mensagemEncriptada = encriptarEConverter(aplicarPadding(envelopeJson));
+  client.publish(topicoLeituras, mensagemEncriptada.c_str());
+
+  Serial.println("Resultado da medicao enviado: " + String(temperatura, 2) + " C");
+}
+
+// arranca uma sessao de medicao de temperatura pedida pelo backend
+void iniciarSessaoMedicao(long idMedicao) {
+  idMedicaoAtual = idMedicao;
+
+  if (!sensorTempOk || medicaoEmCurso) {
+    enviarEstadoMedicao("erro");
+    definirErro();
+    return;
+  }
+
+  medicaoEmCurso = true;
+  inicioMedicao = millis();
+  ultimaAmostra = 0;
+  amostrasRecolhidas = 0;
+  somaTemperatura = 0;
+
+  definirCarregando();
+  enviarEstadoMedicao("iniciada");
+  Serial.println("Medicao de temperatura iniciada, id: " + String(idMedicao));
+}
+
+void cancelarSessaoMedicao() {
+  if (!medicaoEmCurso) return;
+  medicaoEmCurso = false;
+  apagarLed();
+  estadoAtual = ESTADO_INATIVO;
+  Serial.println("Medicao cancelada pelo backend");
+}
+
+// chamada em cada iteracao do loop; nao bloqueia, amostra por millis()
+void processarMedicao() {
+  if (!medicaoEmCurso) return;
+
+  // sensor sempre a falhar (ex.: desligado a meio): desiste e avisa o backend
+  if (millis() - inicioMedicao > timeoutMedicaoMs) {
+    medicaoEmCurso = false;
+    enviarEstadoMedicao("erro");
+    definirErro();
+    return;
+  }
+
+  if (millis() - ultimaAmostra < intervaloAmostraMs) return;
+  ultimaAmostra = millis();
+
+  float leitura = sensorTemp.readObjectTempC();
+  if (isnan(leitura)) return; // amostra falhada, tenta na proxima
+
+  somaTemperatura += leitura + offsetCalibracao;
+  amostrasRecolhidas++;
+  ultimaAtividade = millis(); // medir conta como atividade para o auto-sleep
+
+  if (amostrasRecolhidas >= amostrasPorMedicao) {
+    medicaoEmCurso = false;
+    enviarResultadoMedicao(somaTemperatura / amostrasRecolhidas);
+    // o LED mantem-se a piscar ate chegar a respostaMedicao com a avaliacao
+    aguardaRespostaMedicao = true;
+    inicioEsperaRespostaMedicao = millis();
+  }
+}
+
 // verifica se a mensagem recebida é um pedido imediato e despacha sem esperar o loop
 // pedirMac é tratado aqui porque a resposta tem de ser enviada assim que o pedido chega
 void processarComandoImediato(const String& mensagemBase64) {
@@ -253,6 +390,18 @@ void processarComandoImediato(const String& mensagemBase64) {
       definirSucesso();
     } else {
       definirErro();
+    }
+  } else if (tipo == "iniciarMedicao") {
+    iniciarSessaoMedicao(json["idMedicao"].as<long>());
+  } else if (tipo == "pararMedicao") {
+    cancelarSessaoMedicao();
+  } else if (tipo == "respostaMedicao") {
+    aguardaRespostaMedicao = false;
+    String resultado = json["resultado"].as<String>();
+    if (resultado == "NORMAL") {
+      definirSucesso();
+    } else {
+      definirErro(); // FEBRE ou leitura invalida: feedback de alerta
     }
   }
 }
@@ -485,6 +634,12 @@ void setup() {
   SPI.begin();
   rfid.PCD_Init();
 
+  Wire.begin();
+  sensorTempOk = sensorTemp.begin();
+  if (!sensorTempOk) {
+    Serial.println("AVISO: sensor de temperatura nao encontrado no I2C");
+  }
+
   conectarWifi();
   conectarMqtt();
 
@@ -499,10 +654,17 @@ void loop() {
 
   atualizarFeedback();
   verificarCartao();
+  processarMedicao();
 
   // se o backend nao responder ao login dentro de 5s, assume erro
   if (aguardaRespostaLogin && millis() - inicioEsperaLogin > 5000) {
     aguardaRespostaLogin = false;
+    definirErro();
+  }
+
+  // se a avaliacao da medicao nao chegar em 8s, termina o feedback com erro
+  if (aguardaRespostaMedicao && millis() - inicioEsperaRespostaMedicao > 8000) {
+    aguardaRespostaMedicao = false;
     definirErro();
   }
 

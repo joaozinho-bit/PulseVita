@@ -1,0 +1,192 @@
+.conteudo {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+    padding: 15px;
+}
+
+.conteudo h1 {
+    color: #ffffff;
+    font-size: 1.6rem;
+}
+
+.subtitulo {
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 4px;
+}
+
+/* ─── Vista 1: cartoes de selecao ───────────────────────────── */
+.cartoes-medicao {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.cartao-medicao {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #B6E5E5;
+    border: none;
+    border-radius: 16px;
+    padding: 18px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+}
+
+.cartao-medicao i {
+    font-size: 30px;
+    color: #138C6E;
+    flex-shrink: 0;
+}
+
+.cartao-medicao h2 {
+    color: #205236;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cartao-medicao p {
+    color: #3a6b57;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+.selo-brevemente {
+    background: #205236;
+    color: #B6E5E5;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+/* ─── Vista 2: instrucoes ───────────────────────────────────── */
+.instrucao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 24px 0;
+}
+
+.instrucao h2 {
+    color: #ffffff;
+    font-size: 1.25rem;
+}
+
+.instrucao p {
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 320px;
+    line-height: 1.5;
+}
+
+.icone-grande {
+    font-size: 56px;
+    color: #B6E5E5;
+}
+
+.icone-grande.sucesso {
+    color: #B6E5E5;
+}
+
+.icone-grande.alerta {
+    color: #FFD166;
+}
+
+/* ─── Vista 3: medicao, erro e resultado ────────────────────── */
+.painel-medicao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+    padding: 24px 0;
+}
+
+.painel-medicao h2 {
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.painel-medicao p {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.loader-medicao {
+    width: 64px;
+    height: 64px;
+    border: 5px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #B6E5E5;
+    border-radius: 50%;
+    animation: loader-rodar 0.9s linear infinite;
+}
+
+.texto-erro {
+    max-width: 320px;
+    line-height: 1.5;
+}
+
+.valor-resultado {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.avaliacao-resultado {
+    color: #B6E5E5;
+    font-weight: 600;
+    font-size: 1.15rem;
+}
+
+.avaliacao-resultado.alerta {
+    color: #FFD166;
+}
+
+.detalhe-resultado {
+    max-width: 340px;
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.nota-resultado {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+/* ─── Botoes ────────────────────────────────────────────────── */
+.botoes-medicao {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 360px;
+    margin: 8px auto 0;
+}
+
+.botoes-medicao button {
+    flex: 1;
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-primario {
+    border: none;
+    background: #205236;
+    color: #ffffff;
+}
+
+.btn-secundario {
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    background: transparent;
+    color: #ffffff;
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="../Imagens/Icon app.png">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="../css/medicoes.css">
+        <link rel="stylesheet" href="../css/global.css">
+        <link rel="stylesheet" href="../css/loader.css">
+        <link rel="stylesheet" href="../css/toast.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+        <!-- Font montserrat -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <title>Medições</title>
+      <script src="../js/config.js"></script>
+      <script src="../js/perfil.js"></script>
+</head>
+    <body>
+        <!-- Header fixo -->
+        <div class="header">
+            <button class="menuToggle" id="menuToggle" onclick="abrirMenu()" aria-label="Abrir menu">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="logo">
+                <img class="logo" src="../Imagens/Logo.png" alt="PulseVita">
+            </div>
+            <div class="profile">
+                <img class="img-user" id="header-foto" src="../Imagens/user.png" alt="Imagem de perfil">
+                <span id="nome-paciente">Pedro Silva</span>
+            </div>
+        </div>
+
+        <!-- Overlay do menu -->
+        <div class="menuOverlay" id="menuOverlay" onclick="fecharMenu()"></div>
+
+        <!-- Conteudo -->
+        <section class="container">
+            <!-- Menu lateral (fullscreen em mobile) -->
+            <div class="esquerda" id="menuLateral">
+                <div class="menu">
+                    <button class="menuFechar" onclick="fecharMenu()" aria-label="Fechar menu">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                    <ul>
+                        <a href="dashboard.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-dashboard.png" alt="">
+                                <p>Dashboard</p>
+                            </li>
+                        </a>
+
+                        <a href="marcacoes.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-marcacoes.png" alt="">
+                                <p>Marcações</p>
+                            </li>
+                        </a>
+
+                        <a href="medicoes.html">
+                            <li class="menu-links active">
+                                <i class="bi bi-heart-pulse"></i>
+                                <p>Medições</p>
+                            </li>
+                        </a>
+
+                        <a href="resultados.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-resultados.png" alt="">
+                                <p>Resultados</p>
+                            </li>
+                        </a>
+
+                        <a href="dadosmedicos.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-dados-medicos.png" alt="">
+                                <p>Dados Médicos</p>
+                            </li>
+                        </a>
+
+                        <a href="marcarconsulta.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-marcarconsulta.png" alt="">
+                                <p>Marcar Consulta</p>
+                            </li>
+                        </a>
+
+                        <a href="contactar.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-contactar.png" alt="">
+                                <p>FAQ</p>
+                            </li>
+                        </a>
+                        <a href="sincronizar.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-sync.png" alt="">
+                                <p>Sincronizar</p>
+                            </li>
+                        </a>
+                        <a href="definicoes.html">
+                            <li class="menu-links">
+                                <img src="../Imagens/icon-definicoes.png" alt="">
+                                <p>Definições</p>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+                <div class="btn-sair">
+                    <a href="../index.html" id="btn-sair">
+                        <p class="sair">Sair</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="direita">
+                <div class="conteudo">
+                    <h1>Medições</h1>
+
+                    <!-- Vista 1: selecao do tipo -->
+                    <div id="vista-selecao">
+                        <p class="subtitulo">Escolha o que pretende medir</p>
+                        <div class="cartoes-medicao">
+                            <button class="cartao-medicao" onclick="escolherTipo('TEMPERATURA')">
+                                <i class="bi bi-thermometer-half"></i>
+                                <div>
+                                    <h2>Temperatura</h2>
+                                    <p>Temperatura corporal por infravermelhos</p>
+                                </div>
+                            </button>
+                            <button class="cartao-medicao" onclick="escolherTipo('BPM')">
+                                <i class="bi bi-heart-pulse"></i>
+                                <div>
+                                    <h2>Frequência cardíaca <span class="selo-brevemente">Brevemente</span></h2>
+                                    <p>Batimentos por minuto no sensor de pulso</p>
+                                </div>
+                            </button>
+                            <button class="cartao-medicao" onclick="escolherTipo('AMBOS')">
+                                <i class="bi bi-activity"></i>
+                                <div>
+                                    <h2>Temperatura + BPM <span class="selo-brevemente">Brevemente</span></h2>
+                                    <p>Medição completa dos dois sinais vitais</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vista 2: instrucoes e confirmacao -->
+                    <div id="vista-instrucoes" style="display:none">
+                        <div class="instrucao">
+                            <i class="bi bi-thermometer-half icone-grande"></i>
+                            <h2>Medir temperatura</h2>
+                            <p>Aproxime o sensor da testa, a 2 a 3 cm de distância, e mantenha-o imóvel durante a medição.</p>
+                        </div>
+                        <div class="botoes-medicao">
+                            <button class="btn-secundario" onclick="mostrarVista('selecao')">Voltar</button>
+                            <button class="btn-primario" onclick="iniciarMedicao(this)">Iniciar medição</button>
+                        </div>
+                    </div>
+
+                    <!-- Vista 3: medicao em curso / erro / resultado -->
+                    <div id="vista-medicao" style="display:none">
+                        <div id="medicao-progresso" class="painel-medicao">
+                            <div class="loader-medicao"></div>
+                            <h2 id="progresso-titulo">A ligar ao dispositivo…</h2>
+                            <p id="progresso-texto"></p>
+                            <div class="botoes-medicao">
+                                <button class="btn-secundario" onclick="cancelarMedicao()">Cancelar</button>
+                            </div>
+                        </div>
+
+                        <div id="medicao-erro" class="painel-medicao" style="display:none">
+                            <i class="bi bi-exclamation-circle icone-grande alerta"></i>
+                            <p id="erro-texto" class="texto-erro"></p>
+                            <div class="botoes-medicao">
+                                <button class="btn-secundario" onclick="mostrarVista('selecao')">Voltar</button>
+                                <button class="btn-primario" onclick="iniciarMedicao(this)">Tentar novamente</button>
+                            </div>
+                        </div>
+
+                        <div id="medicao-resultado" class="painel-medicao" style="display:none">
+                            <i id="resultado-icone" class="bi bi-check-circle icone-grande sucesso"></i>
+                            <p class="valor-resultado" id="resultado-valor"></p>
+                            <p class="avaliacao-resultado" id="resultado-avaliacao"></p>
+                            <p class="detalhe-resultado" id="resultado-detalhe"></p>
+                            <p class="nota-resultado" id="resultado-data"></p>
+                            <p class="nota-resultado">Medição guardada no histórico</p>
+                            <div class="botoes-medicao">
+                                <button class="btn-secundario" onclick="window.location.href='dadosmedicos.html'">Ver histórico</button>
+                                <button class="btn-primario" onclick="mostrarVista('selecao')">Concluir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script src="../js/toast.js"></script>
+        <script>
+    // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
+    function abrirMenu() {
+        document.getElementById("menuLateral").classList.add("aberto");
+        document.getElementById("menuOverlay").classList.add("aberto");
+        document.body.style.overflow = "hidden";
+    }
+
+    function fecharMenu() {
+        document.getElementById("menuLateral").classList.remove("aberto");
+        document.getElementById("menuOverlay").classList.remove("aberto");
+        document.body.style.overflow = "";
+    }
+
+    // guard de autenticacao, igual as restantes paginas
+    (async function () {
+        try {
+            const resp = await fetch(API_BASE_URL + '/users/me', { credentials: 'include' });
+            if (!resp.ok) { window.location.href = '../index.html'; return; }
+        } catch (erro) {
+            window.location.href = '../index.html';
+        }
+    })();
+
+    // ─── Fluxo da medicao ─────────────────────────────────────────
+    let tipoAtual = null;
+    let pollingTimer = null;
+    let pollsFalhados = 0;
+
+    const mensagensErro = {
+        DISPOSITIVO_NAO_RESPONDE: 'O dispositivo não respondeu. Verifique se o LinkLife está ligado e tente novamente.',
+        LEITURA_INVALIDA: 'Não foi possível obter uma leitura válida. Aproxime bem o sensor da testa e tente novamente.',
+        TIMEOUT: 'A medição demorou demasiado tempo. Tente novamente.',
+        ERRO_DISPOSITIVO: 'O dispositivo comunicou um erro. Tente novamente.',
+        SEM_LIGACAO: 'Perdeu-se a ligação ao servidor. Verifique a sua internet.'
+    };
+
+    function mostrarVista(nome) {
+        if (nome !== 'medicao') pararPolling();
+        ['selecao', 'instrucoes', 'medicao'].forEach(v => {
+            document.getElementById('vista-' + v).style.display = (v === nome) ? '' : 'none';
+        });
+    }
+
+    function mostrarSubestado(nome) {
+        ['progresso', 'erro', 'resultado'].forEach(s => {
+            document.getElementById('medicao-' + s).style.display = (s === nome) ? '' : 'none';
+        });
+    }
+
+    function escolherTipo(tipo) {
+        if (tipo !== 'TEMPERATURA') {
+            toast.info('Esta medição ficará disponível brevemente.');
+            return;
+        }
+        tipoAtual = tipo;
+        mostrarVista('instrucoes');
+    }
+
+    async function iniciarMedicao(botao) {
+        const reporBotao = ativarLoaderBotao(botao);
+        try {
+            const resposta = await fetch(API_BASE_URL + '/medicoes/iniciar', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: tipoAtual })
+            });
+
+            if (resposta.status === 401) { window.location.href = '../index.html'; return; }
+
+            if (!resposta.ok) {
+                const corpo = await resposta.json().catch(() => null);
+                toast.error(corpo && corpo.message ? corpo.message : 'Não foi possível iniciar a medição.');
+                return;
+            }
+
+            mostrarVista('medicao');
+            mostrarSubestado('progresso');
+            atualizarProgresso('A ligar ao dispositivo…', '');
+            pollsFalhados = 0;
+            pollingTimer = setInterval(consultarEstado, 1200);
+        } catch (erro) {
+            toast.error('Não foi possível contactar o servidor.');
+        } finally {
+            reporBotao();
+        }
+    }
+
+    async function consultarEstado() {
+        try {
+            const resposta = await fetch(API_BASE_URL + '/medicoes/estado', { credentials: 'include' });
+
+            if (resposta.status === 204) { mostrarErro('TIMEOUT'); return; }
+            if (!resposta.ok) throw new Error('estado ' + resposta.status);
+
+            pollsFalhados = 0;
+            const estado = await resposta.json();
+
+            if (estado.estado === 'AGUARDA_DISPOSITIVO') {
+                atualizarProgresso('A ligar ao dispositivo…', '');
+            } else if (estado.estado === 'EM_CURSO') {
+                atualizarProgresso('Medição em curso', 'Mantenha o sensor junto à testa');
+            } else if (estado.estado === 'CONCLUIDA') {
+                mostrarResultado(estado.resultado);
+            } else if (estado.estado === 'ERRO') {
+                mostrarErro(estado.motivo);
+            }
+        } catch (erro) {
+            pollsFalhados++;
+            if (pollsFalhados >= 3) mostrarErro('SEM_LIGACAO');
+        }
+    }
+
+    function atualizarProgresso(titulo, texto) {
+        document.getElementById('progresso-titulo').textContent = titulo;
+        document.getElementById('progresso-texto').textContent = texto;
+    }
+
+    function mostrarResultado(resultado) {
+        pararPolling();
+
+        const valorFormatado = resultado.temperatura.toFixed(1).replace('.', ',');
+        document.getElementById('resultado-valor').textContent = valorFormatado + ' ºC';
+
+        // o limite vem do backend porque pode ser personalizado pelo medico
+        const limite = resultado.temperaturaMaxima != null
+            ? resultado.temperaturaMaxima.toFixed(1).replace('.', ',')
+            : '37,5';
+
+        const normal = resultado.avaliacao === 'NORMAL';
+        document.getElementById('resultado-avaliacao').textContent = normal
+            ? 'Temperatura normal'
+            : 'Febre detetada';
+        document.getElementById('resultado-avaliacao').classList.toggle('alerta', !normal);
+
+        document.getElementById('resultado-detalhe').textContent = normal
+            ? 'O valor medido está dentro do seu limite de referência (' + limite + ' ºC).'
+            : 'O valor medido está acima do seu limite de referência (' + limite + ' ºC). '
+              + 'Se a temperatura se mantiver elevada, contacte o seu médico.';
+
+        const icone = document.getElementById('resultado-icone');
+        icone.className = normal
+            ? 'bi bi-check-circle icone-grande sucesso'
+            : 'bi bi-thermometer-high icone-grande alerta';
+
+        const agora = new Date();
+        document.getElementById('resultado-data').textContent =
+            agora.toLocaleDateString('pt-PT') + ' às ' +
+            agora.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+        mostrarSubestado('resultado');
+    }
+
+    function mostrarErro(motivo) {
+        pararPolling();
+        document.getElementById('erro-texto').textContent =
+            mensagensErro[motivo] || 'Ocorreu um erro na medição. Tente novamente.';
+        mostrarSubestado('erro');
+    }
+
+    async function cancelarMedicao() {
+        pararPolling();
+        try {
+            await fetch(API_BASE_URL + '/medicoes/cancelar', { method: 'POST', credentials: 'include' });
+        } catch (erro) {
+            // o timeout do backend limpa o estado de qualquer forma
+        }
+        mostrarVista('instrucoes');
+    }
+
+    function pararPolling() {
+        if (pollingTimer) {
+            clearInterval(pollingTimer);
+            pollingTimer = null;
+        }
+    }
+
+    document.getElementById('btn-sair').addEventListener('click', async function (e) {
+        e.preventDefault();
+        try {
+            await fetch(API_BASE_URL + '/users/logout', {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (erro) {
+        }
+        window.location.href = '../index.html';
+    });
+</script>
+    </body>
+</html>

@@ -195,6 +195,15 @@ body {
     opacity: 0.85;
 }
 
+/* itens de menu com icone de fonte (bootstrap icons) em vez de PNG */
+.esquerda .menu .menu-links i {
+    width: 26px;
+    font-size: 24px;
+    text-align: center;
+    color: #ffffff;
+    opacity: 0.85;
+}
+
 .esquerda .btn-sair {
     width: 100%;
     display: flex;

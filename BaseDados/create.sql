@@ -96,11 +96,18 @@ CREATE TABLE consulta (
     FOREIGN KEY (estado) REFERENCES estado_consulta(estado)
 );
 
+-- Historico de medicoes. O tipo e explicito para nao depender dos NULLs:
+-- numa medicao AMBOS em que um dos sensores falhe, o registo continua correto.
+-- A avaliacao e guardada no momento da medicao, porque os limites de referencia
+-- do paciente podem mudar ao longo do tempo.
 CREATE TABLE historico_paciente (
     id SERIAL PRIMARY KEY,
     id_paciente INTEGER NOT NULL,
-    bpm INTEGER NOT NULL,
-    temperatura DECIMAL(4,2) NOT NULL,
+    tipo_medicao VARCHAR(15) NOT NULL
+        CHECK (tipo_medicao IN ('TEMPERATURA', 'BPM', 'AMBOS')),
+    temperatura DECIMAL(4,2),
+    bpm INTEGER,
+    avaliacao VARCHAR(50),
     data_leitura TIMESTAMP NOT NULL,
     FOREIGN KEY (id_paciente) REFERENCES paciente(id)
 );
