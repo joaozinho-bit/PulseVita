@@ -18,7 +18,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         
-        <title>Marcações do utilizador</title>
+        <title>Dados Médicos</title>
       <script src="../js/config.js"></script>
       <script src="../js/perfil.js"></script>
 </head>
@@ -67,13 +67,6 @@
                             <li class="menu-links">
                                 <i class="bi bi-heart-pulse"></i>
                                 <p>Medições</p>
-                            </li>
-                        </a>
-
-                        <a href="resultados.html">
-                            <li class="menu-links">
-                                <img src="../Imagens/icon-resultados.png" alt="">
-                                <p>Resultados</p>
                             </li>
                         </a>
 
@@ -175,6 +168,16 @@
                             </div>
 
                             <div class="modalFiltro-campo">
+                                <label for="modal-tipo">Tipo de medição</label>
+                                <select id="modal-tipo">
+                                    <option value="">Todas</option>
+                                    <option value="TEMPERATURA">Temperatura</option>
+                                    <option value="BPM">Frequência cardíaca</option>
+                                    <option value="AMBOS">Medição completa</option>
+                                </select>
+                            </div>
+
+                            <div class="modalFiltro-campo">
                                 <label for="modal-data-inicio">Início</label>
                                 <input type="date" id="modal-data-inicio">
                             </div>
@@ -231,7 +234,6 @@
             });
 
         </script>
+        <script src="../js/dadosmedicos.js"></script>
     </body>
-<script src="../js/app.js"></script<script src="../js/app.js"></script>
-<script src="../js/dadosmedicos.js"></script>>
 </html>

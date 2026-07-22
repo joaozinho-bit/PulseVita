@@ -1,23 +1,26 @@
 // ===== Dados Médicos: histórico + filtro (modal) + ordenação + paginação =====
-// TODO: substituir HISTORICO_MOCK por fetch('http://localhost:8080/medicoes/historico')
+// Filtros e ordenação são aplicados pelo backend; o cliente só pagina.
 
 const ITENS_POR_PAGINA = 4;
 let paginaAtual = 1;
 
 // Filtro só é aplicado quando o utilizador clica em "Aplicar"
-let filtroAtivo = { inicio: "", fim: "" };
+let filtroAtivo = { inicio: "", fim: "", tipo: "" };
 
-const HISTORICO_MOCK = [
-    { bpm: 96, temp: "37,6", data: "2026-07-18T12:55" },
-    { bpm: 96, temp: "37,6", data: "2026-07-18T12:55" },
-    { bpm: 96, temp: "37,6", data: "2026-07-18T12:55" },
-    { bpm: 96, temp: "37,6", data: "2026-07-18T12:55" },
-    { bpm: 98, temp: "37,4", data: "2026-07-17T09:20" },
-    { bpm: 91, temp: "37,1", data: "2026-07-16T21:10" },
-    { bpm: 95, temp: "37,3", data: "2026-07-16T08:45" },
-    { bpm: 93, temp: "37,0", data: "2026-07-15T19:30" },
-    { bpm: 97, temp: "37,5", data: "2026-07-15T07:15" },
-];
+let historico = [];
+
+const NOMES_TIPO = {
+    TEMPERATURA: "Temperatura",
+    BPM: "Frequência cardíaca",
+    AMBOS: "Medição completa"
+};
+
+const NOMES_AVALIACAO = {
+    NORMAL: "Normal",
+    FEBRE: "Febre",
+    BPM_ALTO: "BPM elevado",
+    BPM_BAIXO: "BPM baixo"
+};
 
 function formatarData(isoString) {
     const d = new Date(isoString);
@@ -29,29 +32,42 @@ function formatarData(isoString) {
     return `${dia}/${mes}/${ano} - ${horas}:${minutos}`;
 }
 
-function obterListaProcessada() {
-    const ordem = document.getElementById("ordenar-por").value;
-    let lista = [...HISTORICO_MOCK];
-
-    if (filtroAtivo.inicio) {
-        lista = lista.filter(item => item.data.slice(0, 10) >= filtroAtivo.inicio);
-    }
-    if (filtroAtivo.fim) {
-        lista = lista.filter(item => item.data.slice(0, 10) <= filtroAtivo.fim);
-    }
-
-    lista.sort((a, b) => {
-        return ordem === "antigas"
-            ? new Date(a.data) - new Date(b.data)
-            : new Date(b.data) - new Date(a.data);
-    });
-
-    return lista;
+function formatarTemperatura(valor) {
+    return valor.toFixed(1).replace(".", ",");
 }
 
-function renderUltimaMedicao(medicao) {
-    document.getElementById("ultimo-bpm").textContent = `${medicao.bpm} bpm`;
-    document.getElementById("ultima-temp").textContent = `${medicao.temp} °C`;
+// a avaliacao vem do backend ja calculada no momento da medicao
+function formatarAvaliacao(avaliacao) {
+    if (!avaliacao) return "";
+    return avaliacao.split(",").map(a => NOMES_AVALIACAO[a] || a).join(" + ");
+}
+
+async function carregarHistorico() {
+    const ordem = document.getElementById("ordenar-por").value;
+    const params = new URLSearchParams();
+    if (filtroAtivo.tipo) params.set("tipo", filtroAtivo.tipo);
+    if (filtroAtivo.inicio) params.set("dataInicio", filtroAtivo.inicio);
+    if (filtroAtivo.fim) params.set("dataFim", filtroAtivo.fim);
+    params.set("ordem", ordem);
+
+    const resposta = await fetch(`${API_BASE_URL}/historico?${params}`, { credentials: "include" });
+    if (resposta.status === 401) {
+        window.location.href = "../index.html";
+        return [];
+    }
+    if (!resposta.ok) throw new Error();
+    return resposta.json();
+}
+
+// cartoes do topo: ultimo valor conhecido de cada grandeza, seja de que
+// tipo de medicao for; recebem a primeira carga, sem filtros e por ordem recente
+function renderUltimaMedicao(lista) {
+    const comBpm = lista.find(item => item.bpm != null);
+    const comTemp = lista.find(item => item.temperatura != null);
+    document.getElementById("ultimo-bpm").textContent =
+        comBpm ? `${comBpm.bpm} bpm` : "-- bpm";
+    document.getElementById("ultima-temp").textContent =
+        comTemp ? `${formatarTemperatura(comTemp.temperatura)} °C` : "-- °C";
 }
 
 function renderHistorico(lista, pagina) {
@@ -67,13 +83,28 @@ function renderHistorico(lista, pagina) {
     const itensPagina = lista.slice(inicio, inicio + ITENS_POR_PAGINA);
 
     itensPagina.forEach(item => {
+        // cada registo mostra apenas os valores que o seu tipo de medicao tem
+        const linhas = [];
+        if (item.bpm != null) {
+            linhas.push(`<p>Batimentos cardíacos: <span>${item.bpm} bpm</span></p>`);
+        }
+        if (item.temperatura != null) {
+            linhas.push(`<p>Temperatura corporal: <span>${formatarTemperatura(item.temperatura)} °C</span></p>`);
+        }
+
+        const textoAvaliacao = formatarAvaliacao(item.avaliacao);
+        const badgeAvaliacao = textoAvaliacao
+            ? `<p class="avaliacao ${item.avaliacao === "NORMAL" ? "" : "alerta"}">${textoAvaliacao}</p>`
+            : "";
+
         const box = document.createElement("div");
         box.className = "box-info";
         box.innerHTML = `
             <div class="box-dados">
-                <p>Batimentos cardíacos: <span>${item.bpm} bpm</span></p>
-                <p>Temperatura corporal: <span>${item.temp} °C</span></p>
-                <p class="data">${formatarData(item.data)}</p>
+                <p class="tipo-medicao">${NOMES_TIPO[item.tipoMedicao] || "Medição"}</p>
+                ${linhas.join("")}
+                ${badgeAvaliacao}
+                <p class="data">${formatarData(item.dataLeitura)}</p>
             </div>
         `;
         container.appendChild(box);
@@ -106,19 +137,32 @@ function renderPaginacao(lista) {
     nav.appendChild(btnProximo);
 }
 
-function atualizarHistorico() {
-    const lista = obterListaProcessada();
-    renderHistorico(lista, paginaAtual);
-    renderPaginacao(lista);
+function renderizar() {
+    renderHistorico(historico, paginaAtual);
+    renderPaginacao(historico);
+}
+
+// mudar de pagina nao volta ao servidor; so filtros e ordenacao recarregam
+async function atualizarHistorico() {
+    try {
+        historico = await carregarHistorico();
+    } catch (erro) {
+        document.getElementById("lista-historico").innerHTML =
+            `<p class="sem-resultados">Não foi possível carregar o histórico. Tente novamente mais tarde.</p>`;
+        document.getElementById("paginacao").innerHTML = "";
+        return;
+    }
+    renderizar();
 }
 
 function irParaPagina(pagina) {
     paginaAtual = pagina;
-    atualizarHistorico();
+    renderizar();
 }
 
 // ===== Modal de filtro =====
 function abrirModalFiltro() {
+    document.getElementById("modal-tipo").value = filtroAtivo.tipo;
     document.getElementById("modal-data-inicio").value = filtroAtivo.inicio;
     document.getElementById("modal-data-fim").value = filtroAtivo.fim;
     document.getElementById("modalFiltroOverlay").classList.add("aberto");
@@ -129,11 +173,12 @@ function fecharModalFiltro() {
 }
 
 function aplicarFiltro() {
+    filtroAtivo.tipo = document.getElementById("modal-tipo").value;
     filtroAtivo.inicio = document.getElementById("modal-data-inicio").value;
     filtroAtivo.fim = document.getElementById("modal-data-fim").value;
 
     document.getElementById("btn-abrir-filtro")
-        .classList.toggle("ativo", !!(filtroAtivo.inicio || filtroAtivo.fim));
+        .classList.toggle("ativo", !!(filtroAtivo.tipo || filtroAtivo.inicio || filtroAtivo.fim));
 
     paginaAtual = 1;
     atualizarHistorico();
@@ -141,7 +186,8 @@ function aplicarFiltro() {
 }
 
 function limparFiltro() {
-    filtroAtivo = { inicio: "", fim: "" };
+    filtroAtivo = { inicio: "", fim: "", tipo: "" };
+    document.getElementById("modal-tipo").value = "";
     document.getElementById("modal-data-inicio").value = "";
     document.getElementById("modal-data-fim").value = "";
     document.getElementById("btn-abrir-filtro").classList.remove("ativo");
@@ -151,9 +197,9 @@ function limparFiltro() {
     fecharModalFiltro();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    renderUltimaMedicao(HISTORICO_MOCK[0]);
-    atualizarHistorico();
+document.addEventListener("DOMContentLoaded", async () => {
+    await atualizarHistorico();
+    renderUltimaMedicao(historico);
 
     document.getElementById("ordenar-por").addEventListener("change", () => {
         paginaAtual = 1;

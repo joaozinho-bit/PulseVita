@@ -143,7 +143,8 @@
     font-weight: 600;
 }
 
-.modalFiltro-campo input[type="date"] {
+.modalFiltro-campo input[type="date"],
+.modalFiltro-campo select {
     border: 1px solid #B6E5E5;
     border-radius: 8px;
     padding: 9px 12px;
@@ -151,9 +152,11 @@
     font-family: 'Montserrat', sans-serif;
     font-size: 0.85rem;
     outline: none;
+    background: #fff;
 }
 
-.modalFiltro-campo input[type="date"]:focus {
+.modalFiltro-campo input[type="date"]:focus,
+.modalFiltro-campo select:focus {
     border-color: #138C6E;
 }
 
@@ -296,6 +299,25 @@
     color: #205236;
     opacity: 0.85;
     font-weight: 600;
+}
+
+.lista-historico .box-dados p.tipo-medicao {
+    background: #B6E5E5;
+    color: #205236;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+}
+
+.lista-historico .box-dados p.avaliacao {
+    color: #34C759;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.lista-historico .box-dados p.avaliacao.alerta {
+    color: #C77700;
 }
 
 /* Paginação */
