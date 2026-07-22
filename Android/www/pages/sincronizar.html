@@ -314,11 +314,20 @@
             });
 
             async function confirmarRemocao() {
-                const utilizador = JSON.parse(localStorage.getItem("utilizador"));
-                const idUtilizador = utilizador.id;
-                await fetch(`${API}/users/${idUtilizador}/dispositivo`, { method: "DELETE" });
+                try {
+                    const idUtilizador = await getUserId();
+                    const resposta = await fetch(`${API}/users/${idUtilizador}/dispositivo`, {
+                        method: "DELETE",
+                        credentials: "include"
+                    });
+                    if (!resposta.ok) throw new Error();
+                } catch {
+                    toast.error("Não foi possível remover o dispositivo.");
+                    return;
+                }
 
                 fecharModalRemover();
+                toast.success("Dispositivo removido.");
 
                 // Aguarda o fade-out do modal antes de trocar o estado visível
                 setTimeout(() => {

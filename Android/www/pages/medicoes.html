@@ -172,7 +172,6 @@
                             <div class="barra-progresso" id="barra-progresso" style="display:none">
                                 <div class="barra-preenchimento" id="barra-preenchimento"></div>
                             </div>
-                            <p class="nota-resultado" id="progresso-validos" style="display:none"></p>
                             <p class="aviso-dedo" id="aviso-dedo" style="display:none">
                                 <i class="bi bi-hand-index"></i> Sem dedo detetado — pouse o dedo no sensor
                             </p>
@@ -351,13 +350,21 @@
         document.getElementById('progresso-anel').style.display = '';
         document.getElementById('progresso-bpm').style.display = 'none';
         document.getElementById('barra-progresso').style.display = 'none';
-        document.getElementById('progresso-validos').style.display = 'none';
         document.getElementById('aviso-dedo').style.display = 'none';
         document.getElementById('barra-preenchimento').style.width = '0%';
     }
 
+    // mensagens tranquilizadoras que acompanham a barra, para o utilizador
+    // perceber que a medicao continua a decorrer mesmo quando esta demora
+    function mensagemProgressoBpm(progresso) {
+        if (progresso < 25) return 'A detetar os batimentos…';
+        if (progresso < 55) return 'Mantenha o dedo firme e imóvel';
+        if (progresso < 85) return 'A estabilizar a leitura…';
+        return 'Está quase concluído…';
+    }
+
     // a vista adapta-se a fase reportada pelo dispositivo: na temperatura mostra
-    // o anel; nos BPM mostra o valor ao vivo, a barra de progresso e o contador
+    // o anel; nos BPM mostra o valor ao vivo, a barra e a mensagem de progresso
     function atualizarEmCurso(estado) {
         const fase = estado.fase || (tipoAtual === 'BPM' ? 'BPM' : 'TEMPERATURA');
 
@@ -369,19 +376,13 @@
             bpmEl.style.display = '';
             bpmEl.innerHTML = (estado.valorParcial != null ? estado.valorParcial : '--') + ' <span>bpm</span>';
 
-            atualizarProgresso('Medição em curso', 'Mantenha o dedo pousado no sensor');
+            const progresso = estado.progresso != null ? estado.progresso : 0;
+            document.getElementById('barra-preenchimento').style.width = progresso + '%';
 
-            if (estado.progresso != null) {
-                document.getElementById('barra-preenchimento').style.width = estado.progresso + '%';
-            }
-
-            const validosEl = document.getElementById('progresso-validos');
-            if (estado.validos != null && estado.alvo != null) {
-                validosEl.style.display = '';
-                validosEl.textContent = 'Batimentos válidos: ' + estado.validos + ' / ' + estado.alvo;
-            }
-
-            document.getElementById('aviso-dedo').style.display = (estado.dedo === false) ? '' : 'none';
+            const semDedo = estado.dedo === false;
+            document.getElementById('aviso-dedo').style.display = semDedo ? '' : 'none';
+            // sem dedo, a mensagem principal cede o lugar ao aviso amarelo
+            atualizarProgresso('Medição em curso', semDedo ? '' : mensagemProgressoBpm(progresso));
         } else {
             reporVistaProgresso();
             atualizarProgresso('Medição em curso', 'Mantenha o sensor junto à testa');

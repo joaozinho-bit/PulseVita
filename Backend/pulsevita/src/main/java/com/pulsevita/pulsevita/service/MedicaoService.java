@@ -286,9 +286,9 @@ public class MedicaoService {
         }
 
         int idade = java.time.Period.between(paciente.getDataNascimento(), java.time.LocalDate.now()).getYears();
-        if (idade < 1) return new int[]{100, 190};
-        if (idade <= 2) return new int[]{98, 140};
-        if (idade <= 5) return new int[]{80, 120};
+        if (idade < 1) return new int[]{100, 160};
+        if (idade <= 2) return new int[]{90, 150};
+        if (idade <= 5) return new int[]{80, 140};
         if (idade <= 11) return new int[]{75, 118};
         return new int[]{BPM_MINIMO_PADRAO, BPM_MAXIMO_PADRAO};
     }
