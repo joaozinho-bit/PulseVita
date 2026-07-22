@@ -48,6 +48,15 @@ public class LeituraMqttListener {
                     Integer bpm = dados.has("bpm") && !dados.get("bpm").isJsonNull()
                             ? dados.get("bpm").getAsInt() : null;
                     medicaoService.registarResultado(idMedicao, temperatura, bpm);
+                } else if ("progressoMedicao".equals(tipo)) {
+                    String fase = dados.has("fase") ? dados.get("fase").getAsString() : null;
+                    Integer bpm = dados.has("bpm") && !dados.get("bpm").isJsonNull()
+                            ? dados.get("bpm").getAsInt() : null;
+                    Boolean dedo = dados.has("dedo") ? dados.get("dedo").getAsBoolean() : null;
+                    Integer progresso = dados.has("progresso") ? dados.get("progresso").getAsInt() : null;
+                    Integer validos = dados.has("validos") ? dados.get("validos").getAsInt() : null;
+                    Integer alvo = dados.has("alvo") ? dados.get("alvo").getAsInt() : null;
+                    medicaoService.registarProgresso(idMedicao, fase, bpm, dedo, progresso, validos, alvo);
                 } else {
                     System.out.println("Mensagem de leitura com tipo desconhecido: " + tipo);
                 }

@@ -41,6 +41,11 @@ public class MedicaoService {
     private static final double TEMPERATURA_PLAUSIVEL_MINIMA = 33.0;
     private static final double TEMPERATURA_PLAUSIVEL_MAXIMA = 42.5;
 
+    // plausibilidade dos BPM: valida apenas se a leitura e fisicamente possivel,
+    // nunca entra na avaliacao clinica
+    private static final int BPM_PLAUSIVEL_MINIMO = 30;
+    private static final int BPM_PLAUSIVEL_MAXIMO = 220;
+
     private static final long TIMEOUT_DISPOSITIVO_MS = 6_000;
     private static final long TIMEOUT_RESULTADO_MS = 15_000;
     private static final long VALIDADE_RESULTADO_MS = 60_000;
@@ -55,7 +60,15 @@ public class MedicaoService {
         Double temperatura;
         Integer bpm;
         String avaliacao;
-        Double temperaturaMaxima; // limite usado na avaliacao, mostrado ao utilizador
+        Double temperaturaMaxima; // limites usados na avaliacao, mostrados ao utilizador
+        Integer bpmMinimo;
+        Integer bpmMaximo;
+        String fase;              // fase reportada pelo dispositivo (TEMPERATURA/BPM)
+        Integer valorParcial;     // BPM ao vivo durante a medicao
+        Boolean dedo;
+        Integer progresso;
+        Integer validos;
+        Integer alvo;
         long inicio;
         long ultimaAtualizacao;
     }
@@ -84,11 +97,6 @@ public class MedicaoService {
     }
 
     public synchronized Map<String, Object> iniciar(Long idPaciente, TipoMedicao tipo) {
-        if (tipo != TipoMedicao.TEMPERATURA) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Este tipo de medição ainda não está disponível.");
-        }
-
         atualizarTimeouts();
         if (atual != null && (atual.estado == Estado.AGUARDA_DISPOSITIVO || atual.estado == Estado.EM_CURSO)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma medição em curso.");
@@ -141,12 +149,16 @@ public class MedicaoService {
         }
         atual.ultimaAtualizacao = System.currentTimeMillis();
 
-        if (temperatura != null
-                && (temperatura < TEMPERATURA_PLAUSIVEL_MINIMA || temperatura > TEMPERATURA_PLAUSIVEL_MAXIMA)) {
+        boolean temperaturaInvalida = temperatura != null
+                && (temperatura < TEMPERATURA_PLAUSIVEL_MINIMA || temperatura > TEMPERATURA_PLAUSIVEL_MAXIMA);
+        boolean bpmInvalido = bpm != null
+                && (bpm < BPM_PLAUSIVEL_MINIMO || bpm > BPM_PLAUSIVEL_MAXIMO);
+
+        if (temperaturaInvalida || bpmInvalido) {
             atual.estado = Estado.ERRO;
             atual.motivoErro = "LEITURA_INVALIDA";
             enviarRespostaDispositivo("INVALIDA");
-            System.out.println("Medicao rejeitada por implausibilidade: " + temperatura + " C");
+            System.out.println("Medicao rejeitada por implausibilidade: temp=" + temperatura + " bpm=" + bpm);
             return;
         }
 
@@ -168,6 +180,24 @@ public class MedicaoService {
 
         enviarRespostaDispositivo(avaliacao);
         System.out.println("Medicao concluida: " + temperatura + " C, avaliacao " + avaliacao);
+    }
+
+    // chamado pelo listener MQTT a cada mensagem de progresso do dispositivo;
+    // alem de alimentar a app, refresca ultimaAtualizacao e funciona como
+    // keep-alive: uma medicao longa de BPM nunca cai no timeout de resultado
+    public synchronized void registarProgresso(long idMedicao, String fase, Integer bpm,
+                                               Boolean dedo, Integer progresso,
+                                               Integer validos, Integer alvo) {
+        if (atual == null || atual.idMedicao != idMedicao) {
+            return;
+        }
+        atual.ultimaAtualizacao = System.currentTimeMillis();
+        atual.fase = fase;
+        atual.valorParcial = bpm;
+        atual.dedo = dedo;
+        atual.progresso = progresso;
+        atual.validos = validos;
+        atual.alvo = alvo;
     }
 
     public synchronized Map<String, Object> consultarEstado(Long idPaciente) {
@@ -228,10 +258,14 @@ public class MedicaoService {
         }
 
         if (bpm != null) {
+            // prioridade: valores do medico > referencia por idade > padrao adulto
+            int[] limitesIdade = limitesBpmPorIdade(idPaciente);
             int minimo = (referencia != null && referencia.getBpmMinimo() != null)
-                    ? referencia.getBpmMinimo() : BPM_MINIMO_PADRAO;
+                    ? referencia.getBpmMinimo() : limitesIdade[0];
             int maximo = (referencia != null && referencia.getBpmMaximo() != null)
-                    ? referencia.getBpmMaximo() : BPM_MAXIMO_PADRAO;
+                    ? referencia.getBpmMaximo() : limitesIdade[1];
+            atual.bpmMinimo = minimo;
+            atual.bpmMaximo = maximo;
             if (bpm < minimo) {
                 alertas.add("BPM_BAIXO");
             } else if (bpm > maximo) {
@@ -240,6 +274,23 @@ public class MedicaoService {
         }
 
         return alertas.isEmpty() ? "NORMAL" : String.join(",", alertas);
+    }
+
+    // intervalos de referencia da frequencia cardiaca em repouso por idade:
+    // escaloes pediatricos das tabelas PALS, adultos 60-100 da AHA.
+    // O sexo nao entra: as referencias clinicas nao diferenciam limites por sexo
+    private int[] limitesBpmPorIdade(Long idPaciente) {
+        Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
+        if (paciente == null || paciente.getDataNascimento() == null) {
+            return new int[]{BPM_MINIMO_PADRAO, BPM_MAXIMO_PADRAO};
+        }
+
+        int idade = java.time.Period.between(paciente.getDataNascimento(), java.time.LocalDate.now()).getYears();
+        if (idade < 1) return new int[]{100, 190};
+        if (idade <= 2) return new int[]{98, 140};
+        if (idade <= 5) return new int[]{80, 120};
+        if (idade <= 11) return new int[]{75, 118};
+        return new int[]{BPM_MINIMO_PADRAO, BPM_MAXIMO_PADRAO};
     }
 
     private void enviarRespostaDispositivo(String resultado) {
@@ -268,7 +319,12 @@ public class MedicaoService {
         mapa.put("idMedicao", medicao.idMedicao);
         mapa.put("tipo", medicao.tipo);
         mapa.put("estado", medicao.estado);
-        mapa.put("valorParcial", null); // reservado para os BPM em tempo real
+        mapa.put("fase", medicao.fase);
+        mapa.put("valorParcial", medicao.valorParcial);
+        mapa.put("dedo", medicao.dedo);
+        mapa.put("progresso", medicao.progresso);
+        mapa.put("validos", medicao.validos);
+        mapa.put("alvo", medicao.alvo);
 
         if (medicao.estado == Estado.ERRO) {
             mapa.put("motivo", medicao.motivoErro);
@@ -279,6 +335,8 @@ public class MedicaoService {
             resultado.put("bpm", medicao.bpm);
             resultado.put("avaliacao", medicao.avaliacao);
             resultado.put("temperaturaMaxima", medicao.temperaturaMaxima);
+            resultado.put("bpmMinimo", medicao.bpmMinimo);
+            resultado.put("bpmMaximo", medicao.bpmMaximo);
             mapa.put("resultado", resultado);
         }
         return mapa;

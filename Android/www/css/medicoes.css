@@ -190,3 +190,91 @@
     background: transparent;
     color: #ffffff;
 }
+
+/* ─── BPM ao vivo e barra de progresso ──────────────────────── */
+.bpm-vivo {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+}
+
+.bpm-vivo span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.barra-progresso {
+    width: 100%;
+    max-width: 320px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+}
+
+.barra-preenchimento {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: #B6E5E5;
+    transition: width 0.9s ease;
+}
+
+.aviso-dedo {
+    color: #FFD166;
+    font-weight: 600;
+}
+
+/* ─── Cartoes de resultado (um por valor medido) ────────────── */
+.cartoes-resultado {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.cartao-resultado {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(182, 229, 229, 0.14);
+    border: 2px solid rgba(182, 229, 229, 0.35);
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: left;
+}
+
+.cartao-resultado i {
+    font-size: 28px;
+    color: #B6E5E5;
+    flex-shrink: 0;
+}
+
+.cartao-resultado.alerta {
+    border-color: #FFD166;
+}
+
+.cartao-resultado.alerta i,
+.cartao-resultado.alerta .cartao-estado {
+    color: #FFD166;
+}
+
+.cartao-valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.cartao-estado {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #B6E5E5;
+}
+
+.cartao-detalhe {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+}

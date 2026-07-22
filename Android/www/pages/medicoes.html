@@ -135,14 +135,14 @@
                             <button class="cartao-medicao" onclick="escolherTipo('BPM')">
                                 <i class="bi bi-heart-pulse"></i>
                                 <div>
-                                    <h2>Frequência cardíaca <span class="selo-brevemente">Brevemente</span></h2>
+                                    <h2>Frequência cardíaca</h2>
                                     <p>Batimentos por minuto no sensor de pulso</p>
                                 </div>
                             </button>
                             <button class="cartao-medicao" onclick="escolherTipo('AMBOS')">
                                 <i class="bi bi-activity"></i>
                                 <div>
-                                    <h2>Temperatura + BPM <span class="selo-brevemente">Brevemente</span></h2>
+                                    <h2>Temperatura + BPM</h2>
                                     <p>Medição completa dos dois sinais vitais</p>
                                 </div>
                             </button>
@@ -152,9 +152,9 @@
                     <!-- Vista 2: instrucoes e confirmacao -->
                     <div id="vista-instrucoes" style="display:none">
                         <div class="instrucao">
-                            <i class="bi bi-thermometer-half icone-grande"></i>
-                            <h2>Medir temperatura</h2>
-                            <p>Aproxime o sensor da testa, a 2 a 3 cm de distância, e mantenha-o imóvel durante a medição.</p>
+                            <i id="instrucao-icone" class="bi bi-thermometer-half icone-grande"></i>
+                            <h2 id="instrucao-titulo">Medir temperatura</h2>
+                            <p id="instrucao-texto">Aproxime o sensor da testa, a 2 a 3 cm de distância, e mantenha-o imóvel durante a medição.</p>
                         </div>
                         <div class="botoes-medicao">
                             <button class="btn-secundario" onclick="mostrarVista('selecao')">Voltar</button>
@@ -165,9 +165,17 @@
                     <!-- Vista 3: medicao em curso / erro / resultado -->
                     <div id="vista-medicao" style="display:none">
                         <div id="medicao-progresso" class="painel-medicao">
-                            <div class="loader-medicao"></div>
+                            <div class="loader-medicao" id="progresso-anel"></div>
+                            <p class="bpm-vivo" id="progresso-bpm" style="display:none">-- <span>bpm</span></p>
                             <h2 id="progresso-titulo">A ligar ao dispositivo…</h2>
                             <p id="progresso-texto"></p>
+                            <div class="barra-progresso" id="barra-progresso" style="display:none">
+                                <div class="barra-preenchimento" id="barra-preenchimento"></div>
+                            </div>
+                            <p class="nota-resultado" id="progresso-validos" style="display:none"></p>
+                            <p class="aviso-dedo" id="aviso-dedo" style="display:none">
+                                <i class="bi bi-hand-index"></i> Sem dedo detetado — pouse o dedo no sensor
+                            </p>
                             <div class="botoes-medicao">
                                 <button class="btn-secundario" onclick="cancelarMedicao()">Cancelar</button>
                             </div>
@@ -184,9 +192,9 @@
 
                         <div id="medicao-resultado" class="painel-medicao" style="display:none">
                             <i id="resultado-icone" class="bi bi-check-circle icone-grande sucesso"></i>
-                            <p class="valor-resultado" id="resultado-valor"></p>
-                            <p class="avaliacao-resultado" id="resultado-avaliacao"></p>
-                            <p class="detalhe-resultado" id="resultado-detalhe"></p>
+                            <p class="avaliacao-resultado" id="resultado-resumo" style="display:none"></p>
+                            <div class="cartoes-resultado" id="cartoes-resultado"></div>
+                            <p class="detalhe-resultado" id="resultado-recomendacao" style="display:none">Se os valores se mantiverem alterados, contacte o seu médico.</p>
                             <p class="nota-resultado" id="resultado-data"></p>
                             <p class="nota-resultado">Medição guardada no histórico</p>
                             <div class="botoes-medicao">
@@ -231,10 +239,28 @@
 
     const mensagensErro = {
         DISPOSITIVO_NAO_RESPONDE: 'O dispositivo não respondeu. Verifique se o LinkLife está ligado e tente novamente.',
-        LEITURA_INVALIDA: 'Não foi possível obter uma leitura válida. Aproxime bem o sensor da testa e tente novamente.',
+        LEITURA_INVALIDA: 'Não foi possível obter uma leitura válida. Verifique o posicionamento e tente novamente.',
         TIMEOUT: 'A medição demorou demasiado tempo. Tente novamente.',
-        ERRO_DISPOSITIVO: 'O dispositivo comunicou um erro. Tente novamente.',
+        ERRO_DISPOSITIVO: 'A medição não foi concluída pelo dispositivo. Tente novamente.',
         SEM_LIGACAO: 'Perdeu-se a ligação ao servidor. Verifique a sua internet.'
+    };
+
+    const infoTipos = {
+        TEMPERATURA: {
+            icone: 'bi-thermometer-half',
+            titulo: 'Medir temperatura',
+            instrucao: 'Aproxime o sensor da testa, a 2 a 3 cm de distância, e mantenha-o imóvel durante a medição.'
+        },
+        BPM: {
+            icone: 'bi-heart-pulse',
+            titulo: 'Medir frequência cardíaca',
+            instrucao: 'Pouse o dedo indicador sobre o sensor de pulso, sem pressionar, e mantenha a mão imóvel.'
+        },
+        AMBOS: {
+            icone: 'bi-activity',
+            titulo: 'Medição completa',
+            instrucao: 'Começa pela temperatura: aproxime o sensor da testa. Quando ouvir o sinal sonoro, pouse o dedo no sensor de pulso.'
+        }
     };
 
     function mostrarVista(nome) {
@@ -251,11 +277,11 @@
     }
 
     function escolherTipo(tipo) {
-        if (tipo !== 'TEMPERATURA') {
-            toast.info('Esta medição ficará disponível brevemente.');
-            return;
-        }
         tipoAtual = tipo;
+        const info = infoTipos[tipo];
+        document.getElementById('instrucao-icone').className = 'bi ' + info.icone + ' icone-grande';
+        document.getElementById('instrucao-titulo').textContent = info.titulo;
+        document.getElementById('instrucao-texto').textContent = info.instrucao;
         mostrarVista('instrucoes');
     }
 
@@ -279,6 +305,7 @@
 
             mostrarVista('medicao');
             mostrarSubestado('progresso');
+            reporVistaProgresso();
             atualizarProgresso('A ligar ao dispositivo…', '');
             pollsFalhados = 0;
             pollingTimer = setInterval(consultarEstado, 1200);
@@ -302,7 +329,7 @@
             if (estado.estado === 'AGUARDA_DISPOSITIVO') {
                 atualizarProgresso('A ligar ao dispositivo…', '');
             } else if (estado.estado === 'EM_CURSO') {
-                atualizarProgresso('Medição em curso', 'Mantenha o sensor junto à testa');
+                atualizarEmCurso(estado);
             } else if (estado.estado === 'CONCLUIDA') {
                 mostrarResultado(estado.resultado);
             } else if (estado.estado === 'ERRO') {
@@ -319,32 +346,118 @@
         document.getElementById('progresso-texto').textContent = texto;
     }
 
+    // repoe a vista de progresso no estado inicial (anel, sem widgets de BPM)
+    function reporVistaProgresso() {
+        document.getElementById('progresso-anel').style.display = '';
+        document.getElementById('progresso-bpm').style.display = 'none';
+        document.getElementById('barra-progresso').style.display = 'none';
+        document.getElementById('progresso-validos').style.display = 'none';
+        document.getElementById('aviso-dedo').style.display = 'none';
+        document.getElementById('barra-preenchimento').style.width = '0%';
+    }
+
+    // a vista adapta-se a fase reportada pelo dispositivo: na temperatura mostra
+    // o anel; nos BPM mostra o valor ao vivo, a barra de progresso e o contador
+    function atualizarEmCurso(estado) {
+        const fase = estado.fase || (tipoAtual === 'BPM' ? 'BPM' : 'TEMPERATURA');
+
+        if (fase === 'BPM') {
+            document.getElementById('progresso-anel').style.display = 'none';
+            document.getElementById('barra-progresso').style.display = '';
+
+            const bpmEl = document.getElementById('progresso-bpm');
+            bpmEl.style.display = '';
+            bpmEl.innerHTML = (estado.valorParcial != null ? estado.valorParcial : '--') + ' <span>bpm</span>';
+
+            atualizarProgresso('Medição em curso', 'Mantenha o dedo pousado no sensor');
+
+            if (estado.progresso != null) {
+                document.getElementById('barra-preenchimento').style.width = estado.progresso + '%';
+            }
+
+            const validosEl = document.getElementById('progresso-validos');
+            if (estado.validos != null && estado.alvo != null) {
+                validosEl.style.display = '';
+                validosEl.textContent = 'Batimentos válidos: ' + estado.validos + ' / ' + estado.alvo;
+            }
+
+            document.getElementById('aviso-dedo').style.display = (estado.dedo === false) ? '' : 'none';
+        } else {
+            reporVistaProgresso();
+            atualizarProgresso('Medição em curso', 'Mantenha o sensor junto à testa');
+        }
+    }
+
+    // renderizador unico: um cartao por valor medido, com o limite de
+    // referencia proprio (que pode ser personalizado pelo medico)
     function mostrarResultado(resultado) {
         pararPolling();
 
-        const valorFormatado = resultado.temperatura.toFixed(1).replace('.', ',');
-        document.getElementById('resultado-valor').textContent = valorFormatado + ' ºC';
+        const avaliacao = resultado.avaliacao || '';
+        const cartoes = [];
 
-        // o limite vem do backend porque pode ser personalizado pelo medico
-        const limite = resultado.temperaturaMaxima != null
-            ? resultado.temperaturaMaxima.toFixed(1).replace('.', ',')
-            : '37,5';
+        if (resultado.temperatura != null) {
+            const alerta = avaliacao.includes('FEBRE');
+            const limite = resultado.temperaturaMaxima != null
+                ? resultado.temperaturaMaxima.toFixed(1).replace('.', ',') : '37,5';
+            cartoes.push({
+                icone: 'bi-thermometer-half',
+                valor: resultado.temperatura.toFixed(1).replace('.', ',') + ' ºC',
+                estado: alerta ? 'Febre detetada' : 'Temperatura normal',
+                detalhe: 'Limite de referência: ' + limite + ' ºC',
+                alerta: alerta
+            });
+        }
 
-        const normal = resultado.avaliacao === 'NORMAL';
-        document.getElementById('resultado-avaliacao').textContent = normal
-            ? 'Temperatura normal'
-            : 'Febre detetada';
-        document.getElementById('resultado-avaliacao').classList.toggle('alerta', !normal);
+        if (resultado.bpm != null) {
+            const alerta = avaliacao.includes('BPM_ALTO') || avaliacao.includes('BPM_BAIXO');
+            const estadoTexto = avaliacao.includes('BPM_ALTO') ? 'Frequência acima do normal'
+                : avaliacao.includes('BPM_BAIXO') ? 'Frequência abaixo do normal'
+                : 'Frequência cardíaca normal';
+            const intervalo = (resultado.bpmMinimo != null && resultado.bpmMaximo != null)
+                ? resultado.bpmMinimo + '–' + resultado.bpmMaximo + ' bpm' : '60–100 bpm';
+            cartoes.push({
+                icone: 'bi-heart-pulse',
+                valor: resultado.bpm + ' bpm',
+                estado: estadoTexto,
+                detalhe: 'Intervalo de referência: ' + intervalo,
+                alerta: alerta
+            });
+        }
 
-        document.getElementById('resultado-detalhe').textContent = normal
-            ? 'O valor medido está dentro do seu limite de referência (' + limite + ' ºC).'
-            : 'O valor medido está acima do seu limite de referência (' + limite + ' ºC). '
-              + 'Se a temperatura se mantiver elevada, contacte o seu médico.';
+        const totalAlertas = cartoes.filter(c => c.alerta).length;
 
-        const icone = document.getElementById('resultado-icone');
-        icone.className = normal
+        const container = document.getElementById('cartoes-resultado');
+        container.innerHTML = '';
+        cartoes.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'cartao-resultado' + (c.alerta ? ' alerta' : '');
+            div.innerHTML = '<i class="bi ' + c.icone + '"></i>'
+                + '<div><p class="cartao-valor">' + c.valor + '</p>'
+                + '<p class="cartao-estado">' + c.estado + '</p>'
+                + '<p class="cartao-detalhe">' + c.detalhe + '</p></div>';
+            container.appendChild(div);
+        });
+
+        // linha-resumo so na medicao conjunta: leitura imediata sem obrigar
+        // a percorrer os dois cartoes
+        const resumo = document.getElementById('resultado-resumo');
+        if (cartoes.length > 1) {
+            resumo.style.display = '';
+            resumo.textContent = totalAlertas === 0 ? 'Tudo dentro dos valores normais'
+                : totalAlertas === 1 ? '1 valor requer atenção'
+                : 'Ambos os valores requerem atenção';
+            resumo.classList.toggle('alerta', totalAlertas > 0);
+        } else {
+            resumo.style.display = 'none';
+        }
+
+        document.getElementById('resultado-icone').className = totalAlertas === 0
             ? 'bi bi-check-circle icone-grande sucesso'
-            : 'bi bi-thermometer-high icone-grande alerta';
+            : 'bi bi-exclamation-triangle icone-grande alerta';
+
+        // recomendacao uma unica vez, mesmo com os dois valores alterados
+        document.getElementById('resultado-recomendacao').style.display = totalAlertas > 0 ? '' : 'none';
 
         const agora = new Date();
         document.getElementById('resultado-data').textContent =
