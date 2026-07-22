@@ -801,3 +801,235 @@ html{
 .faq-item.ativo .faq-conteudo {
     display: block;
 }
+
+/* Todo cta final */
+.cta-footer{
+    padding: 0 0 60px 0;
+}
+
+.cta-footer .box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.cta-footer .box h1{
+    font-size: 3.5rem;
+    color: #205236;
+    text-align: center;
+    text-shadow: 2px 2px 4px #34C759;
+}
+
+.cta-footer .box h2{
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: #138C6E;
+    text-align: center;
+}
+
+.cta-footer .box button{
+    width: 200px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    background-color: #34C759;
+    color: white;
+    cursor: pointer;
+}
+
+/* todo: footer */
+
+/* ===== Footer ===== */
+.site-footer {
+    background-color: #205236;
+    color: #B6E5E5;
+    padding: 56px 64px 32px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-topo {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 48px;
+    margin-bottom: 40px;
+}
+
+/* Logo */
+.footer-logo h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 2.2rem;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.footer-logo h2 span {
+    color: #B6E5E5;
+    font-style: italic;
+}
+
+.footer-logo p {
+    color: #B6E5E5;
+    opacity: 0.75;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    max-width: 240px;
+}
+
+/* Colunas de links */
+.footer-links {
+    display: flex;
+    gap: 56px;
+    flex-wrap: wrap;
+}
+
+.footer-coluna {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-coluna h3 {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.footer-coluna a {
+    color: #B6E5E5;
+    opacity: 0.8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer-coluna a:hover {
+    opacity: 1;
+    color: #34C759;
+}
+
+/* Linha divisória */
+.footer-linha {
+    height: 1px;
+    background-color: rgba(182, 229, 229, 0.25);
+    margin-bottom: 24px;
+}
+
+/* Parte inferior */
+.footer-baixo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.footer-baixo p {
+    color: #B6E5E5;
+    opacity: 0.7;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.footer-social {
+    display: flex;
+    gap: 12px;
+}
+
+.footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #B6E5E5;
+    border-radius: 50%;
+    color: #B6E5E5;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-social a:hover {
+    background-color: #34C759;
+    border-color: #34C759;
+    color: #205236;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 40px 24px 24px;
+    }
+
+    .footer-topo {
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .footer-links {
+        gap: 32px;
+    }
+
+    .footer-baixo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* todo: btn flutuante para ir ao topo */
+
+/* ===== Botão voltar ao topo ===== */
+.btn-topo {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background-color: #138C6E;
+    color: #fff;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease, visibility 0.3s ease;
+    z-index: 900;
+}
+
+.btn-topo.visivel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.btn-topo:hover {
+    background-color: #34C759;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .btn-topo {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+        font-size: 1.05rem;
+    }
+}
