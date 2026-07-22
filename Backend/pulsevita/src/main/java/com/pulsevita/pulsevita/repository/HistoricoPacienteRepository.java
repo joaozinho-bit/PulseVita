@@ -21,4 +21,6 @@ public interface HistoricoPacienteRepository extends JpaRepository<HistoricoPaci
             @Param("inicio") LocalDateTime inicio,
             @Param("fim") LocalDateTime fim
     );
+
+    List<HistoricoPaciente> findByIdPacienteOrderByDataLeituraDesc(Long idPaciente);
 }

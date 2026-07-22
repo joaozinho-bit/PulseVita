@@ -1,7 +1,6 @@
 package com.pulsevita.pulsevita.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,31 +11,77 @@ public class HistoricoPaciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_paciente")
-    private Paciente paciente;
+    @Column(name = "id_paciente")
+    private Long idPaciente;
 
-    @Column(name = "bpm")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_medicao")
+    private TipoMedicao tipoMedicao;
+
+    private Double temperatura;
+
     private Integer bpm;
 
-    @Column(name = "temperatura")
-    private BigDecimal temperatura;
+    // avaliacao calculada no momento da medicao, com os limites em vigor nessa
+    // altura; nao se recalcula ao consultar porque os limites podem mudar
+    private String avaliacao;
 
     @Column(name = "data_leitura")
     private LocalDateTime dataLeitura;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Paciente getPaciente() { return paciente; }
-    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Integer getBpm() { return bpm; }
-    public void setBpm(Integer bpm) { this.bpm = bpm; }
+    public Long getIdPaciente() {
+        return idPaciente;
+    }
 
-    public BigDecimal getTemperatura() { return temperatura; }
-    public void setTemperatura(BigDecimal temperatura) { this.temperatura = temperatura; }
+    public void setIdPaciente(Long idPaciente) {
+        this.idPaciente = idPaciente;
+    }
 
-    public LocalDateTime getDataLeitura() { return dataLeitura; }
-    public void setDataLeitura(LocalDateTime dataLeitura) { this.dataLeitura = dataLeitura; }
+    public TipoMedicao getTipoMedicao() {
+        return tipoMedicao;
+    }
+
+    public void setTipoMedicao(TipoMedicao tipoMedicao) {
+        this.tipoMedicao = tipoMedicao;
+    }
+
+    public Double getTemperatura() {
+        return temperatura;
+    }
+
+    public void setTemperatura(Double temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    public Integer getBpm() {
+        return bpm;
+    }
+
+    public void setBpm(Integer bpm) {
+        this.bpm = bpm;
+    }
+
+    public String getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(String avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public LocalDateTime getDataLeitura() {
+        return dataLeitura;
+    }
+
+    public void setDataLeitura(LocalDateTime dataLeitura) {
+        this.dataLeitura = dataLeitura;
+    }
 }
