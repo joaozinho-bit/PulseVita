@@ -132,7 +132,21 @@
                     </div>
 
                     <div class="historico-medicoes">
-                        <h1>Histórico de medições</h1>
+                        <div class="historico-header">
+                            <h1>Histórico de medições</h1>
+
+                            <div class="historico-controlos">
+                                <button id="btn-abrir-filtro" class="btn-filtro">
+                                    <i class="bi bi-funnel"></i>
+                                    Filtro
+                                </button>
+
+                                <select id="ordenar-por" aria-label="Ordenar por">
+                                    <option value="recentes">Mais recentes</option>
+                                    <option value="antigas">Mais antigas</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div id="lista-historico" class="lista-historico">
                             <!-- Preenchido dinamicamente pelo dadosmedicos.js -->
@@ -140,6 +154,33 @@
 
                         <div id="paginacao" class="paginacao">
                             <!-- Botões de página gerados pelo JS -->
+                        </div>
+                    </div>
+
+                    <!-- Modal de filtro -->
+                    <div class="modalOverlay" id="modalFiltroOverlay">
+                        <div class="modalFiltro">
+                            <div class="modalFiltro-header">
+                                <h2>Filtrar por data</h2>
+                                <button class="modalFechar" id="btnFecharFiltro" aria-label="Fechar">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+
+                            <div class="modalFiltro-campo">
+                                <label for="modal-data-inicio">Início</label>
+                                <input type="date" id="modal-data-inicio">
+                            </div>
+
+                            <div class="modalFiltro-campo">
+                                <label for="modal-data-fim">Fim</label>
+                                <input type="date" id="modal-data-fim">
+                            </div>
+
+                            <div class="modalFiltro-acoes">
+                                <button id="btnLimparFiltro" class="btn-limpar">Limpar filtros</button>
+                                <button id="btnAplicarFiltro" class="btn-aplicar">Aplicar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

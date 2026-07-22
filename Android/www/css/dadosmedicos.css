@@ -14,6 +14,208 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+/* Cabeçalho do histórico: título + controlos */
+.historico-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.historico-header h1 {
+    margin-bottom: 0;
+}
+
+.historico-controlos {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Botão Filtro */
+.btn-filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 16px;
+    color: #205236;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-filtro:hover {
+    background-color: #34C759;
+    color: #fff;
+}
+
+.btn-filtro.ativo {
+    background-color: #205236;
+    color: #fff;
+}
+
+/* Ordenar por */
+#ordenar-por {
+    background-color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    color: #205236;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23205236'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+}
+
+/* Modal de filtro */
+.modalOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalOverlay.aberto {
+    display: flex;
+}
+
+.modalFiltro {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    width: 90%;
+    max-width: 340px;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.modalFiltro-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modalFiltro-header h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #205236;
+    margin: 0;
+}
+
+.modalFechar {
+    background: none;
+    border: none;
+    color: #205236;
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.modalFiltro-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.modalFiltro-campo label {
+    color: #205236;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.modalFiltro-campo input[type="date"] {
+    border: 1px solid #B6E5E5;
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: #205236;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.modalFiltro-campo input[type="date"]:focus {
+    border-color: #138C6E;
+}
+
+.modalFiltro-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-limpar {
+    background: none;
+    border: none;
+    color: #205236;
+    opacity: 0.7;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.btn-limpar:hover {
+    opacity: 1;
+}
+
+.btn-aplicar {
+    background-color: #138C6E;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 22px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-aplicar:hover {
+    background-color: #34C759;
+}
+
+/* Responsivo */
+@media (max-width: 700px) {
+    .historico-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .historico-controlos {
+        width: 100%;
+    }
+
+    .btn-filtro,
+    #ordenar-por {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
 .ultimas-medicoes h1,
 .historico-medicoes h1 {
     font-size: 1.2rem;
