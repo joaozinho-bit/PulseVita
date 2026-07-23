@@ -363,3 +363,213 @@
         align-items: flex-start;
     }
 }
+
+/* ===== Separadores (Medições / Doenças) ===== */
+.tabs {
+    display: flex;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 24px;
+}
+
+.tab {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 11px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.tab.ativo {
+    background: #fff;
+    color: #205236;
+}
+
+.painel {
+    display: none;
+}
+
+.painel.ativo {
+    display: block;
+}
+
+/* ===== Doenças ===== */
+.doencas-chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.doenca-chip {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 8px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.doenca-chip.ativo {
+    background: #B6E5E5;
+    color: #205236;
+    border-color: #B6E5E5;
+}
+
+.lista-doencas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cartao-doenca {
+    display: flex;
+    gap: 14px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px;
+    border-left: 5px solid #34C759;
+}
+
+.cartao-doenca.terminada {
+    border-left-color: #c2c8c5;
+}
+
+.doenca-icone {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: #B6E5E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doenca-icone i {
+    color: #138C6E;
+    font-size: 22px;
+}
+
+.cartao-doenca.terminada .doenca-icone {
+    background: #eef1f0;
+}
+
+.cartao-doenca.terminada .doenca-icone i {
+    color: #9aa5a0;
+}
+
+.doenca-corpo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.doenca-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.doenca-topo h2 {
+    color: #205236;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.doenca-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.doenca-badge.ativa {
+    background: rgba(52, 199, 89, 0.16);
+    color: #1e7d3f;
+}
+
+.doenca-badge.terminada {
+    background: #eceeed;
+    color: #7a827e;
+}
+
+.doenca-cronica {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 209, 102, 0.25);
+    color: #C77700;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 999px;
+}
+
+.doenca-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.doenca-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #6b7770;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.doenca-meta i {
+    color: #138C6E;
+    width: 15px;
+}
+
+.doenca-obs {
+    color: #4a5a53;
+    font-size: 0.83rem;
+    line-height: 1.45;
+    background: #f4f8f6;
+    border-radius: 10px;
+    padding: 9px 11px;
+}
+
+.doencas-vazio {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.doencas-vazio i {
+    font-size: 40px;
+    color: #B6E5E5;
+}

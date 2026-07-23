@@ -112,6 +112,16 @@
             </div>
             <div class="direita">
                 <div id="conteudo" class="conteudo">
+                    <div class="tabs">
+                        <button class="tab ativo" data-painel="medicoes">
+                            <i class="bi bi-heart-pulse"></i> Medições
+                        </button>
+                        <button class="tab" data-painel="doencas">
+                            <i class="bi bi-clipboard2-pulse"></i> Doenças
+                        </button>
+                    </div>
+
+                    <div class="painel ativo" id="painel-medicoes">
                     <div class="ultimas-medicoes">
                         <h1>Últimas medicoes</h1>
                         <div class="box-info">
@@ -193,6 +203,16 @@
                             </div>
                         </div>
                     </div>
+                    </div><!-- fim painel-medicoes -->
+
+                    <div class="painel" id="painel-doencas">
+                        <div class="doencas-chips" id="doencas-chips">
+                            <button class="doenca-chip ativo" data-estado="">Todas</button>
+                            <button class="doenca-chip" data-estado="ATIVA">Ativas</button>
+                            <button class="doenca-chip" data-estado="TERMINADA">Terminadas</button>
+                        </div>
+                        <div class="lista-doencas" id="lista-doencas"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -235,5 +255,6 @@
 
         </script>
         <script src="../js/dadosmedicos.js"></script>
+        <script src="../js/doencas.js"></script>
     </body>
 </html>
