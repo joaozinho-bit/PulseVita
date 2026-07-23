@@ -26,6 +26,14 @@
             <input id="nome-input" class="nome" type="text" placeholder="Nome e sobrenome">
             <input id="email-input" class="email" type="text" placeholder="E-mail">
             <input id="senha-input" class="senha" type="password" placeholder="Senha">
+            <select id="genero-input" class="genero">
+                <option value="" disabled selected>Género</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+                <option value="Prefiro não dizer">Prefiro não dizer</option>
+                <option value="Outro">Outro</option>
+            </select>
+            <input id="data-nasc-input" class="data-nasc" type="date" placeholder="Data de nascimento">
             <div class="link-clique">
                 <p>Já possui uma conta? <a href="../index.html">Clique aqui</a></p>
             </div>
@@ -34,12 +42,16 @@
     </div>
     <script src="../js/toast.js"></script>
     <script>
+        const generoParaBackend = { 'Masculino': 'M', 'Feminino': 'F', 'Prefiro não dizer': 'P', 'Outro': 'O' };
+
         document.getElementById('btn-registar').addEventListener('click', async function() {
             const nome = document.getElementById('nome-input').value;
             const email = document.getElementById('email-input').value;
             const senha = document.getElementById('senha-input').value;
+            const genero = document.getElementById('genero-input').value;
+            const dataNasc = document.getElementById('data-nasc-input').value;
 
-            if (!nome || !email || !senha) {
+            if (!nome || !email || !senha || !genero || !dataNasc) {
                 toast.warning("Preenche todos os campos!");
                 return;
             }
@@ -50,7 +62,13 @@
                 const resposta = await fetch(API_BASE_URL + '/users/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nomeCompleto: nome, email: email, senha: senha })
+                    body: JSON.stringify({
+                        nomeCompleto: nome,
+                        email: email,
+                        senha: senha,
+                        genero: generoParaBackend[genero],
+                        dataNasc: dataNasc
+                    })
                 });
 
                 if (resposta.ok) {

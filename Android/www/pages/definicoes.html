@@ -148,18 +148,13 @@
 
                             <div class="dados">
                                 <img class="icon" src="../Imagens/icon-genero.png" alt="">
-                                <select class="edit-select" id="genero" disabled>
-                                    <option value="Masculino" selected>Masculino</option>
-                                    <option value="Feminino">Feminino</option>
-                                </select>
+                                <p class="campo-texto" id="genero-texto">N/A</p>
                             </div>
 
                             <div class="dados">
                                 <img class="icon" src="../Imagens/icon-cruz.png" alt="">
                                 <p class="campo-texto" id="data-nasc-texto">N/A</p>
-                                <input class="edit-date" id="data-nasc" type="date" disabled style="display:none">
                             </div>
-
                             <!-- Botões de ação -->
                             <div class="botoes-acao">
                                 <button id="btn-editar" class="btn-editar" onclick="ativarEdicao()">
@@ -210,7 +205,6 @@
     }
 
     // ─── Mapeamento género (frontend ↔ backend) ────────────────────
-    const generoParaBackend = { 'Masculino': 'M', 'Feminino': 'F', 'Prefiro não dizer': 'P', 'Outro': 'O' };
     const generoParaFrontend = { 'M': 'Masculino', 'F': 'Feminino', 'P': 'Prefiro não dizer', 'O': 'Outro' };
 
     // ─── Foto de perfil ───────────────────────────────────────────
@@ -222,8 +216,6 @@
     fotoWrapper.addEventListener('click', () => inputFoto.click());
 
     // ─── Recorte da foto (Cropper.js) ─────────────────────────────
-    // A imagem escolhida abre num modal com janela circular fixa; o utilizador
-    // move e amplia a imagem por baixo, e so o recorte quadrado e enviado
     const cropOverlay = document.getElementById('crop-overlay');
     const cropImagem  = document.getElementById('crop-imagem');
     let cropper = null;
@@ -256,7 +248,6 @@
         inputFoto.value = '';
     }
 
-    // impede que varios cliques em "Guardar" enviem varios pedidos em paralelo
     let aEnviarFoto = false;
 
     function guardarFotoRecortada() {
@@ -282,7 +273,6 @@
                     const dados = await res.json();
                     user.fotoPerfil = dados.foto_perfil;
 
-                    // preview imediato com o proprio recorte, sem esperar novo download
                     const previewUrl = URL.createObjectURL(blob);
                     imgPerfil.src = previewUrl;
                     headerFoto.src = previewUrl;
@@ -299,7 +289,7 @@
             }, 'image/png');
     }
 
-    // Mapeamento campo HTML → chave no objeto user
+    // Mapeamento campo HTML → chave no objeto user (só campos editáveis)
     const camposConfig = [
         { elemId: 'nome',      campo: 'nomeCompleto' },
         { elemId: 'telefone',  campo: 'telefone'     },
@@ -325,29 +315,22 @@
         camposConfig.forEach(({ elemId, campo }) => {
             document.getElementById(elemId).textContent = user[campo] || 'N/A';
         });
-        document.getElementById('genero').value = generoParaFrontend[user.genero] || 'Masculino';
-        document.getElementById('data-nasc').value = user.dataNascimento || '';
+
+        // Género e data de nascimento: só leitura, definidos no registo
+        document.getElementById('genero-texto').textContent = generoParaFrontend[user.genero] || 'N/A';
         document.getElementById('data-nasc-texto').textContent = formatarDataPt(user.dataNascimento);
     })();
 
-    // fora de edicao a data aparece como texto simples, sem o seletor de data
     function formatarDataPt(dataISO) {
         if (!dataISO) return 'N/A';
         const [ano, mes, dia] = dataISO.split('-');
         return `${dia}/${mes}/${ano}`;
     }
 
-    function mostrarDataComoTexto(mostrar) {
-        document.getElementById('data-nasc-texto').style.display = mostrar ? '' : 'none';
-        document.getElementById('data-nasc').style.display = mostrar ? 'none' : '';
-    }
-
     function ativarEdicao() {
         camposConfig.forEach(({ elemId }) => {
             valoresOriginais[elemId] = document.getElementById(elemId).textContent;
         });
-        valoresOriginais['genero']    = document.getElementById('genero').value;
-        valoresOriginais['data-nasc'] = document.getElementById('data-nasc').value;
 
         camposConfig.forEach(({ elemId }) => {
             const p = document.getElementById(elemId);
@@ -358,10 +341,6 @@
             input.value     = p.textContent === 'N/A' ? '' : p.textContent;
             p.replaceWith(input);
         });
-
-        document.getElementById('genero').disabled    = false;
-        document.getElementById('data-nasc').disabled = false;
-        mostrarDataComoTexto(false);
 
         document.getElementById('btn-editar').style.display         = 'none';
         document.getElementById('botoes-confirmacao').style.display = 'flex';
@@ -374,11 +353,6 @@
             const novo  = input.value.trim();
             if (novo !== valoresOriginais[elemId]) payload[campo] = novo;
         });
-
-        const novoGenero = document.getElementById('genero').value;
-        const novaData   = document.getElementById('data-nasc').value;
-        if (novoGenero !== valoresOriginais['genero']) payload['genero']   = generoParaBackend[novoGenero];
-        if (novaData   !== valoresOriginais['data-nasc']) payload['dataNasc'] = novaData;
 
         if (Object.keys(payload).length > 0) {
             const reporBotao = ativarLoaderBotao(document.querySelector('.btn-confirmar'));
@@ -408,14 +382,6 @@
             input.replaceWith(p);
         });
 
-        document.getElementById('genero').value    = generoParaFrontend[user.genero] || novoGenero;
-        document.getElementById('data-nasc').value = user.dataNascimento || novaData;
-        document.getElementById('data-nasc-texto').textContent = formatarDataPt(user.dataNascimento || novaData);
-        mostrarDataComoTexto(true);
-
-        document.getElementById('genero').disabled    = true;
-        document.getElementById('data-nasc').disabled = true;
-
         document.querySelector('.profile span').textContent = user.nomeCompleto || 'Paciente';
 
         document.getElementById('btn-editar').style.display         = 'flex';
@@ -431,13 +397,6 @@
             p.textContent = valoresOriginais[elemId];
             input.replaceWith(p);
         });
-
-        document.getElementById('genero').value    = valoresOriginais['genero'];
-        document.getElementById('genero').disabled = true;
-        document.getElementById('data-nasc').value    = valoresOriginais['data-nasc'];
-        document.getElementById('data-nasc').disabled = true;
-        document.getElementById('data-nasc-texto').textContent = formatarDataPt(valoresOriginais['data-nasc']);
-        mostrarDataComoTexto(true);
 
         document.getElementById('btn-editar').style.display         = 'flex';
         document.getElementById('botoes-confirmacao').style.display = 'none';

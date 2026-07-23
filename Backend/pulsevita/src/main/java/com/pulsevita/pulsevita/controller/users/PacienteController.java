@@ -56,20 +56,24 @@ public class PacienteController {
     }
 
     static class RegisterRequest {
-        public String nomeCompleto;
-        public String email;
-        public String senha;
-    }
+    public String nomeCompleto;
+    public String email;
+    public String senha;
+    public String genero;
+    public LocalDate dataNasc;
+}
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest dados) {
-        boolean sucesso = service.registarPaciente(dados.nomeCompleto, dados.email, dados.senha);
-        if (sucesso) {
-            return ResponseEntity.ok("Conta criada");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já existe.");
-        }
+@PostMapping("/register")
+public ResponseEntity<String> register(@RequestBody RegisterRequest dados) {
+    boolean sucesso = service.registarPaciente(
+        dados.nomeCompleto, dados.email, dados.senha, dados.genero, dados.dataNasc
+    );
+    if (sucesso) {
+        return ResponseEntity.ok("Conta criada");
+    } else {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já existe.");
     }
+}
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getPaciente(@PathVariable Long id) {

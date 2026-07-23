@@ -26,7 +26,7 @@ public class PacienteService {
         return null;
     }
 
-    public boolean registarPaciente(String nomeCompleto, String email, String senha) {
+    public boolean registarPaciente(String nomeCompleto, String email, String senha, String genero, LocalDate dataNascimento) {
         Paciente existente = repository.findByEmail(email);
         if (existente != null) {
             return false;
@@ -35,6 +35,8 @@ public class PacienteService {
         novo.setNomeCompleto(nomeCompleto);
         novo.setEmail(email);
         novo.setPassword(senha);
+        novo.setGenero(genero);
+        novo.setDataNascimento(dataNascimento);
         novo.setN_paciente(gerarNumeroPaciente());
         repository.save(novo);
         return true;

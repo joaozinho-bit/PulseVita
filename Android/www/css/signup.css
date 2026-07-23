@@ -66,6 +66,20 @@ body {
     color: #205236;
 }
 
+.second select {
+    width: 80%;
+    padding: 15px;
+    margin: 10px 0;
+
+    background-color: #B6E5E5;
+    border: 1px solid #205236;
+    border-radius: 15px;
+
+    font-size: 1em;
+    color: #205236;
+    cursor: pointer;
+}
+
 .second .link-clique {
     width: 80%;
     margin: 15px 0;
@@ -182,6 +196,12 @@ body {
         padding: 14px;
 
         font-size: 0.95em;
+    }
+
+    .second select {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95em;
     }
 
     .second .link-clique {
