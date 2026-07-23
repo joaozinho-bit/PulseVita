@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="../css/marcacoes.css">
         <link rel="stylesheet" href="../css/global.css">
         <link rel="stylesheet" href="../css/loader.css">
+        <link rel="stylesheet" href="../css/toast.css">
 
         <!-- Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -17,7 +18,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@400..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        
+
         <title>Marcações do utilizador</title>
       <script src="../js/config.js"></script>
       <script src="../js/perfil.js"></script>
@@ -112,90 +113,246 @@
             </div>
             <div class="direita">
                 <div class="conteudo">
-                    <h2>Marcações</h2>
-                    <div class="marcacoes" id="lista-marcacoes">
-    
-                    </div>                        
+                    <div class="cabecalho">
+                        <h1>Marcações</h1>
+                        <button class="btn-filtros" id="btnFiltros" onclick="abrirFiltros()">
+                            <i class="bi bi-sliders"></i> Filtros
+                        </button>
+                    </div>
+
+                    <div class="chips-estado" id="chipsEstado">
+                        <button class="chip-filtro ativo" data-estado="">Todas</button>
+                        <button class="chip-filtro" data-estado="CONFIRMADA">Confirmadas</button>
+                        <button class="chip-filtro" data-estado="POR_CONFIRMAR">Por confirmar</button>
+                        <button class="chip-filtro" data-estado="CONCLUIDA">Concluídas</button>
+                        <button class="chip-filtro" data-estado="CANCELADA">Canceladas</button>
+                    </div>
+
+                    <div id="lista"></div>
                 </div>
             </div>
         </section>
+
+        <!-- Modal de filtros -->
+        <div class="modal-overlay" id="modalFiltros" onclick="if(event.target===this)fecharFiltros()">
+            <div class="modal">
+                <div class="modal-cabecalho">
+                    <h2>Filtrar consultas</h2>
+                    <button class="modal-fechar" onclick="fecharFiltros()"><i class="bi bi-x-lg"></i></button>
+                </div>
+
+                <div class="campo">
+                    <label for="f-medico">Médico</label>
+                    <select id="f-medico"></select>
+                </div>
+
+                <div class="campo">
+                    <label for="f-especialidade">Especialidade</label>
+                    <select id="f-especialidade"></select>
+                </div>
+
+                <div class="campo-duplo">
+                    <div class="campo">
+                        <label for="f-inicio">De</label>
+                        <input type="date" id="f-inicio">
+                    </div>
+                    <div class="campo">
+                        <label for="f-fim">Até</label>
+                        <input type="date" id="f-fim">
+                    </div>
+                </div>
+
+                <div class="modal-acoes">
+                    <button class="btn-limpar" onclick="limparFiltros()">Limpar</button>
+                    <button class="btn-aplicar" onclick="aplicarFiltros()">Aplicar</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="../js/toast.js"></script>
         <script>
-    // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
-    function abrirMenu() {
-        document.getElementById("menuLateral").classList.add("aberto");
-        document.getElementById("menuOverlay").classList.add("aberto");
-        document.body.style.overflow = "hidden";
-    }
-
-    function fecharMenu() {
-        document.getElementById("menuLateral").classList.remove("aberto");
-        document.getElementById("menuOverlay").classList.remove("aberto");
-        document.body.style.overflow = "";
-    }
-
-    function formatarData(dataISO) {
-        const [ano, mes, dia] = dataISO.split('-');
-        return `${dia}/${mes}/${ano}`;
-    }
-
-    function formatarHora(horaISO) {
-        return horaISO.slice(0, 5);
-    }
-
-    (async function () {
-        let dados;
-
-        try {
-            const resp = await fetch(API_BASE_URL + '/users/me', { credentials: 'include' });
-            if (!resp.ok) { window.location.href = '../index.html'; return; }
-            dados = await resp.json();
-
-        } catch (erro) {
-            window.location.href = '../index.html';
-            return;
-        }
-
-        try {
-            const respMarc = await fetch(`${API_BASE_URL}/consultas/paciente/${dados.id}`, { credentials: 'include' });
-            if (respMarc.ok) {
-                const lista = await respMarc.json();
-                const container = document.getElementById('lista-marcacoes');
-                container.innerHTML = '';
-
-                if (lista.length === 0) {
-                    container.innerHTML = '<p style="color:white;">Não tens consultas confirmadas.</p>';
-                } else {
-                    lista.forEach(consulta => {
-                        const ul = document.createElement('ul');
-                        ul.innerHTML = `
-                            <li>
-                                <p>${formatarData(consulta.dataConsulta)}</p>
-                                <img src="../Imagens/PontoVerde.png">
-                                <p>${formatarHora(consulta.horaConsulta)}</p>
-                                <img src="../Imagens/PontoVerde.png">
-                                <p>${consulta.motivo || 'Consulta'}</p>
-                            </li>
-                        `;
-                        container.appendChild(ul);
-                    });
-                }
+            // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
+            function abrirMenu() {
+                document.getElementById("menuLateral").classList.add("aberto");
+                document.getElementById("menuOverlay").classList.add("aberto");
+                document.body.style.overflow = "hidden";
             }
-        } catch (erro) {
-            console.warn('Erro ao carregar marcações.', erro);
-        }
-    })();
+            function fecharMenu() {
+                document.getElementById("menuLateral").classList.remove("aberto");
+                document.getElementById("menuOverlay").classList.remove("aberto");
+                document.body.style.overflow = "";
+            }
 
-    document.getElementById('btn-sair').addEventListener('click', async function (e) {
-        e.preventDefault();
-        try {
-            await fetch(API_BASE_URL + '/users/logout', {
-                method: 'POST',
-                credentials: 'include'
+            const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+            const SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+            const ESTADOS = {
+                CONFIRMADA: { classe: "confirmada", rotulo: "Confirmada", icone: "bi-check-circle-fill" },
+                POR_CONFIRMAR: { classe: "por-confirmar", rotulo: "Por confirmar", icone: "bi-hourglass-split" },
+                CANCELADA: { classe: "cancelada", rotulo: "Cancelada", icone: "bi-x-circle-fill" },
+                CONCLUIDA: { classe: "concluida", rotulo: "Concluída", icone: "bi-check2-all" },
+            };
+
+            const agora = new Date();
+            const HOJE = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, "0")}-${String(agora.getDate()).padStart(2, "0")}`;
+
+            let consultas = [];
+            let filtroEstado = "";
+            let filtros = { medico: "", especialidade: "", inicio: "", fim: "" };
+
+            // parse manual para evitar desvios de fuso horario
+            function comoData(iso) {
+                const [a, m, d] = iso.split("-").map(Number);
+                return new Date(a, m - 1, d);
+            }
+
+            function aplicaFiltros(lista) {
+                return lista.filter(c => {
+                    if (filtroEstado && c.estado !== filtroEstado) return false;
+                    if (filtros.medico && c.medico !== filtros.medico) return false;
+                    if (filtros.especialidade && c.especialidade !== filtros.especialidade) return false;
+                    if (filtros.inicio && c.data < filtros.inicio) return false;
+                    if (filtros.fim && c.data > filtros.fim) return false;
+                    return true;
+                });
+            }
+
+            function cartao(c) {
+                const dt = comoData(c.data);
+                const est = ESTADOS[c.estado] || ESTADOS.POR_CONFIRMAR;
+
+                const tituloMedico = c.medico
+                    ? `<h3>${c.medico}</h3>`
+                    : `<h3 class="sem-medico">Médico por atribuir</h3>`;
+                const chipEspecialidade = c.especialidade
+                    ? `<span class="chip-especialidade"><i class="bi bi-heart-pulse"></i> ${c.especialidade}</span>` : "";
+
+                return `
+                    <article class="cartao ${est.classe}">
+                        <div class="data-bloco">
+                            <span class="dia">${String(dt.getDate()).padStart(2, "0")}</span>
+                            <span class="mes">${MESES[dt.getMonth()]}</span>
+                        </div>
+                        <div class="corpo">
+                            <div class="linha-topo">
+                                ${tituloMedico}
+                                <span class="badge badge-${est.classe}"><i class="bi ${est.icone}"></i> ${est.rotulo}</span>
+                            </div>
+                            ${chipEspecialidade}
+                            <p class="motivo"><i class="bi bi-clipboard2-pulse"></i> ${c.motivo || "Consulta"}</p>
+                            <div class="meta">
+                                <span><i class="bi bi-clock"></i> ${c.hora || "--:--"}</span>
+                                <span><i class="bi bi-calendar-event"></i> ${SEMANA[dt.getDay()]}, ${String(dt.getDate()).padStart(2, "0")} ${MESES[dt.getMonth()]} ${dt.getFullYear()}</span>
+                            </div>
+                        </div>
+                    </article>`;
+            }
+
+            function seccao(titulo, itens) {
+                if (itens.length === 0) return "";
+                return `
+                    <div class="seccao-titulo">${titulo} <span>${itens.length}</span></div>
+                    <div class="lista">${itens.map(cartao).join("")}</div>`;
+            }
+
+            function render() {
+                const cont = document.getElementById("lista");
+
+                if (consultas.length === 0) {
+                    cont.innerHTML = `
+                        <div class="estado-vazio">
+                            <i class="bi bi-calendar-x"></i>
+                            <p>Ainda não tem consultas marcadas.</p>
+                        </div>`;
+                    return;
+                }
+
+                const lista = aplicaFiltros(consultas);
+                if (lista.length === 0) {
+                    cont.innerHTML = `
+                        <div class="estado-vazio">
+                            <i class="bi bi-funnel"></i>
+                            <p>Nenhuma consulta corresponde aos filtros selecionados.</p>
+                        </div>`;
+                    return;
+                }
+
+                const proximas = lista.filter(c => c.data >= HOJE).sort((a, b) => a.data.localeCompare(b.data) || a.hora.localeCompare(b.hora));
+                const anteriores = lista.filter(c => c.data < HOJE).sort((a, b) => b.data.localeCompare(a.data) || b.hora.localeCompare(a.hora));
+                cont.innerHTML = seccao("Próximas", proximas) + seccao("Anteriores", anteriores);
+            }
+
+            // ===== Chips de estado =====
+            document.getElementById("chipsEstado").addEventListener("click", (e) => {
+                const btn = e.target.closest(".chip-filtro");
+                if (!btn) return;
+                document.querySelectorAll(".chip-filtro").forEach(c => c.classList.remove("ativo"));
+                btn.classList.add("ativo");
+                filtroEstado = btn.dataset.estado;
+                render();
             });
-        } catch (erro) {
-        }
-        window.location.href = '../index.html';
-    });
-</script>
+
+            // ===== Modal =====
+            function popularSelect(id, valores) {
+                const sel = document.getElementById(id);
+                sel.innerHTML = `<option value="">Todos</option>` +
+                    valores.map(v => `<option value="${v}">${v}</option>`).join("");
+            }
+
+            function abrirFiltros() { document.getElementById("modalFiltros").classList.add("aberto"); }
+            function fecharFiltros() { document.getElementById("modalFiltros").classList.remove("aberto"); }
+
+            function aplicarFiltros() {
+                filtros.medico = document.getElementById("f-medico").value;
+                filtros.especialidade = document.getElementById("f-especialidade").value;
+                filtros.inicio = document.getElementById("f-inicio").value;
+                filtros.fim = document.getElementById("f-fim").value;
+                const ativo = filtros.medico || filtros.especialidade || filtros.inicio || filtros.fim;
+                document.getElementById("btnFiltros").classList.toggle("ativo", !!ativo);
+                fecharFiltros();
+                render();
+            }
+
+            function limparFiltros() {
+                filtros = { medico: "", especialidade: "", inicio: "", fim: "" };
+                document.getElementById("f-medico").value = "";
+                document.getElementById("f-especialidade").value = "";
+                document.getElementById("f-inicio").value = "";
+                document.getElementById("f-fim").value = "";
+                document.getElementById("btnFiltros").classList.remove("ativo");
+                fecharFiltros();
+                render();
+            }
+
+            // ===== Carregamento =====
+            async function carregarConsultas() {
+                const cont = document.getElementById("lista");
+                cont.innerHTML = `<div class="estado-vazio"><i class="bi bi-hourglass-split"></i><p>A carregar as suas consultas…</p></div>`;
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/consultas/minhas`, { credentials: "include" });
+                    if (resp.status === 401) { window.location.href = "../index.html"; return; }
+                    if (!resp.ok) throw new Error();
+                    consultas = await resp.json();
+                } catch (erro) {
+                    cont.innerHTML = `<div class="estado-vazio"><i class="bi bi-wifi-off"></i><p>Não foi possível carregar as consultas.</p></div>`;
+                    if (window.toast) toast.error("Não foi possível carregar as consultas.");
+                    return;
+                }
+
+                // opcoes de filtro construidas a partir dos dados reais recebidos
+                popularSelect("f-medico", [...new Set(consultas.map(c => c.medico).filter(Boolean))]);
+                popularSelect("f-especialidade", [...new Set(consultas.map(c => c.especialidade).filter(Boolean))]);
+                render();
+            }
+
+            document.getElementById("btn-sair").addEventListener("click", async function (e) {
+                e.preventDefault();
+                try {
+                    await fetch(API_BASE_URL + "/users/logout", { method: "POST", credentials: "include" });
+                } catch (erro) { }
+                window.location.href = "../index.html";
+            });
+
+            carregarConsultas();
+        </script>
     </body>
 </html>

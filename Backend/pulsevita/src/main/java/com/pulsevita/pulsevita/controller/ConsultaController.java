@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +44,19 @@ public class ConsultaController {
     @GetMapping("/paciente/{id}")
     public ResponseEntity<?> listar(@PathVariable Long id) {
         return ResponseEntity.ok(service.listarConsultasConfirmadas(id));
+    }
+
+    // ecra de marcacoes do paciente autenticado: todas as consultas, num DTO
+    // proprio que nao expoe as entidades paciente/medico completas
+    @GetMapping("/minhas")
+    public ResponseEntity<?> minhasConsultas(HttpSession session) {
+        Long idPaciente = (Long) session.getAttribute("pacienteId");
+        if (idPaciente == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<MinhaConsultaDTO> lista = service.listarConsultasDoPaciente(idPaciente)
+                .stream().map(this::paraMinhaDTO).collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/paciente/{id}/proxima")
@@ -133,5 +147,45 @@ public class ConsultaController {
             case "CANCELADA" -> "recusado";
             default -> "pendente"; // POR_CONFIRMAR
         };
+    }
+
+    // ---- Vista do paciente ----
+
+    static class MinhaConsultaDTO {
+        public Long id;
+        public String data;
+        public String hora;
+        public String estado;         // POR_CONFIRMAR, CONFIRMADA, CONCLUIDA ou CANCELADA
+        public String motivo;
+        public String medico;         // nulo enquanto a consulta nao for confirmada
+        public String especialidade;  // nulo enquanto a consulta nao for confirmada
+    }
+
+    private MinhaConsultaDTO paraMinhaDTO(Consulta c) {
+        MinhaConsultaDTO dto = new MinhaConsultaDTO();
+        dto.id = c.getId();
+        dto.data = c.getDataConsulta() != null ? c.getDataConsulta().format(DateTimeFormatter.ISO_DATE) : null;
+        dto.hora = c.getHoraConsulta() != null ? c.getHoraConsulta().format(DateTimeFormatter.ofPattern("HH:mm")) : null;
+        dto.estado = estadoEfetivo(c);
+        dto.motivo = c.getMotivo();
+        if (c.getMedico() != null) {
+            dto.medico = c.getMedico().getNome();
+            dto.especialidade = c.getMedico().getEspecializacao();
+        }
+        return dto;
+    }
+
+    // uma consulta confirmada cuja data e hora ja passaram e apresentada como concluida
+    private String estadoEfetivo(Consulta c) {
+        String estado = c.getEstado();
+        if ("CONFIRMADA".equals(estado) && c.getDataConsulta() != null) {
+            LocalDateTime quando = c.getHoraConsulta() != null
+                    ? c.getDataConsulta().atTime(c.getHoraConsulta())
+                    : c.getDataConsulta().atStartOfDay();
+            if (quando.isBefore(LocalDateTime.now())) {
+                return "CONCLUIDA";
+            }
+        }
+        return estado != null ? estado : "POR_CONFIRMAR";
     }
 }

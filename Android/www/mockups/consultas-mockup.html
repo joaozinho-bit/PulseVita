@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Marcações</title>
+
+    <!-- Reaproveita o shell visual da app (header, menu, painel). Nenhum ficheiro existente e alterado. -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --verde-escuro: #205236;
+            --verde: #138C6E;
+            --verde-vivo: #34C759;
+            --cyan: #B6E5E5;
+            --amarelo: #FFD166;
+            --laranja: #C77700;
+        }
+
+        .conteudo {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 16px;
+        }
+
+        .cabecalho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .cabecalho h1 {
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .btn-filtros {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 9px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .btn-filtros.ativo {
+            background: var(--cyan);
+            color: var(--verde-escuro);
+            border-color: var(--cyan);
+        }
+
+        /* Chips de estado: filtro rapido de um toque, o mais usado numa lista de consultas */
+        .chips-estado {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .chips-estado::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip-filtro {
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 7px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.08s ease;
+        }
+
+        .chip-filtro:active {
+            transform: scale(0.96);
+        }
+
+        .chip-filtro.ativo {
+            background: var(--cyan);
+            color: var(--verde-escuro);
+            border-color: var(--cyan);
+        }
+
+        .seccao-titulo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .seccao-titulo span {
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 1px 8px;
+            border-radius: 999px;
+        }
+
+        .lista {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Cartao de consulta */
+        .cartao {
+            display: flex;
+            gap: 14px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+            border-left: 5px solid var(--verde-vivo);
+        }
+
+        .cartao.por-confirmar { border-left-color: var(--amarelo); }
+        .cartao.cancelada { border-left-color: #c2c8c5; }
+        .cartao.concluida { border-left-color: var(--verde); }
+
+        .cartao.cancelada .data-bloco,
+        .cartao.cancelada .corpo h3 {
+            opacity: 0.6;
+        }
+
+        /* Bloco de data a esquerda: ancora de leitura rapida (dia grande + mes) */
+        .data-bloco {
+            flex-shrink: 0;
+            width: 56px;
+            background: var(--cyan);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+        }
+
+        .data-bloco .dia {
+            color: var(--verde-escuro);
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .data-bloco .mes {
+            color: var(--verde);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .corpo {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .linha-topo {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .corpo h3 {
+            color: var(--verde-escuro);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .badge-confirmada { background: rgba(52, 199, 89, 0.16); color: #1e7d3f; }
+        .badge-por-confirmar { background: rgba(255, 209, 102, 0.25); color: var(--laranja); }
+        .badge-cancelada { background: #eceeed; color: #7a827e; }
+        .badge-concluida { background: rgba(19, 140, 110, 0.14); color: var(--verde); }
+
+        .chip-especialidade {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--cyan);
+            color: var(--verde-escuro);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+
+        .motivo {
+            color: #4a5a53;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: baseline;
+            gap: 7px;
+        }
+
+        .motivo i {
+            color: var(--verde);
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            margin-top: 2px;
+        }
+
+        .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7770;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .meta i {
+            color: var(--verde);
+        }
+
+        .vazio {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.85);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vazio i {
+            font-size: 44px;
+            color: var(--cyan);
+        }
+
+        /* Modal de filtros avancados */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 33, 24, 0.55);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-overlay.aberto {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 22px 22px 0 0;
+            padding: 22px 20px calc(env(safe-area-inset-bottom) + 22px);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-cabecalho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-cabecalho h2 {
+            color: var(--verde-escuro);
+            font-size: 1.1rem;
+        }
+
+        .modal-fechar {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: #eef3f1;
+            color: var(--verde-escuro);
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .campo label {
+            color: var(--verde-escuro);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .campo select,
+        .campo input {
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            padding: 11px 12px;
+            color: var(--verde-escuro);
+            font-family: inherit;
+            font-size: 0.88rem;
+            background: #fff;
+            outline: none;
+        }
+
+        .campo-duplo {
+            display: flex;
+            gap: 12px;
+        }
+
+        .campo-duplo .campo {
+            flex: 1;
+        }
+
+        .modal-acoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .btn-limpar {
+            flex: 1;
+            background: none;
+            border: 1px solid #cfd8d4;
+            color: #6b7770;
+            font-family: inherit;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .btn-aplicar {
+            flex: 2;
+            background: var(--verde-escuro);
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <button class="menuToggle" onclick="abrirMenu()" aria-label="Abrir menu">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo">
+            <img class="logo" src="../Imagens/Logo.png" alt="PulseVita">
+        </div>
+        <div class="profile">
+            <img class="img-user pronta" src="../Imagens/user.png" alt="Imagem de perfil">
+            <span>Ana Martins</span>
+        </div>
+    </div>
+
+    <div class="menuOverlay" id="menuOverlay" onclick="fecharMenu()"></div>
+
+    <section class="container">
+        <!-- Menu lateral -->
+        <div class="esquerda" id="menuLateral">
+            <div class="menu">
+                <button class="menuFechar" onclick="fecharMenu()" aria-label="Fechar menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <ul>
+                    <a href="#"><li class="menu-links"><i class="bi bi-grid"></i><p>Dashboard</p></li></a>
+                    <a href="#"><li class="menu-links active"><i class="bi bi-calendar-check"></i><p>Marcações</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-heart-pulse"></i><p>Medições</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-clipboard2-pulse"></i><p>Dados Médicos</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-calendar-plus"></i><p>Marcar Consulta</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-question-circle"></i><p>FAQ</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-arrow-repeat"></i><p>Sincronizar</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-gear"></i><p>Definições</p></li></a>
+                </ul>
+            </div>
+            <div class="btn-sair">
+                <a href="#"><p class="sair">Sair</p></a>
+            </div>
+        </div>
+
+        <div class="direita">
+            <div class="conteudo">
+                <div class="cabecalho">
+                    <h1>Marcações</h1>
+                    <button class="btn-filtros" id="btnFiltros" onclick="abrirFiltros()">
+                        <i class="bi bi-sliders"></i> Filtros
+                    </button>
+                </div>
+
+                <div class="chips-estado" id="chipsEstado">
+                    <button class="chip-filtro ativo" data-estado="">Todas</button>
+                    <button class="chip-filtro" data-estado="CONFIRMADA">Confirmadas</button>
+                    <button class="chip-filtro" data-estado="POR_CONFIRMAR">Por confirmar</button>
+                    <button class="chip-filtro" data-estado="CONCLUIDA">Concluídas</button>
+                    <button class="chip-filtro" data-estado="CANCELADA">Canceladas</button>
+                </div>
+
+                <div id="lista"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de filtros -->
+    <div class="modal-overlay" id="modalFiltros" onclick="if(event.target===this)fecharFiltros()">
+        <div class="modal">
+            <div class="modal-cabecalho">
+                <h2>Filtrar consultas</h2>
+                <button class="modal-fechar" onclick="fecharFiltros()"><i class="bi bi-x-lg"></i></button>
+            </div>
+
+            <div class="campo">
+                <label for="f-medico">Médico</label>
+                <select id="f-medico"></select>
+            </div>
+
+            <div class="campo">
+                <label for="f-especialidade">Especialidade</label>
+                <select id="f-especialidade"></select>
+            </div>
+
+            <div class="campo-duplo">
+                <div class="campo">
+                    <label for="f-inicio">De</label>
+                    <input type="date" id="f-inicio">
+                </div>
+                <div class="campo">
+                    <label for="f-fim">Até</label>
+                    <input type="date" id="f-fim">
+                </div>
+            </div>
+
+            <div class="modal-acoes">
+                <button class="btn-limpar" onclick="limparFiltros()">Limpar</button>
+                <button class="btn-aplicar" onclick="aplicarFiltros()">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirMenu() {
+            document.getElementById("menuLateral").classList.add("aberto");
+            document.getElementById("menuOverlay").classList.add("aberto");
+            document.body.style.overflow = "hidden";
+        }
+        function fecharMenu() {
+            document.getElementById("menuLateral").classList.remove("aberto");
+            document.getElementById("menuOverlay").classList.remove("aberto");
+            document.body.style.overflow = "";
+        }
+
+        // ===== Dados mockados (sem backend) =====
+        const HOJE = "2026-07-23";
+
+        const CONSULTAS = [
+            { data: "2026-07-28", hora: "09:30", medico: "Dr. Carlos Pinto", especialidade: "Cardiologia", motivo: "Avaliação de arritmia", estado: "CONFIRMADA" },
+            { data: "2026-08-05", hora: "14:00", medico: "Dra. Sofia Nunes", especialidade: "Medicina Geral", motivo: "Consulta de rotina anual", estado: "POR_CONFIRMAR" },
+            { data: "2026-08-12", hora: "11:15", medico: "Dr. Carlos Pinto", especialidade: "Cardiologia", motivo: "Reavaliação da tensão arterial", estado: "CONFIRMADA" },
+            { data: "2026-06-30", hora: "10:00", medico: "Dra. Sofia Nunes", especialidade: "Medicina Geral", motivo: "Renovação de receita", estado: "CONCLUIDA" },
+            { data: "2026-06-10", hora: "16:30", medico: "Dr. Miguel Sousa", especialidade: "Pneumologia", motivo: "Seguimento de pneumonia", estado: "CONCLUIDA" },
+            { data: "2026-05-22", hora: "09:00", medico: "Dr. Carlos Pinto", especialidade: "Cardiologia", motivo: "Consulta cancelada pelo paciente", estado: "CANCELADA" },
+        ];
+
+        const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+        const SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+        const ESTADOS = {
+            CONFIRMADA: { classe: "confirmada", rotulo: "Confirmada", icone: "bi-check-circle-fill" },
+            POR_CONFIRMAR: { classe: "por-confirmar", rotulo: "Por confirmar", icone: "bi-hourglass-split" },
+            CANCELADA: { classe: "cancelada", rotulo: "Cancelada", icone: "bi-x-circle-fill" },
+            CONCLUIDA: { classe: "concluida", rotulo: "Concluída", icone: "bi-check2-all" },
+        };
+
+        // parse manual para evitar desvios de fuso horario
+        function comoData(iso) {
+            const [a, m, d] = iso.split("-").map(Number);
+            return new Date(a, m - 1, d);
+        }
+
+        let filtroEstado = "";
+        let filtros = { medico: "", especialidade: "", inicio: "", fim: "" };
+
+        function aplicaFiltros(lista) {
+            return lista.filter(c => {
+                if (filtroEstado && c.estado !== filtroEstado) return false;
+                if (filtros.medico && c.medico !== filtros.medico) return false;
+                if (filtros.especialidade && c.especialidade !== filtros.especialidade) return false;
+                if (filtros.inicio && c.data < filtros.inicio) return false;
+                if (filtros.fim && c.data > filtros.fim) return false;
+                return true;
+            });
+        }
+
+        function cartao(c) {
+            const dt = comoData(c.data);
+            const est = ESTADOS[c.estado];
+            return `
+                <article class="cartao ${est.classe}">
+                    <div class="data-bloco">
+                        <span class="dia">${String(dt.getDate()).padStart(2, "0")}</span>
+                        <span class="mes">${MESES[dt.getMonth()]}</span>
+                    </div>
+                    <div class="corpo">
+                        <div class="linha-topo">
+                            <h3>${c.medico}</h3>
+                            <span class="badge badge-${est.classe}"><i class="bi ${est.icone}"></i> ${est.rotulo}</span>
+                        </div>
+                        <span class="chip-especialidade"><i class="bi bi-heart-pulse"></i> ${c.especialidade}</span>
+                        <p class="motivo"><i class="bi bi-clipboard2-pulse"></i> ${c.motivo}</p>
+                        <div class="meta">
+                            <span><i class="bi bi-clock"></i> ${c.hora}</span>
+                            <span><i class="bi bi-calendar-event"></i> ${SEMANA[dt.getDay()]}, ${String(dt.getDate()).padStart(2, "0")} ${MESES[dt.getMonth()]} ${dt.getFullYear()}</span>
+                        </div>
+                    </div>
+                </article>`;
+        }
+
+        function seccao(titulo, itens) {
+            if (itens.length === 0) return "";
+            return `
+                <div class="seccao-titulo">${titulo} <span>${itens.length}</span></div>
+                <div class="lista">${itens.map(cartao).join("")}</div>`;
+        }
+
+        function render() {
+            const lista = aplicaFiltros(CONSULTAS);
+            const proximas = lista.filter(c => c.data >= HOJE).sort((a, b) => a.data.localeCompare(b.data));
+            const anteriores = lista.filter(c => c.data < HOJE).sort((a, b) => b.data.localeCompare(a.data));
+
+            const cont = document.getElementById("lista");
+            if (lista.length === 0) {
+                cont.innerHTML = `
+                    <div class="vazio">
+                        <i class="bi bi-calendar-x"></i>
+                        <p>Nenhuma consulta corresponde aos filtros selecionados.</p>
+                    </div>`;
+                return;
+            }
+            cont.innerHTML = seccao("Próximas", proximas) + seccao("Anteriores", anteriores);
+        }
+
+        // ===== Chips de estado =====
+        document.getElementById("chipsEstado").addEventListener("click", (e) => {
+            const btn = e.target.closest(".chip-filtro");
+            if (!btn) return;
+            document.querySelectorAll(".chip-filtro").forEach(c => c.classList.remove("ativo"));
+            btn.classList.add("ativo");
+            filtroEstado = btn.dataset.estado;
+            render();
+        });
+
+        // ===== Modal =====
+        function popularSelect(id, valores) {
+            const sel = document.getElementById(id);
+            sel.innerHTML = `<option value="">Todos</option>` +
+                valores.map(v => `<option value="${v}">${v}</option>`).join("");
+        }
+
+        function abrirFiltros() {
+            document.getElementById("modalFiltros").classList.add("aberto");
+        }
+        function fecharFiltros() {
+            document.getElementById("modalFiltros").classList.remove("aberto");
+        }
+        function aplicarFiltros() {
+            filtros.medico = document.getElementById("f-medico").value;
+            filtros.especialidade = document.getElementById("f-especialidade").value;
+            filtros.inicio = document.getElementById("f-inicio").value;
+            filtros.fim = document.getElementById("f-fim").value;
+            const ativo = filtros.medico || filtros.especialidade || filtros.inicio || filtros.fim;
+            document.getElementById("btnFiltros").classList.toggle("ativo", !!ativo);
+            fecharFiltros();
+            render();
+        }
+        function limparFiltros() {
+            filtros = { medico: "", especialidade: "", inicio: "", fim: "" };
+            document.getElementById("f-medico").value = "";
+            document.getElementById("f-especialidade").value = "";
+            document.getElementById("f-inicio").value = "";
+            document.getElementById("f-fim").value = "";
+            document.getElementById("btnFiltros").classList.remove("ativo");
+            fecharFiltros();
+            render();
+        }
+
+        // inicializacao
+        popularSelect("f-medico", [...new Set(CONSULTAS.map(c => c.medico))]);
+        popularSelect("f-especialidade", [...new Set(CONSULTAS.map(c => c.especialidade))]);
+        render();
+    </script>
+</body>
+</html>

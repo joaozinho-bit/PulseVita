@@ -46,6 +46,11 @@ public class ConsultaService {
         return consultaRepository.findByPacienteIdAndEstadoOrderByDataConsultaAscHoraConsultaAsc(idPaciente, "CONFIRMADA");
     }
 
+    // Todas as consultas do paciente (qualquer estado), da mais recente para a mais antiga
+    public List<Consulta> listarConsultasDoPaciente(Long idPaciente) {
+        return consultaRepository.findByPacienteIdOrderByDataConsultaDescHoraConsultaDesc(idPaciente);
+    }
+
     // Apenas a próxima consulta confirmada 
     public Optional<Consulta> proximaConsulta(Long idPaciente) {
         return listarConsultasConfirmadas(idPaciente).stream()
