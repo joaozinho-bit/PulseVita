@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../Imagens/Icon app.png">
+    <title>Mockup - Novo Dashboard</title>
+
+    <!-- Reutiliza SÓ o global (header/menu/painel) para consistência visual. Nada é alterado. -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===================================================================
+           Mockup do novo dashboard — classes prefixadas com "dm-" para nunca
+           colidir com o CSS da aplicação. Apenas dados fictícios (ver <script>).
+           =================================================================== */
+
+        /* Painel de conteúdo centrado, confortável em ecrã de telemóvel */
+        .dm {
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 4px 4px 96px; /* espaço em baixo para o seletor de estado (só do mockup) */
+        }
+
+        /* ---- 1. Cabeçalho do utilizador (só foto, nome e nº de paciente) ---- */
+        .dm-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 4px 6px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .dm-user__foto {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #B6E5E5;
+            flex-shrink: 0;
+        }
+
+        .dm-user__txt { min-width: 0; }
+
+        .dm-user__ola {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .dm-user__nome {
+            color: #fff;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .dm-user__num {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .dm-user__data {
+            margin-left: auto;
+            align-self: flex-start;
+            text-align: right;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        /* ---- 2. Cartão principal: estado diário (maior destaque) ---- */
+        .dm-hero {
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .dm-hero__top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .dm-hero__icone {
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .dm-hero__titulo { font-size: 1.12rem; font-weight: 800; line-height: 1.25; }
+        .dm-hero__sub { font-size: 0.85rem; font-weight: 500; line-height: 1.45; margin-top: 3px; }
+
+        /* Estado 1 — aviso (ainda sem medição hoje): âmbar quente */
+        .dm-hero--aviso {
+            background: linear-gradient(135deg, #FFE39A 0%, #FFC94D 100%);
+            color: #5b4410;
+        }
+        .dm-hero--aviso .dm-hero__icone { background: rgba(255, 255, 255, 0.6); color: #C77700; }
+        .dm-hero--aviso .dm-hero__sub { color: #6b5417; }
+
+        /* Estado 2 — sucesso (medição concluída): verde da identidade */
+        .dm-hero--ok {
+            background: linear-gradient(135deg, #138C6E 0%, #34C759 100%);
+            color: #fff;
+        }
+        .dm-hero--ok .dm-hero__icone { background: rgba(255, 255, 255, 0.18); color: #fff; }
+        .dm-hero--ok .dm-hero__sub { color: rgba(255, 255, 255, 0.9); }
+
+        /* Chip "Hoje" no topo do herói */
+        .dm-hoje {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .dm-hero--aviso .dm-hoje { background: rgba(199, 119, 0, 0.16); color: #a5620a; }
+        .dm-hero--ok .dm-hoje { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+        /* Valores medidos (herói estado 2) — tiles translúcidos */
+        .dm-valores { display: flex; gap: 10px; }
+        .dm-valor {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 13px;
+            padding: 11px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .dm-valor__lbl {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.72rem; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+        }
+        .dm-valor__num { font-size: 1.35rem; font-weight: 800; line-height: 1; }
+        .dm-valor__num small { font-size: 0.78rem; font-weight: 600; opacity: 0.85; }
+
+        .dm-hero__limites {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.82rem; font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        .dm-hero__limites i { font-size: 1rem; }
+
+        /* ---- Botões ---- */
+        .dm-acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+        .dm-btn {
+            flex: 1;
+            min-width: 130px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            padding: 13px 18px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.12s ease, opacity 0.2s ease;
+        }
+        .dm-btn:active { transform: scale(0.97); }
+
+        .dm-btn--escuro { background: #205236; color: #fff; }          /* CTA sobre âmbar */
+        .dm-btn--branco { background: #fff; color: #138C6E; }          /* primário sobre verde */
+        .dm-btn--fantasma-claro {
+            background: transparent; color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* ---- 3 e 4. Cartões secundários (brancos) ---- */
+        .dm-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .dm-card__head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .dm-card__head h2 {
+            display: inline-flex; align-items: center; gap: 9px;
+            color: #205236; font-size: 1rem; font-weight: 700;
+        }
+        .dm-chip-icone {
+            width: 34px; height: 34px; border-radius: 10px;
+            background: #B6E5E5; color: #138C6E;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+        .dm-link {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: none; border: none; cursor: pointer;
+            color: #138C6E; font-family: inherit; font-size: 0.82rem; font-weight: 700;
+        }
+        .dm-link:active { opacity: 0.6; }
+
+        /* Próxima consulta */
+        .dm-consulta__quando {
+            display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+        }
+        .dm-consulta__data { color: #205236; font-size: 1.25rem; font-weight: 800; }
+        .dm-consulta__hora {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #138C6E; font-size: 1rem; font-weight: 700;
+        }
+        .dm-consulta__medico {
+            display: flex; flex-direction: column; gap: 2px;
+        }
+        .dm-consulta__medico b { color: #205236; font-size: 0.95rem; font-weight: 700; }
+        .dm-consulta__medico span { color: #6b7770; font-size: 0.83rem; font-weight: 500; }
+
+        .dm-badge {
+            align-self: flex-start;
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 0.72rem; font-weight: 700;
+            padding: 4px 10px; border-radius: 999px;
+        }
+        .dm-badge--ok { background: rgba(52, 199, 89, 0.16); color: #1e7d3f; }
+
+        .dm-sep { height: 1px; background: #eef1f0; }
+
+        /* Última medição (estado 1) */
+        .dm-tiles { display: flex; gap: 10px; }
+        .dm-tile {
+            flex: 1;
+            background: #f4f8f6;
+            border-radius: 12px;
+            padding: 11px 12px;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .dm-tile__lbl {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #6b7770; font-size: 0.74rem; font-weight: 600;
+        }
+        .dm-tile__lbl i { color: #138C6E; }
+        .dm-tile__num { color: #205236; font-size: 1.3rem; font-weight: 800; line-height: 1; }
+        .dm-tile__num small { font-size: 0.78rem; font-weight: 600; opacity: 0.75; }
+
+        .dm-rodape {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        }
+        .dm-rodape__data { color: #6b7770; font-size: 0.8rem; font-weight: 600; }
+        .dm-aval { display: inline-flex; align-items: center; gap: 5px; font-size: 0.85rem; font-weight: 700; }
+        .dm-aval--ok { color: #34C759; }
+
+        /* Botão largo "Ver histórico" (estado 2, sobre o painel verde) */
+        .dm-btn-largo {
+            width: 100%;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            color: #fff;
+            font-family: inherit; font-size: 0.9rem; font-weight: 700;
+            padding: 14px; border-radius: 13px; cursor: pointer;
+            transition: transform 0.12s ease;
+        }
+        .dm-btn-largo:active { transform: scale(0.98); }
+
+        /* ---- Seletor de estado (SÓ do mockup, não faz parte da app) ---- */
+        .dm-switch {
+            position: fixed;
+            left: 50%;
+            bottom: 14px;
+            transform: translateX(-50%);
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(13, 69, 53, 0.92);
+            backdrop-filter: blur(6px);
+            border: 1px dashed rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+            padding: 6px 8px 6px 14px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+        .dm-switch__lbl {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.66rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .dm-switch button {
+            border: none; cursor: pointer;
+            font-family: inherit; font-size: 0.78rem; font-weight: 700;
+            padding: 8px 14px; border-radius: 999px;
+            background: transparent; color: rgba(255, 255, 255, 0.7);
+        }
+        .dm-switch button.ativo { background: #34C759; color: #0d4535; }
+
+        /* ---- Toast de simulação de navegação ---- */
+        .dm-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 68px;
+            transform: translateX(-50%) translateY(12px);
+            z-index: 85;
+            background: #205236;
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .dm-toast.mostrar { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+    <!-- Header (igual ao da app) -->
+    <div class="header">
+        <button class="menuToggle" onclick="abrirMenu()" aria-label="Abrir menu">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo">
+            <img class="logo" src="../Imagens/Logo.png" alt="PulseVita">
+        </div>
+        <div class="profile">
+            <img class="img-user pronta" src="../Imagens/user.png" alt="Imagem de perfil">
+            <span>Matilde Vasconcelos</span>
+        </div>
+    </div>
+
+    <div class="menuOverlay" id="menuOverlay" onclick="fecharMenu()"></div>
+
+    <section class="container">
+        <!-- Menu lateral (igual ao da app) -->
+        <div class="esquerda" id="menuLateral">
+            <div class="menu">
+                <button class="menuFechar" onclick="fecharMenu()" aria-label="Fechar menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <ul>
+                    <a href="#"><li class="menu-links active"><i class="bi bi-grid"></i><p>Dashboard</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-calendar-check"></i><p>Marcações</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-heart-pulse"></i><p>Medições</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-clipboard2-pulse"></i><p>Dados Médicos</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-calendar-plus"></i><p>Marcar Consulta</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-question-circle"></i><p>FAQ</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-arrow-repeat"></i><p>Sincronizar</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-gear"></i><p>Definições</p></li></a>
+                </ul>
+            </div>
+            <div class="btn-sair">
+                <a href="#"><p class="sair">Sair</p></a>
+            </div>
+        </div>
+
+        <div class="direita">
+            <div class="dm" id="dm"><!-- preenchido pelo JS --></div>
+        </div>
+    </section>
+
+    <!-- Seletor de estado (apenas para pré-visualizar o mockup) -->
+    <div class="dm-switch">
+        <span class="dm-switch__lbl">Prévia</span>
+        <button id="btn-sem" class="ativo" onclick="setEstado('sem')">Sem medição</button>
+        <button id="btn-feita" onclick="setEstado('feita')">Medição feita</button>
+    </div>
+
+    <div class="dm-toast" id="dm-toast"></div>
+
+    <script>
+        /* ===== Menu (igual à app) ===== */
+        function abrirMenu() {
+            document.getElementById("menuLateral").classList.add("aberto");
+            document.getElementById("menuOverlay").classList.add("aberto");
+            document.body.style.overflow = "hidden";
+        }
+        function fecharMenu() {
+            document.getElementById("menuLateral").classList.remove("aberto");
+            document.getElementById("menuOverlay").classList.remove("aberto");
+            document.body.style.overflow = "";
+        }
+
+        /* ===== DADOS MOCKADOS (sem backend) ===== */
+        const HOJE = "2026-07-24";
+        const MOCK = {
+            utilizador: {
+                nome: "Matilde Vasconcelos",
+                nPaciente: "204518637",
+                foto: "../Imagens/user.png"
+            },
+            proximaConsulta: {
+                data: "2026-08-12", hora: "10:00",
+                medico: "Dr. Carlos Pinto", especialidade: "Cardiologia",
+                estado: "Confirmada"
+            },
+            // usada no estado 2 (medição já feita hoje)
+            medicaoHoje: {
+                hora: "08:15", temperatura: 36.6, bpm: 72,
+                avaliacao: "Normal", dentroLimites: true
+            },
+            // usada no estado 1 (última leitura conhecida, de um dia anterior)
+            ultimaMedicao: {
+                data: "2026-07-23", hora: "21:30",
+                temperatura: 36.7, bpm: 70, avaliacao: "Normal"
+            }
+        };
+
+        const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+        const DIAS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+
+        function dataCurta(iso) {
+            const [a, m, d] = iso.split("-").map(Number);
+            return `${d} ${MESES[m - 1]} ${a}`;
+        }
+        function diaSemana(iso) {
+            const [a, m, d] = iso.split("-").map(Number);
+            return `${DIAS[new Date(a, m - 1, d).getDay()]}, ${d} ${MESES[m - 1]}`;
+        }
+
+        /* ===== Simulação de navegação (botões não ligam a nada) ===== */
+        let toastTimer;
+        function simular(destino) {
+            const t = document.getElementById("dm-toast");
+            t.textContent = `→ ${destino} (simulação)`;
+            t.classList.add("mostrar");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove("mostrar"), 1600);
+        }
+
+        /* ===== Blocos reutilizáveis ===== */
+        function blocoUtilizador() {
+            const u = MOCK.utilizador;
+            return `
+                <div class="dm-user">
+                    <img class="dm-user__foto" src="${u.foto}" alt="Foto de perfil">
+                    <div class="dm-user__txt">
+                        <div class="dm-user__ola">Bem-vinda de volta</div>
+                        <div class="dm-user__nome">${u.nome}</div>
+                        <div class="dm-user__num"><i class="bi bi-person-vcard"></i> Nº paciente ${u.nPaciente}</div>
+                    </div>
+                    <div class="dm-user__data">${diaSemana(HOJE)}</div>
+                </div>`;
+        }
+
+        function heroSemMedicao() {
+            return `
+                <article class="dm-hero dm-hero--aviso">
+                    <span class="dm-hoje"><i class="bi bi-exclamation-circle-fill"></i> Ação de hoje</span>
+                    <div class="dm-hero__top">
+                        <div class="dm-hero__icone"><i class="bi bi-clipboard2-pulse"></i></div>
+                        <div>
+                            <div class="dm-hero__titulo">Ainda não realizou nenhuma medição hoje.</div>
+                            <div class="dm-hero__sub">Realize a medição diária para acompanhar o seu estado de saúde.</div>
+                        </div>
+                    </div>
+                    <div class="dm-acoes">
+                        <button class="dm-btn dm-btn--escuro" onclick="simular('Efetuar medição')">
+                            <i class="bi bi-heart-pulse"></i> Efetuar medição
+                        </button>
+                    </div>
+                </article>`;
+        }
+
+        function heroComMedicao() {
+            const m = MOCK.medicaoHoje;
+            return `
+                <article class="dm-hero dm-hero--ok">
+                    <span class="dm-hoje"><i class="bi bi-check-circle-fill"></i> Concluída às ${m.hora}</span>
+                    <div class="dm-hero__top">
+                        <div class="dm-hero__icone"><i class="bi bi-check2-circle"></i></div>
+                        <div>
+                            <div class="dm-hero__titulo">Medição diária concluída.</div>
+                            <div class="dm-hero__sub">Bom trabalho! Já registou os seus valores de hoje.</div>
+                        </div>
+                    </div>
+                    <div class="dm-valores">
+                        <div class="dm-valor">
+                            <span class="dm-valor__lbl"><i class="bi bi-thermometer-half"></i> Temperatura</span>
+                            <span class="dm-valor__num">${m.temperatura.toFixed(1).replace(".", ",")}<small> °C</small></span>
+                        </div>
+                        <div class="dm-valor">
+                            <span class="dm-valor__lbl"><i class="bi bi-heart-pulse"></i> Frequência</span>
+                            <span class="dm-valor__num">${m.bpm}<small> bpm</small></span>
+                        </div>
+                    </div>
+                    <div class="dm-hero__limites">
+                        <i class="bi bi-shield-check"></i> Os seus valores estão dentro dos limites esperados.
+                    </div>
+                    <div class="dm-acoes">
+                        <button class="dm-btn dm-btn--branco" onclick="simular('Ver resultado')">
+                            <i class="bi bi-clipboard2-data"></i> Ver resultado
+                        </button>
+                        <button class="dm-btn dm-btn--fantasma-claro" onclick="simular('Nova medição')">
+                            <i class="bi bi-arrow-repeat"></i> Nova medição
+                        </button>
+                    </div>
+                </article>`;
+        }
+
+        function cardProximaConsulta() {
+            const c = MOCK.proximaConsulta;
+            return `
+                <section class="dm-card">
+                    <div class="dm-card__head">
+                        <h2><span class="dm-chip-icone"><i class="bi bi-calendar-check"></i></span> Próxima consulta</h2>
+                        <button class="dm-link" onclick="simular('Ver consultas')">Ver consultas <i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div class="dm-consulta__quando">
+                        <span class="dm-consulta__data">${dataCurta(c.data)}</span>
+                        <span class="dm-consulta__hora"><i class="bi bi-clock"></i> ${c.hora}</span>
+                    </div>
+                    <div class="dm-sep"></div>
+                    <div class="dm-card__head">
+                        <div class="dm-consulta__medico">
+                            <b>${c.medico}</b>
+                            <span>${c.especialidade}</span>
+                        </div>
+                        <span class="dm-badge dm-badge--ok"><i class="bi bi-check2"></i> ${c.estado}</span>
+                    </div>
+                </section>`;
+        }
+
+        function cardUltimaMedicao() {
+            const m = MOCK.ultimaMedicao;
+            return `
+                <section class="dm-card">
+                    <div class="dm-card__head">
+                        <h2><span class="dm-chip-icone"><i class="bi bi-activity"></i></span> Última medição</h2>
+                        <button class="dm-link" onclick="simular('Ver histórico')">Ver histórico <i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div class="dm-tiles">
+                        <div class="dm-tile">
+                            <span class="dm-tile__lbl"><i class="bi bi-thermometer-half"></i> Temperatura</span>
+                            <span class="dm-tile__num">${m.temperatura.toFixed(1).replace(".", ",")}<small> °C</small></span>
+                        </div>
+                        <div class="dm-tile">
+                            <span class="dm-tile__lbl"><i class="bi bi-heart-pulse"></i> Frequência</span>
+                            <span class="dm-tile__num">${m.bpm}<small> bpm</small></span>
+                        </div>
+                    </div>
+                    <div class="dm-rodape">
+                        <span class="dm-rodape__data"><i class="bi bi-clock-history"></i> ${dataCurta(m.data)} · ${m.hora}</span>
+                        <span class="dm-aval dm-aval--ok"><i class="bi bi-circle-fill" style="font-size:0.5rem"></i> ${m.avaliacao}</span>
+                    </div>
+                </section>`;
+        }
+
+        function botaoHistorico() {
+            return `
+                <button class="dm-btn-largo" onclick="simular('Ver histórico')">
+                    <i class="bi bi-clock-history"></i> Ver histórico de medições
+                </button>`;
+        }
+
+        /* ===== Render por estado =====
+           Estado "sem":   herói de aviso + próxima consulta + última medição (dia anterior)
+           Estado "feita": herói de sucesso (que JÁ mostra a leitura de hoje) + próxima consulta
+                           + acesso ao histórico. A "última medição" não se repete: é o próprio
+                           herói, evitando duplicar informação. */
+        function render(estado) {
+            const dm = document.getElementById("dm");
+            if (estado === "feita") {
+                dm.innerHTML = blocoUtilizador() + heroComMedicao() + cardProximaConsulta() + botaoHistorico();
+            } else {
+                dm.innerHTML = blocoUtilizador() + heroSemMedicao() + cardProximaConsulta() + cardUltimaMedicao();
+            }
+        }
+
+        function setEstado(estado) {
+            document.getElementById("btn-sem").classList.toggle("ativo", estado === "sem");
+            document.getElementById("btn-feita").classList.toggle("ativo", estado === "feita");
+            render(estado);
+        }
+
+        // Estado inicial: sem medição (a ação mais importante em destaque)
+        render("sem");
+    </script>
+</body>
+</html>

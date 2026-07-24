@@ -405,6 +405,32 @@
 }
 
 /* ===== Doenças ===== */
+/* Pesquisa por nome: util quando a lista cresce, discreta quando nao */
+.doencas-pesquisa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 11px 14px;
+    margin-bottom: 12px;
+}
+
+.doencas-pesquisa i {
+    color: #138C6E;
+    font-size: 17px;
+}
+
+.doencas-pesquisa input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #205236;
+    background: transparent;
+}
+
 .doencas-chips {
     display: flex;
     gap: 8px;

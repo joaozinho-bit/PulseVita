@@ -6,6 +6,7 @@
 
     let doencas = null;   // null enquanto ainda nao foram carregadas do backend
     let filtroEstado = "";
+    let termo = "";       // texto da barra de pesquisa (por nome da doenca)
 
     function formatarData(iso) {
         const [a, m, d] = iso.split("-").map(Number);
@@ -59,11 +60,15 @@
         const cont = document.getElementById("lista-doencas");
         if (!Array.isArray(doencas)) return;
 
-        const lista = filtroEstado ? doencas.filter(d => d.estado === filtroEstado) : doencas;
+        const lista = doencas.filter(d => {
+            if (filtroEstado && d.estado !== filtroEstado) return false;
+            if (termo && !(d.nome || "").toLowerCase().includes(termo)) return false;
+            return true;
+        });
         if (lista.length === 0) {
             const msg = doencas.length === 0
                 ? "Não tem doenças registadas."
-                : "Nenhuma doença corresponde ao filtro selecionado.";
+                : "Nenhuma doença corresponde à pesquisa.";
             cont.innerHTML = `<div class="doencas-vazio"><i class="bi bi-clipboard2-check"></i><p>${msg}</p></div>`;
             return;
         }
@@ -107,6 +112,11 @@
             document.querySelectorAll(".doenca-chip").forEach(c => c.classList.remove("ativo"));
             btn.classList.add("ativo");
             filtroEstado = btn.dataset.estado;
+            render();
+        });
+
+        document.getElementById("pesquisa-doencas").addEventListener("input", (e) => {
+            termo = e.target.value.trim().toLowerCase();
             render();
         });
     });
