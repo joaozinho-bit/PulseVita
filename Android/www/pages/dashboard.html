@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="../css/dashboard.css">
         <link rel="stylesheet" href="../css/global.css">
         <link rel="stylesheet" href="../css/loader.css">
+        <link rel="stylesheet" href="../css/toast.css">
 
         <!-- Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -20,10 +21,10 @@
 
         <title>Dashboard do Paciente</title>
       <script src="../js/config.js"></script>
-      <script src="../js/perfil.js"></script>
 </head>
     <body>
-        <!-- Header fixo -->
+        <!-- Header fixo. A foto/nome do header sao preenchidos pelo dashboard.js
+             a partir do mesmo pedido /dashboard, evitando um fetch extra. -->
         <div class="header">
             <button class="menuToggle" id="menuToggle" onclick="abrirMenu()" aria-label="Abrir menu">
                 <i class="bi bi-list"></i>
@@ -33,7 +34,7 @@
             </div>
             <div class="profile">
                 <img class="img-user" id="header-foto" src="../Imagens/user.png" alt="Imagem de perfil">
-                <span id="nome-paciente">Pedro Silva</span>
+                <span id="nome-paciente"></span>
             </div>
         </div>
 
@@ -112,118 +113,34 @@
             </div>
 
             <div class="direita">
-                <div class="conteudo">
-                    <div class="info-pessoal">
-                        <div class="foto">
-                            <img src="../Imagens/user.png" alt="" id="img-perfil">
-                        </div>
-                        <p id="nome-info" class="nome-perfil">Pedro Silva</p>
-                        <div class="lista-info">
-                            <div class="dados">
-                                <img src="../Imagens/icon-tel.png" alt="">
-                                <p id="telefone" class="telefone">123 456 789</p>
-                            </div>
-                            <div class="dados">
-                                <img src="../Imagens/icon-mail.png" alt="">
-                                <p id="email" class="email">pedro@gmail.com</p>
-                            </div>
-                            <div class="dados">
-                                <img src="../Imagens/icon-cruz.png" alt="">
-                                <p id="n-paciente" class="n-paciente">123456789</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-direita">
-                        <div class="prox-consultas">
-                            <h2>Próximas consultas</h2>
-                            <div class="data">
-                                 <p id="prox-data">--/--/----</p>
-                                <img src="../Imagens/PontoVerde.png" alt="">
-                                <p id="prox-hora">--:--</p>
-                                <img src="../Imagens/PontoVerde.png" alt="">
-                                <p id="prox-motivo">Sem consultas agendadas</p>
-                            </div>
-                        </div>
-                        <div class="notify">
-                            <h2>Notificações</h2>
-                            <div class="conteudo-notify">
-                                <p>Veja suas notificações</p>
-                                <img src="../Imagens/icon-mail.png" alt="">
-                            </div>
-                        </div>
-                    </div>
+                <div class="dash" id="dash">
+                    <div class="dash-loader"></div>
                 </div>
             </div>
         </section>
 
         <script>
-    // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
-    function abrirMenu() {
-        document.getElementById("menuLateral").classList.add("aberto");
-        document.getElementById("menuOverlay").classList.add("aberto");
-        document.body.style.overflow = "hidden";
-    }
+            // Menu lateral (fullscreen): bloqueia o scroll do fundo enquanto esta aberto
+            function abrirMenu() {
+                document.getElementById("menuLateral").classList.add("aberto");
+                document.getElementById("menuOverlay").classList.add("aberto");
+                document.body.style.overflow = "hidden";
+            }
+            function fecharMenu() {
+                document.getElementById("menuLateral").classList.remove("aberto");
+                document.getElementById("menuOverlay").classList.remove("aberto");
+                document.body.style.overflow = "";
+            }
 
-    function fecharMenu() {
-        document.getElementById("menuLateral").classList.remove("aberto");
-        document.getElementById("menuOverlay").classList.remove("aberto");
-        document.body.style.overflow = "";
-    }
-
-    function formatarData(dataISO) {
-        const [ano, mes, dia] = dataISO.split('-');
-        return `${dia}/${mes}/${ano}`;
-    }
-
-    function formatarHora(horaISO) {
-        return horaISO.slice(0, 5);
-    }
-
-    (async function () {
-        let dados;
-
-        try {
-            const resp = await fetch(API_BASE_URL + '/users/me', { credentials: 'include' });
-            if (!resp.ok) { window.location.href = '../index.html'; return; }
-            dados = await resp.json();
-
-            document.getElementById('nome-info').textContent = dados.nomeCompleto;
-            document.getElementById('email').textContent = dados.email || 'N/A';
-            document.getElementById('telefone').textContent = dados.telefone || 'N/A';
-            document.getElementById('n-paciente').textContent = dados.n_paciente || 'N/A';
-
-            carregarFotoPerfil(document.getElementById('img-perfil'), dados.fotoPerfil);
-        } catch (erro) {
-            window.location.href = '../index.html';
-            return;
-        }
-
-        try {
-    const respProx = await fetch(`${API_BASE_URL}/consultas/paciente/${dados.id}/proxima`, { credentials: 'include' });
-    if (respProx.status === 204) {
-        // Não há consultas futuras, mantém o texto padrão
-    } else if (respProx.ok) {
-        const consulta = await respProx.json();
-        document.getElementById('prox-data').textContent = formatarData(consulta.dataConsulta);
-        document.getElementById('prox-hora').textContent = formatarHora(consulta.horaConsulta);
-        document.getElementById('prox-motivo').textContent = consulta.motivo || 'Consulta';
-    }
-} catch (erro) {
-    console.warn('Erro ao carregar próxima consulta.', erro);
-}
-    })();
-
-    document.getElementById('btn-sair').addEventListener('click', async function (e) {
-        e.preventDefault();
-        try {
-            await fetch(API_BASE_URL + '/users/logout', {
-                method: 'POST',
-                credentials: 'include'
+            document.getElementById('btn-sair').addEventListener('click', async function (e) {
+                e.preventDefault();
+                try {
+                    await fetch(API_BASE_URL + '/users/logout', { method: 'POST', credentials: 'include' });
+                } catch (erro) { /* segue para o login de qualquer forma */ }
+                window.location.href = '../index.html';
             });
-        } catch (erro) {
-        }
-        window.location.href = '../index.html';
-    });
-</script>
+        </script>
+        <script src="../js/toast.js"></script>
+        <script src="../js/dashboard.js"></script>
     </body>
 </html>

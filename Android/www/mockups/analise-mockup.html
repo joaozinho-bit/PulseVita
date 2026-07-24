@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../Imagens/Icon app.png">
+    <title>Mockup - Análise</title>
+
+    <!-- Reutiliza SÓ o global (header/menu/painel) para consistência visual. Nada é alterado. -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===================================================================
+           Mockup do ecrã "Análise" — classes prefixadas "an-" para não colidir
+           com o CSS da aplicação. Apenas dados fictícios (ver <script>).
+           Azul = temperatura, Vermelho = frequência cardíaca (linhas do gráfico).
+           =================================================================== */
+        :root {
+            --an-azul: #2F80ED;
+            --an-vermelho: #E5484D;
+        }
+
+        .an {
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 4px 4px 24px;
+        }
+
+        /* ---- 1. Cabeçalho ---- */
+        .an-cab h1 { color: #fff; font-size: 1.5rem; font-weight: 800; }
+        .an-cab p { color: rgba(255, 255, 255, 0.8); font-size: 0.85rem; margin-top: 3px; }
+
+        /* Etiqueta de secção discreta sobre o painel verde */
+        .an-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: -4px;
+        }
+
+        /* ---- 2. Cartões de tipo de análise ---- */
+        .an-tipos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .an-tipo {
+            background: #fff;
+            border-radius: 16px;
+            padding: 14px 8px;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .an-tipo:active { transform: scale(0.97); }
+        .an-tipo__ic {
+            width: 44px; height: 44px; border-radius: 13px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .an-tipo h3 { font-size: 0.82rem; color: #205236; font-weight: 700; line-height: 1.15; }
+        .an-tipo p { font-size: 0.68rem; color: #6b7770; line-height: 1.25; }
+
+        /* Cores temáticas por métrica (estado normal) */
+        .an-tipo[data-tipo="temp"] .an-tipo__ic { background: rgba(47, 128, 237, 0.14); color: var(--an-azul); }
+        .an-tipo[data-tipo="bpm"] .an-tipo__ic { background: rgba(229, 72, 77, 0.14); color: var(--an-vermelho); }
+        .an-tipo[data-tipo="completa"] .an-tipo__ic { background: #B6E5E5; color: #138C6E; }
+
+        /* Selecionado: destaque com a cor da própria métrica */
+        .an-tipo.sel { box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12); }
+        .an-tipo[data-tipo="temp"].sel { border-color: var(--an-azul); }
+        .an-tipo[data-tipo="bpm"].sel { border-color: var(--an-vermelho); }
+        .an-tipo[data-tipo="completa"].sel { border-color: #34C759; }
+        .an-tipo[data-tipo="temp"].sel .an-tipo__ic { background: var(--an-azul); color: #fff; }
+        .an-tipo[data-tipo="bpm"].sel .an-tipo__ic { background: var(--an-vermelho); color: #fff; }
+        .an-tipo[data-tipo="completa"].sel .an-tipo__ic { background: #34C759; color: #fff; }
+
+        /* ---- 3. Período ---- */
+        .an-periodos {
+            display: flex; gap: 8px; overflow-x: auto;
+            padding-bottom: 4px; scrollbar-width: none;
+        }
+        .an-periodos::-webkit-scrollbar { display: none; }
+        .an-chip {
+            flex: 0 0 auto;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            font-family: inherit; font-size: 0.8rem; font-weight: 600;
+            padding: 9px 15px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+            transition: transform 0.1s ease;
+        }
+        .an-chip:active { transform: scale(0.96); }
+        .an-chip.sel { background: #B6E5E5; color: #205236; border-color: #B6E5E5; }
+
+        .an-custom { display: none; gap: 10px; }
+        .an-custom.show { display: flex; }
+        .an-custom label { flex: 1; display: flex; flex-direction: column; gap: 5px; color: rgba(255, 255, 255, 0.85); font-size: 0.75rem; font-weight: 600; }
+        .an-custom input {
+            border: none; border-radius: 10px; padding: 10px 12px;
+            font-family: inherit; font-size: 0.85rem; color: #205236; background: #fff;
+        }
+
+        .an-gerar {
+            width: 100%;
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+            background: #205236; color: #fff;
+            font-family: inherit; font-size: 0.95rem; font-weight: 700;
+            border: none; border-radius: 12px; padding: 14px; cursor: pointer;
+            transition: transform 0.12s ease, opacity 0.2s ease;
+        }
+        .an-gerar:active { transform: scale(0.98); }
+
+        /* ---- Resultado ---- */
+        .an-resultado { display: flex; flex-direction: column; gap: 16px; }
+
+        .an-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .an-card__titulo {
+            display: inline-flex; align-items: center; gap: 9px;
+            color: #205236; font-size: 1rem; font-weight: 700;
+        }
+        .an-card__titulo .an-chip-icone {
+            width: 32px; height: 32px; border-radius: 10px;
+            background: #B6E5E5; color: #138C6E;
+            display: inline-flex; align-items: center; justify-content: center; font-size: 17px;
+        }
+
+        /* Legenda personalizada (explica linhas + linhas de referência) */
+        .an-legenda { display: flex; flex-wrap: wrap; gap: 12px; }
+        .an-leg { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; color: #4a5a53; }
+        .an-leg__linha { width: 18px; height: 0; border-top: 3px solid; border-radius: 2px; }
+        .an-leg__linha.tracejado { border-top-style: dashed; border-top-width: 2px; }
+
+        .an-grafico { position: relative; height: 260px; width: 100%; }
+
+        /* Resumo automático */
+        .an-frase {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: 1px solid #eef1f0;
+        }
+        .an-frase:last-child { border-bottom: none; padding-bottom: 0; }
+        .an-frase:first-of-type { padding-top: 0; }
+        .an-frase i { font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+        .an-frase p { font-size: 0.86rem; color: #3f4c46; line-height: 1.4; font-weight: 500; }
+        .an-frase.ok i { color: #34C759; }
+        .an-frase.alerta i { color: #C77700; }
+        .an-frase.info i { color: #138C6E; }
+        .an-frase.sobe i { color: var(--an-vermelho); }
+        .an-frase.desce i { color: var(--an-azul); }
+
+        /* Estatísticas */
+        .an-stats-grupo { display: flex; flex-direction: column; gap: 8px; }
+        .an-stats-grupo + .an-stats-grupo { margin-top: 4px; }
+        .an-stats-cab { display: inline-flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 700; color: #205236; }
+        .an-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .an-stat-linha { display: flex; gap: 8px; }
+        .an-stat {
+            flex: 1; background: #f4f8f6; border-radius: 12px; padding: 10px 6px; text-align: center;
+        }
+        .an-stat__lbl { font-size: 0.66rem; color: #6b7770; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+        .an-stat__val { font-size: 1.05rem; color: #205236; font-weight: 800; margin-top: 3px; }
+        .an-stat__val small { font-size: 0.7rem; font-weight: 600; opacity: 0.7; }
+        .an-total {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: #B6E5E5; color: #205236; border-radius: 12px; padding: 10px;
+            font-size: 0.85rem; font-weight: 700; margin-top: 4px;
+        }
+
+        /* Animação de entrada dos cartões do resultado */
+        @keyframes an-surge { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+        .an-anim { animation: an-surge 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+
+        .an-erro {
+            background: #fff; border-radius: 16px; padding: 22px; text-align: center;
+            color: #6b7770; font-size: 0.9rem; display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .an-erro i { font-size: 34px; color: #C77700; }
+    </style>
+</head>
+<body>
+    <!-- Header (igual ao da app) -->
+    <div class="header">
+        <button class="menuToggle" onclick="abrirMenu()" aria-label="Abrir menu">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="logo">
+            <img class="logo" src="../Imagens/Logo.png" alt="PulseVita">
+        </div>
+        <div class="profile">
+            <img class="img-user pronta" src="../Imagens/user.png" alt="Imagem de perfil">
+            <span>Matilde Vasconcelos</span>
+        </div>
+    </div>
+
+    <div class="menuOverlay" id="menuOverlay" onclick="fecharMenu()"></div>
+
+    <section class="container">
+        <!-- Menu lateral (igual ao da app), com "Análise" ativo -->
+        <div class="esquerda" id="menuLateral">
+            <div class="menu">
+                <button class="menuFechar" onclick="fecharMenu()" aria-label="Fechar menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <ul>
+                    <a href="#"><li class="menu-links"><i class="bi bi-grid"></i><p>Dashboard</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-calendar-check"></i><p>Marcações</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-heart-pulse"></i><p>Medições</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-clipboard2-pulse"></i><p>Dados Médicos</p></li></a>
+                    <a href="#"><li class="menu-links active"><i class="bi bi-graph-up-arrow"></i><p>Análise</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-calendar-plus"></i><p>Marcar Consulta</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-question-circle"></i><p>FAQ</p></li></a>
+                    <a href="#"><li class="menu-links"><i class="bi bi-gear"></i><p>Definições</p></li></a>
+                </ul>
+            </div>
+            <div class="btn-sair">
+                <a href="#"><p class="sair">Sair</p></a>
+            </div>
+        </div>
+
+        <div class="direita">
+            <div class="an">
+                <!-- 1. Cabeçalho -->
+                <div class="an-cab">
+                    <h1>Análise</h1>
+                    <p>Consulte a evolução das suas medições ao longo do tempo.</p>
+                </div>
+
+                <!-- 2. Tipo de análise -->
+                <span class="an-label">O que pretende analisar?</span>
+                <div class="an-tipos" id="an-tipos">
+                    <div class="an-tipo sel" data-tipo="temp">
+                        <div class="an-tipo__ic"><i class="bi bi-thermometer-half"></i></div>
+                        <h3>Temperatura</h3>
+                        <p>Evolução da temperatura corporal</p>
+                    </div>
+                    <div class="an-tipo" data-tipo="bpm">
+                        <div class="an-tipo__ic"><i class="bi bi-heart-pulse"></i></div>
+                        <h3>Frequência</h3>
+                        <p>Evolução dos BPM</p>
+                    </div>
+                    <div class="an-tipo" data-tipo="completa">
+                        <div class="an-tipo__ic"><i class="bi bi-graph-up"></i></div>
+                        <h3>Completa</h3>
+                        <p>Temperatura e BPM juntos</p>
+                    </div>
+                </div>
+
+                <!-- 3. Período -->
+                <span class="an-label">Período</span>
+                <div class="an-periodos" id="an-periodos">
+                    <button class="an-chip" data-periodo="7">Últimos 7 dias</button>
+                    <button class="an-chip sel" data-periodo="30">Últimos 30 dias</button>
+                    <button class="an-chip" data-periodo="90">Últimos 3 meses</button>
+                    <button class="an-chip" data-periodo="180">Últimos 6 meses</button>
+                    <button class="an-chip" data-periodo="365">Último ano</button>
+                    <button class="an-chip" data-periodo="custom">Personalizado</button>
+                </div>
+
+                <div class="an-custom" id="an-custom">
+                    <label>Início<input type="date" id="an-de"></label>
+                    <label>Fim<input type="date" id="an-ate"></label>
+                </div>
+
+                <button class="an-gerar" id="an-gerar">
+                    <i class="bi bi-bar-chart-line"></i> Gerar análise
+                </button>
+
+                <!-- Resultado -->
+                <div class="an-resultado" id="an-resultado"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Biblioteca de gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        /* ===== Menu (igual à app) ===== */
+        function abrirMenu() {
+            document.getElementById("menuLateral").classList.add("aberto");
+            document.getElementById("menuOverlay").classList.add("aberto");
+            document.body.style.overflow = "hidden";
+        }
+        function fecharMenu() {
+            document.getElementById("menuLateral").classList.remove("aberto");
+            document.getElementById("menuOverlay").classList.remove("aberto");
+            document.body.style.overflow = "";
+        }
+
+        /* ================= DADOS MOCKADOS (sem backend) =================
+           Série determinista de ~1 ano. Cada dia pode ter temperatura,
+           BPM, ambos, ou nenhum (simula utilização real, com falhas).
+           Eventos clínicos colocados em datas específicas para que cada
+           período conte uma história diferente. */
+        const HOJE = new Date(2026, 6, 24);            // 24 jul 2026
+        const REF = { tempMax: 37.5, bpmMin: 60, bpmMax: 100 };
+        const AZUL = '#2F80ED', VERMELHO = '#E5484D';
+        const MS_DIA = 86400000;
+
+        function mulberry32(a) {
+            return function () {
+                a |= 0; a = a + 0x6D2B79F5 | 0;
+                let t = Math.imul(a ^ a >>> 15, 1 | a);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+
+        // eventos: dias-atrás -> valores forçados (fora do normal)
+        const EVENTOS = {
+            65:  { temp: 37.6 },            // febrícula (aparece em 3 meses+)
+            70:  { bpm: 102 },              // BPM acima (3 meses+)
+            140: { temp: 38.1 },            // febre (6 meses+)
+            175: { bpm: 106 },              // BPM acima (6 meses+)
+            210: { temp: 37.8, bpm: 104 },  // (1 ano)
+            300: { temp: 38.3 }             // (1 ano)
+        };
+
+        function gerarBase() {
+            const rnd = mulberry32(20260724);
+            const dias = 365;
+            const base = [];
+            for (let i = dias; i >= 0; i--) {
+                const diasAtras = i;
+                const d = new Date(HOJE.getTime() - i * MS_DIA);
+                const t = dias - i; // 0 (antigo) .. 365 (hoje)
+
+                const evento = EVENTOS[diasAtras];
+                const medido = evento || rnd() < 0.68; // ~68% dos dias têm medição
+                if (!medido) continue;
+
+                // tipo de medição
+                const r = rnd();
+                let temTemp = r < 0.75;   // 75% incluem temperatura
+                let temBpm = r >= 0.5;    // 50%+ incluem BPM  (=> ~25% ambos)
+                if (evento && evento.temp != null) temTemp = true;
+                if (evento && evento.bpm != null) temBpm = true;
+                if (!temTemp && !temBpm) temTemp = true;
+
+                let temp = null, bpm = null;
+                if (temTemp) {
+                    temp = 36.55 + 0.12 * Math.sin(t / 8) + (rnd() - 0.5) * 0.22;
+                    if (evento && evento.temp != null) temp = evento.temp;
+                    temp = Math.round(temp * 10) / 10;
+                }
+                if (temBpm) {
+                    const tendencia = 87 - (t / dias) * 11; // desce ~11 bpm ao longo do ano
+                    bpm = Math.round(tendencia + Math.sin(t / 6) * 3 + (rnd() - 0.5) * 8);
+                    if (evento && evento.bpm != null) bpm = evento.bpm;
+                }
+                base.push({ ts: d.getTime(), temp, bpm });
+            }
+            // duas interrupções deliberadas (grandes intervalos sem medição)
+            return base.filter(p => {
+                const da = Math.round((HOJE.getTime() - p.ts) / MS_DIA);
+                if (da > 246 && da < 262) return false; // ~2 semanas sem dados
+                if (da > 108 && da < 120) return false;
+                return true;
+            });
+        }
+
+        const BASE = gerarBase();
+
+        /* ================= Estado do ecrã ================= */
+        let tipo = 'temp';       // 'temp' | 'bpm' | 'completa'
+        let periodo = '30';      // dias ou 'custom'
+        let chart = null;
+
+        /* ================= Helpers ================= */
+        const fmt1 = n => n == null ? '—' : n.toFixed(1).replace('.', ',');
+        const fmt0 = n => n == null ? '—' : String(Math.round(n));
+        const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+        function rotuloData(ts) { const d = new Date(ts); return `${d.getDate()} ${MESES[d.getMonth()]}`; }
+        function rotuloDataAno(ts) { const d = new Date(ts); return `${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}`; }
+
+        function intervalo() {
+            if (periodo === 'custom') {
+                const de = document.getElementById('an-de').value;
+                const ate = document.getElementById('an-ate').value;
+                const ini = de ? new Date(de + 'T00:00:00').getTime() : HOJE.getTime() - 45 * MS_DIA;
+                const fim = ate ? new Date(ate + 'T23:59:59').getTime() : HOJE.getTime();
+                return [Math.min(ini, fim), Math.max(ini, fim)];
+            }
+            const dias = parseInt(periodo, 10);
+            return [HOJE.getTime() - dias * MS_DIA, HOJE.getTime()];
+        }
+
+        function dados() {
+            const [ini, fim] = intervalo();
+            return BASE.filter(p => p.ts >= ini && p.ts <= fim);
+        }
+
+        // pontos {x,y} de uma métrica, com quebras da linha em grandes intervalos
+        function pontos(registos, campo) {
+            const so = registos.filter(p => p[campo] != null);
+            const pts = [];
+            for (let i = 0; i < so.length; i++) {
+                if (i > 0) {
+                    const gap = (so[i].ts - so[i - 1].ts) / MS_DIA;
+                    if (gap > 12) pts.push({ x: (so[i].ts + so[i - 1].ts) / 2, y: null }); // interrupção
+                }
+                pts.push({ x: so[i].ts, y: so[i][campo] });
+            }
+            return pts;
+        }
+
+        function regressao(pares) {
+            const n = pares.length;
+            if (n < 2) return 0;
+            const x0 = pares[0].x;
+            let sx = 0, sy = 0, sxy = 0, sxx = 0;
+            pares.forEach(p => {
+                const x = (p.x - x0) / MS_DIA;
+                sx += x; sy += p.y; sxy += x * p.y; sxx += x * x;
+            });
+            const denom = (n * sxx - sx * sx);
+            if (denom === 0) return 0;
+            const slope = (n * sxy - sx * sy) / denom; // por dia
+            const spanDias = (pares[n - 1].x - pares[0].x) / MS_DIA;
+            return slope * spanDias; // variação total no período
+        }
+
+        function estat(vals) {
+            if (!vals.length) return null;
+            const soma = vals.reduce((a, b) => a + b, 0);
+            return { media: soma / vals.length, min: Math.min(...vals), max: Math.max(...vals), n: vals.length };
+        }
+
+        /* ================= Plugin: linhas de referência ================= */
+        const refLinePlugin = {
+            id: 'refLines',
+            afterDatasetsDraw(c, args, opts) {
+                const linhas = (opts && opts.linhas) || [];
+                const { ctx, chartArea } = c;
+                linhas.forEach(l => {
+                    const scale = c.scales[l.scaleId];
+                    if (!scale) return;
+                    const y = scale.getPixelForValue(l.value);
+                    if (y < chartArea.top || y > chartArea.bottom) return;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.setLineDash([5, 5]);
+                    ctx.lineWidth = 1.2;
+                    ctx.strokeStyle = l.color;
+                    ctx.moveTo(chartArea.left, y);
+                    ctx.lineTo(chartArea.right, y);
+                    ctx.stroke();
+                    if (l.label) {
+                        ctx.setLineDash([]);
+                        ctx.font = '600 10px Montserrat, sans-serif';
+                        ctx.fillStyle = l.color;
+                        ctx.textAlign = 'right';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(l.label, chartArea.right - 4, y - 3);
+                    }
+                    ctx.restore();
+                });
+            }
+        };
+
+        function gradiente(ctx, area, cor) {
+            const g = ctx.createLinearGradient(0, area.top, 0, area.bottom);
+            g.addColorStop(0, cor + '33');
+            g.addColorStop(1, cor + '00');
+            return g;
+        }
+
+        function datasetLinha(label, pts, cor, yAxisID) {
+            return {
+                label, data: pts, yAxisID,
+                borderColor: cor,
+                borderWidth: 2.5,
+                tension: 0.35,
+                spanGaps: false,
+                pointRadius: pts.filter(p => p.y != null).length > 40 ? 0 : 2.5,
+                pointHoverRadius: 5,
+                pointBackgroundColor: cor,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 1,
+                fill: true,
+                backgroundColor: (c) => {
+                    const { ctx, chartArea } = c.chart;
+                    if (!chartArea) return 'transparent';
+                    return gradiente(ctx, chartArea, cor);
+                }
+            };
+        }
+
+        function eixo(cor, min, max, mostrarGrelha, lado, unidade) {
+            return {
+                position: lado,
+                suggestedMin: min, suggestedMax: max,
+                grid: { drawOnChartArea: mostrarGrelha, color: 'rgba(32,82,54,0.06)' },
+                border: { display: false },
+                ticks: {
+                    color: cor, font: { family: 'Montserrat', size: 10, weight: '600' },
+                    maxTicksLimit: 5,
+                    callback: v => unidade === '°C' ? fmt1(v) : v
+                }
+            };
+        }
+
+        function eixoX() {
+            return {
+                type: 'linear',
+                grid: { display: false },
+                border: { display: false },
+                ticks: {
+                    color: '#8a938e', font: { family: 'Montserrat', size: 10, weight: '600' },
+                    maxTicksLimit: 6, maxRotation: 0, autoSkip: true,
+                    callback: v => rotuloData(v)
+                }
+            };
+        }
+
+        function construirGrafico(registos) {
+            const ctx = document.getElementById('an-canvas');
+            const datasets = [];
+            const scales = { x: eixoX() };
+            const refLinhas = [];
+
+            if (tipo === 'temp') {
+                datasets.push(datasetLinha('Temperatura', pontos(registos, 'temp'), AZUL, 'y'));
+                scales.y = eixo(AZUL, 35.5, 39, true, 'left', '°C');
+                refLinhas.push({ scaleId: 'y', value: REF.tempMax, color: 'rgba(47,128,237,0.75)', label: 'Limite ' + fmt1(REF.tempMax) + ' °C' });
+            } else if (tipo === 'bpm') {
+                datasets.push(datasetLinha('Frequência cardíaca', pontos(registos, 'bpm'), VERMELHO, 'y'));
+                scales.y = eixo(VERMELHO, 45, 130, true, 'left', 'bpm');
+                refLinhas.push({ scaleId: 'y', value: REF.bpmMin, color: 'rgba(229,72,77,0.6)', label: 'Mín ' + REF.bpmMin });
+                refLinhas.push({ scaleId: 'y', value: REF.bpmMax, color: 'rgba(229,72,77,0.6)', label: 'Máx ' + REF.bpmMax });
+            } else {
+                datasets.push(datasetLinha('Temperatura', pontos(registos, 'temp'), AZUL, 'yTemp'));
+                datasets.push(datasetLinha('Frequência cardíaca', pontos(registos, 'bpm'), VERMELHO, 'yBpm'));
+                scales.yTemp = eixo(AZUL, 35.5, 39, true, 'left', '°C');
+                scales.yBpm = eixo(VERMELHO, 45, 130, false, 'right', 'bpm');
+                // na análise completa mantém-se limpo: sem linhas de referência (evita ruído)
+            }
+
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: { datasets },
+                plugins: [refLinePlugin],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 700, easing: 'easeOutQuart' },
+                    interaction: { mode: 'nearest', intersect: false },
+                    plugins: {
+                        legend: { display: false },
+                        refLines: { linhas: refLinhas },
+                        tooltip: {
+                            backgroundColor: '#205236',
+                            padding: 10, cornerRadius: 8,
+                            titleFont: { family: 'Montserrat', weight: '700' },
+                            bodyFont: { family: 'Montserrat' },
+                            callbacks: {
+                                title: items => items.length ? rotuloDataAno(items[0].parsed.x) : '',
+                                label: it => {
+                                    const u = it.dataset.label === 'Temperatura' ? ' °C' : ' bpm';
+                                    const v = it.dataset.label === 'Temperatura' ? fmt1(it.parsed.y) : fmt0(it.parsed.y);
+                                    return `${it.dataset.label}: ${v}${u}`;
+                                }
+                            }
+                        }
+                    },
+                    scales
+                }
+            });
+        }
+
+        /* ================= Resumo automático ================= */
+        // conjuga corretamente singular/plural para as frases baseadas em contagens
+        function fraseContagem(n, oQue) {
+            return n === 1
+                ? `Registou-se 1 medição ${oQue}.`
+                : `Registaram-se ${n} medições ${oQue}.`;
+        }
+
+        function frasesTemp(registos) {
+            const vals = registos.filter(p => p.temp != null);
+            const f = [];
+            if (!vals.length) return f;
+            const febres = vals.filter(p => p.temp > REF.tempMax).length;
+            if (febres === 0) f.push({ t: 'ok', txt: 'Não foram registados episódios de febre.' });
+            else f.push({ t: 'alerta', txt: fraseContagem(febres, 'de temperatura acima do limite esperado') });
+
+            const var_ = regressao(vals.map(p => ({ x: p.ts, y: p.temp })));
+            if (Math.abs(var_) < 0.25) f.push({ t: 'info', txt: 'A temperatura manteve-se estável durante este período.' });
+            else if (var_ > 0) f.push({ t: 'sobe', txt: 'A temperatura apresenta uma ligeira tendência crescente.' });
+            else f.push({ t: 'desce', txt: 'A temperatura apresenta uma ligeira tendência decrescente.' });
+            return f;
+        }
+
+        function frasesBpm(registos) {
+            const vals = registos.filter(p => p.bpm != null);
+            const f = [];
+            if (!vals.length) return f;
+            const fora = vals.filter(p => p.bpm < REF.bpmMin || p.bpm > REF.bpmMax).length;
+            if (fora === 0) f.push({ t: 'ok', txt: 'A frequência cardíaca manteve-se dentro dos valores de referência.' });
+            else f.push({ t: 'alerta', txt: fraseContagem(fora, 'de frequência cardíaca fora dos valores esperados') });
+
+            const var_ = regressao(vals.map(p => ({ x: p.ts, y: p.bpm })));
+            if (Math.abs(var_) < 4) f.push({ t: 'info', txt: 'A frequência cardíaca manteve-se estável.' });
+            else if (var_ > 0) f.push({ t: 'sobe', txt: 'Observa-se uma ligeira tendência de aumento da frequência cardíaca.' });
+            else f.push({ t: 'desce', txt: 'Observa-se uma ligeira tendência de diminuição da frequência cardíaca.' });
+            return f;
+        }
+
+        function fraseUltima(registos) {
+            const campo = tipo === 'bpm' ? 'bpm' : 'temp';
+            for (let i = registos.length - 1; i >= 0; i--) {
+                const p = registos[i];
+                if (tipo === 'completa') {
+                    if (p.temp == null && p.bpm == null) continue;
+                    const okT = p.temp == null || p.temp <= REF.tempMax;
+                    const okB = p.bpm == null || (p.bpm >= REF.bpmMin && p.bpm <= REF.bpmMax);
+                    return (okT && okB)
+                        ? { t: 'ok', txt: 'A última medição encontra-se dentro dos valores esperados.' }
+                        : { t: 'alerta', txt: 'A última medição apresentou valores fora do esperado.' };
+                }
+                if (p[campo] == null) continue;
+                const ok = campo === 'temp' ? p.temp <= REF.tempMax : (p.bpm >= REF.bpmMin && p.bpm <= REF.bpmMax);
+                return ok
+                    ? { t: 'ok', txt: 'A última medição encontra-se dentro dos valores esperados.' }
+                    : { t: 'alerta', txt: 'A última medição apresentou valores fora do esperado.' };
+            }
+            return null;
+        }
+
+        function construirResumo(registos) {
+            let f = [];
+            if (tipo === 'temp' || tipo === 'completa') f = f.concat(frasesTemp(registos));
+            if (tipo === 'bpm' || tipo === 'completa') f = f.concat(frasesBpm(registos));
+            const ult = fraseUltima(registos);
+            if (ult) f.push(ult);
+            const iconePorTipo = { ok: 'bi-check-circle-fill', alerta: 'bi-exclamation-triangle-fill', info: 'bi-dash-circle-fill', sobe: 'bi-graph-up-arrow', desce: 'bi-graph-down-arrow' };
+            return f.map(x => `<div class="an-frase ${x.t}"><i class="bi ${iconePorTipo[x.t]}"></i><p>${x.txt}</p></div>`).join('');
+        }
+
+        /* ================= Estatísticas ================= */
+        function grupoStat(nome, cor, e, unidade) {
+            if (!e) return '';
+            const u = unidade === '°C' ? '<small> °C</small>' : '<small> bpm</small>';
+            const f = unidade === '°C' ? fmt1 : fmt0;
+            return `
+                <div class="an-stats-grupo">
+                    <div class="an-stats-cab"><span class="an-dot" style="background:${cor}"></span> ${nome}</div>
+                    <div class="an-stat-linha">
+                        <div class="an-stat"><div class="an-stat__lbl">Média</div><div class="an-stat__val">${f(e.media)}${u}</div></div>
+                        <div class="an-stat"><div class="an-stat__lbl">Mínima</div><div class="an-stat__val">${f(e.min)}${u}</div></div>
+                        <div class="an-stat"><div class="an-stat__lbl">Máxima</div><div class="an-stat__val">${f(e.max)}${u}</div></div>
+                    </div>
+                </div>`;
+        }
+
+        function construirStats(registos) {
+            let html = '';
+            const eT = estat(registos.filter(p => p.temp != null).map(p => p.temp));
+            const eB = estat(registos.filter(p => p.bpm != null).map(p => p.bpm));
+            if (tipo === 'temp' || tipo === 'completa') html += grupoStat('Temperatura', AZUL, eT, '°C');
+            if (tipo === 'bpm' || tipo === 'completa') html += grupoStat('Frequência cardíaca', VERMELHO, eB, 'bpm');
+
+            let total;
+            if (tipo === 'temp') total = eT ? eT.n : 0;
+            else if (tipo === 'bpm') total = eB ? eB.n : 0;
+            else total = registos.filter(p => p.temp != null || p.bpm != null).length;
+            html += `<div class="an-total"><i class="bi bi-clipboard2-check"></i> ${total} medições consideradas</div>`;
+            return html;
+        }
+
+        function legenda() {
+            if (tipo === 'temp') {
+                return `<div class="an-leg"><span class="an-leg__linha" style="border-color:${AZUL}"></span> Temperatura</div>
+                        <div class="an-leg"><span class="an-leg__linha tracejado" style="border-color:${AZUL}"></span> Limite de referência</div>`;
+            }
+            if (tipo === 'bpm') {
+                return `<div class="an-leg"><span class="an-leg__linha" style="border-color:${VERMELHO}"></span> Frequência cardíaca</div>
+                        <div class="an-leg"><span class="an-leg__linha tracejado" style="border-color:${VERMELHO}"></span> Limites de referência</div>`;
+            }
+            return `<div class="an-leg"><span class="an-leg__linha" style="border-color:${AZUL}"></span> Temperatura</div>
+                    <div class="an-leg"><span class="an-leg__linha" style="border-color:${VERMELHO}"></span> Frequência cardíaca</div>`;
+        }
+
+        /* ================= Gerar / render ================= */
+        function gerar() {
+            const cont = document.getElementById('an-resultado');
+            const registos = dados();
+
+            if (typeof Chart === 'undefined') {
+                cont.innerHTML = `<div class="an-erro an-anim"><i class="bi bi-wifi-off"></i><p>Não foi possível carregar o gráfico (biblioteca offline).</p></div>`;
+                return;
+            }
+            if (registos.length === 0) {
+                cont.innerHTML = `<div class="an-erro an-anim"><i class="bi bi-clipboard2-x"></i><p>Não existem medições neste período.</p></div>`;
+                return;
+            }
+
+            cont.innerHTML = `
+                <section class="an-card an-anim" style="animation-delay:0s">
+                    <div class="an-card__titulo"><span class="an-chip-icone"><i class="bi bi-activity"></i></span> Evolução</div>
+                    <div class="an-legenda">${legenda()}</div>
+                    <div class="an-grafico"><canvas id="an-canvas"></canvas></div>
+                </section>
+                <section class="an-card an-anim" style="animation-delay:0.08s">
+                    <div class="an-card__titulo"><span class="an-chip-icone"><i class="bi bi-chat-square-text"></i></span> Resumo da análise</div>
+                    <div>${construirResumo(registos)}</div>
+                </section>
+                <section class="an-card an-anim" style="animation-delay:0.16s">
+                    <div class="an-card__titulo"><span class="an-chip-icone"><i class="bi bi-bar-chart"></i></span> Estatísticas</div>
+                    ${construirStats(registos)}
+                </section>`;
+
+            construirGrafico(registos);
+        }
+
+        /* ================= Eventos ================= */
+        document.getElementById('an-tipos').addEventListener('click', e => {
+            const c = e.target.closest('.an-tipo');
+            if (!c) return;
+            document.querySelectorAll('.an-tipo').forEach(x => x.classList.remove('sel'));
+            c.classList.add('sel');
+            tipo = c.dataset.tipo;
+        });
+
+        document.getElementById('an-periodos').addEventListener('click', e => {
+            const c = e.target.closest('.an-chip');
+            if (!c) return;
+            document.querySelectorAll('.an-chip').forEach(x => x.classList.remove('sel'));
+            c.classList.add('sel');
+            periodo = c.dataset.periodo;
+            document.getElementById('an-custom').classList.toggle('show', periodo === 'custom');
+        });
+
+        document.getElementById('an-gerar').addEventListener('click', gerar);
+
+        // datas por defeito para o modo personalizado
+        (function () {
+            const ate = HOJE, de = new Date(HOJE.getTime() - 45 * MS_DIA);
+            const iso = d => d.toISOString().slice(0, 10);
+            document.getElementById('an-ate').value = iso(ate);
+            document.getElementById('an-de').value = iso(de);
+        })();
+
+        // gera uma análise inicial para o ecrã não aparecer vazio
+        window.addEventListener('load', gerar);
+    </script>
+</body>
+</html>

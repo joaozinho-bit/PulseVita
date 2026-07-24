@@ -24,4 +24,8 @@ public interface HistoricoPacienteRepository extends JpaRepository<HistoricoPaci
             @Param("fim") LocalDateTime fim,
             Sort sort
     );
+
+    // ultima medicao do paciente (a mais recente); serve o dashboard, tanto para
+    // o resumo "ultima medicao" como para saber se ja houve medicao hoje
+    HistoricoPaciente findTopByIdPacienteOrderByDataLeituraDesc(Long idPaciente);
 }

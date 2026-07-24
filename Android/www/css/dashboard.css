@@ -1,182 +1,266 @@
-.conteudo {
+/* ===================================================================
+   Dashboard do paciente. Ecra de resumo focado na acao do dia.
+   Sem gradientes: cartoes de estado com cores solidas da identidade
+   (amarelo aviso, verde escuro sucesso, laranja alerta).
+   =================================================================== */
+
+.dash {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    gap: 28px;
-    padding: 15px;
+    gap: 16px;
+    padding: 4px 4px 12px;
 }
 
-/* Perfil em coluna centrada: foto, nome em destaque e por fim os contactos.
-   Evita que textos longos (sobretudo o email) disputem espaco com a foto na horizontal. */
-.conteudo .info-pessoal {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-}
-
-.info-pessoal .foto {
-    position: relative;
+/* ---- Estados de carregamento / erro ---- */
+.dash-loader {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;
-    padding: 8px;
-    border: 3px solid #B6E5E5;
+    padding: 60px 0;
 }
-
-/* Enquanto a fotografia carrega, a area fica coberta por um placeholder com spinner */
-.info-pessoal .foto:has(img:not(.pronta))::after {
+.dash-loader::after {
     content: "";
-    position: absolute;
-    inset: 8px;
-    border-radius: 14px;
-    background: #0f7a63;
-}
-
-.info-pessoal .foto:has(img:not(.pronta))::before {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    left: 50%;
-    width: 26px;
-    height: 26px;
-    margin: -13px 0 0 -13px;
-    border: 3px solid rgba(255, 255, 255, 0.35);
+    width: 34px;
+    height: 34px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-top-color: #ffffff;
     border-radius: 50%;
     animation: loader-rodar 0.7s linear infinite;
 }
-
-.info-pessoal .foto img {
-    width: 100px;
-    height: 100px;
-    border-radius: 14px;
-    object-fit: cover;
-}
-
-.info-pessoal .nome-perfil {
-    color: #ffffff;
-    font-size: 1.15rem;
-    font-weight: 600;
+.dash-erro {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
     text-align: center;
-}
-
-.info-pessoal .lista-info {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-}
-
-.info-pessoal .lista-info .dados {
-    display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 12px;
+    color: #6b7770;
+    font-size: 0.9rem;
 }
-.info-pessoal .lista-info .dados p {
-    color: #ffffff;
-    font-size: 14px;
-    /* permite quebrar emails/textos longos em vez de sair do fundo verde */
-    min-width: 0;
-    overflow-wrap: anywhere;
+.dash-erro i { font-size: 34px; color: #C77700; }
+.dash-erro button {
+    background: #205236;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 20px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
 }
 
-.info-pessoal .lista-info .dados img {
-    width: 22px;
-    flex-shrink: 0;
-}
-
-/* Conteudo direita */
-.conteudo .container-direita {
-    width: 100%;
+/* ---- 1. Cabecalho do utilizador (so foto, nome e nº de paciente) ---- */
+.dash-user {
     display: flex;
-    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 4px 6px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+.dash-user__foto {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #B6E5E5;
+    flex-shrink: 0;
+    background: #0f7a63;
+}
+/* placeholder pulsante enquanto a foto nao esta "pronta" */
+.dash-user__foto:not(.pronta) { opacity: 0; }
+.dash-user__foto { transition: opacity 0.25s ease; }
+.dash-user__txt { min-width: 0; }
+.dash-user__ola { color: rgba(255, 255, 255, 0.75); font-size: 0.78rem; font-weight: 600; }
+.dash-user__nome {
+    color: #fff; font-size: 1.15rem; font-weight: 700; line-height: 1.2;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dash-user__num {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255, 255, 255, 0.8); font-size: 0.8rem; font-weight: 500; margin-top: 2px;
+}
+.dash-user__data {
+    margin-left: auto; align-self: flex-start; text-align: right;
+    color: rgba(255, 255, 255, 0.7); font-size: 0.72rem; font-weight: 600; text-transform: capitalize;
+}
+
+/* ---- 2. Cartao principal: estado diario (maior destaque) ---- */
+.dash-hero {
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+    display: flex;
+    flex-direction: column;
     gap: 16px;
 }
+.dash-hero__top { display: flex; align-items: center; gap: 14px; }
+.dash-hero__icone {
+    width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+}
+.dash-hero__titulo { font-size: 1.12rem; font-weight: 800; line-height: 1.25; }
+.dash-hero__sub { font-size: 0.85rem; font-weight: 500; line-height: 1.45; margin-top: 3px; }
 
-.prox-consultas {
-    width: 50%;
-    height: 200px;
-    gap: 12px;
-    padding: 20px;
+/* Estado — aviso (ainda sem medicao hoje): AMARELO SOLIDO */
+.dash-hero--aviso { background: #FFD166; color: #5b4410; }
+.dash-hero--aviso .dash-hero__icone { background: rgba(255, 255, 255, 0.55); color: #C77700; }
+.dash-hero--aviso .dash-hero__sub { color: #6b5417; }
+
+/* Estado — sucesso (medicao concluida, valores normais): VERDE SOLIDO */
+.dash-hero--ok { background: #205236; color: #fff; }
+.dash-hero--ok .dash-hero__icone { background: #34C759; color: #fff; }
+.dash-hero--ok .dash-hero__sub { color: rgba(255, 255, 255, 0.9); }
+
+/* Estado — atencao (medicao concluida mas fora do esperado): LARANJA SOLIDO */
+.dash-hero--alerta { background: #C77700; color: #fff; }
+.dash-hero--alerta .dash-hero__icone { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.dash-hero--alerta .dash-hero__sub { color: rgba(255, 255, 255, 0.9); }
+
+/* Chip do topo do heroi */
+.dash-hoje {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+}
+.dash-hero--aviso .dash-hoje { background: rgba(199, 119, 0, 0.16); color: #a5620a; }
+.dash-hero--ok .dash-hoje { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.dash-hero--alerta .dash-hoje { background: rgba(255, 255, 255, 0.22); color: #fff; }
+
+/* Valores medidos (heroi com medicao) */
+.dash-valores { display: flex; gap: 10px; }
+.dash-valor {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 13px;
+    padding: 11px 12px;
+    display: flex; flex-direction: column; gap: 3px;
+}
+.dash-valor__lbl {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.72rem; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+}
+.dash-valor__num { font-size: 1.35rem; font-weight: 800; line-height: 1; }
+.dash-valor__num small { font-size: 0.78rem; font-weight: 600; opacity: 0.85; }
+
+.dash-hero__nota {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; font-weight: 600; color: rgba(255, 255, 255, 0.95);
+}
+.dash-hero__nota i { font-size: 1rem; }
+
+/* ---- Botoes ---- */
+.dash-acoes { display: flex; gap: 10px; flex-wrap: wrap; }
+.dash-btn {
+    flex: 1;
+    min-width: 130px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 700;
+    padding: 13px 18px; border-radius: 12px; border: none; cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.2s ease;
+    text-decoration: none;
+}
+.dash-btn:active { transform: scale(0.97); }
+.dash-btn--escuro { background: #205236; color: #fff; }
+.dash-btn--branco { background: #fff; color: #205236; }
+.dash-btn--fantasma-claro { background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, 0.6); }
+
+/* ---- 3 e 4. Cartoes secundarios (brancos) ---- */
+.dash-card {
+    background: #fff;
     border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    background-color: #B6E5E5;
+    padding: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    display: flex; flex-direction: column; gap: 14px;
 }
+.dash-card__head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.dash-card__head h2 {
+    display: inline-flex; align-items: center; gap: 9px;
+    color: #205236; font-size: 1rem; font-weight: 700;
+}
+.dash-chip-icone {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: #B6E5E5; color: #138C6E;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.dash-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: none; border: none; cursor: pointer; text-decoration: none;
+    color: #138C6E; font-family: inherit; font-size: 0.82rem; font-weight: 700; white-space: nowrap;
+}
+.dash-link:active { opacity: 0.6; }
 
-.prox-consultas h2 {
-    color: #205236;
-    font-size: 1.2rem;
+/* Proxima consulta */
+.dash-consulta__quando { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.dash-consulta__data { color: #205236; font-size: 1.25rem; font-weight: 800; }
+.dash-consulta__hora {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: #138C6E; font-size: 1rem; font-weight: 700;
 }
+.dash-consulta__medico { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dash-consulta__medico b { color: #205236; font-size: 0.95rem; font-weight: 700; }
+.dash-consulta__medico span { color: #6b7770; font-size: 0.83rem; font-weight: 500; }
 
-.prox-consultas .data {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+.dash-badge {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap;
 }
+.dash-badge--ok { background: rgba(52, 199, 89, 0.16); color: #1e7d3f; }
 
-.prox-consultas .data p {
-    color: #205236;
-    font-size: 1rem;
-}
+.dash-sep { height: 1px; background: #eef1f0; }
 
-.prox-consultas .data img {
-    width: 6px;
-    flex-shrink: 0;
+/* Ultima medicao */
+.dash-tiles { display: flex; gap: 10px; }
+.dash-tile {
+    flex: 1; background: #f4f8f6; border-radius: 12px; padding: 11px 12px;
+    display: flex; flex-direction: column; gap: 4px;
 }
+.dash-tile__lbl {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: #6b7770; font-size: 0.74rem; font-weight: 600;
+}
+.dash-tile__lbl i { color: #138C6E; }
+.dash-tile__num { color: #205236; font-size: 1.3rem; font-weight: 800; line-height: 1; }
+.dash-tile__num small { font-size: 0.78rem; font-weight: 600; opacity: 0.75; }
 
-.notify {
-    width: 50%;
-    height: 200px;
-    gap: 12px;
-    padding: 20px;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    background-color: #B6E5E5;
+.dash-rodape { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.dash-rodape__data {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: #6b7770; font-size: 0.8rem; font-weight: 600;
 }
+.dash-aval { display: inline-flex; align-items: center; gap: 5px; font-size: 0.85rem; font-weight: 700; }
+.dash-aval--ok { color: #34C759; }
+.dash-aval--alerta { color: #C77700; }
 
-.notify h2 {
-    color: #205236;
-    font-size: 1.2rem;
+/* mensagem de vazio dentro de um cartao (sem consultas / sem medicoes) */
+.dash-vazio {
+    display: flex; align-items: center; gap: 10px;
+    color: #6b7770; font-size: 0.88rem; font-weight: 500;
 }
+.dash-vazio i { color: #138C6E; font-size: 1.1rem; }
 
-.notify .conteudo-notify {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+/* Botao largo "Ver historico" (quando ja mediu hoje, sobre o painel verde) */
+.dash-btn-largo {
+    width: 100%;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff;
+    font-family: inherit; font-size: 0.9rem; font-weight: 700;
+    padding: 14px; border-radius: 13px; cursor: pointer; text-decoration: none;
+    transition: transform 0.12s ease;
 }
+.dash-btn-largo:active { transform: scale(0.98); }
 
-.notify p {
-    color: #205236;
-    font-size: 1rem;
-}
-
-.notify img {
-    width: 24px;
-}
-
-/* Responsividade */
-@media (max-width: 700px) {
-    .conteudo .container-direita {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-    .prox-consultas{
-        width: 100%;
-    }
-    .notify{
-        width: 100%;
-    }
-}
+/* Animacao de entrada dos cartoes (discreta) */
+@keyframes dash-surge { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.dash-anim { animation: dash-surge 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
